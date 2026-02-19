@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilan Commercial Famillys – 2024 / 2025 / 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c8a96e;
+    --dark: #2c1a0e;
+    --bg: #faf7f2;
+    --card: #ffffff;
+    --border: #e8dfc8;
+    --muted: #8b7355;
+    --green: #1a5c3a;
+    --light-bg: #faf5ec;
+  }
+
+  body {
+    background: var(--bg);
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    color: var(--dark);
+    padding: 40px 28px;
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--gold);
+    margin-bottom: 32px;
+  }
+  .header-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 30px; line-height: 1.2; color: var(--dark);
+  }
+  .header h1 span { color: var(--gold); }
+
+  .print-date { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; gap: 4px; background: #ede8df;
+    border-radius: 10px; padding: 4px; width: fit-content; margin-bottom: 28px;
+  }
+  .tab {
+    background: transparent; border: none; border-radius: 7px;
+    color: var(--muted); padding: 8px 24px; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.18s; font-family: inherit;
+  }
+  .tab.active { background: var(--dark); color: #faf7f2; }
+
+  /* ── KPIs ── */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px; margin-bottom: 28px;
+  }
+  .kpi {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .kpi-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+  }
+  .kpi-value { font-size: 21px; font-weight: 700; color: var(--dark); }
+  .kpi-sub { font-size: 11px; color: #b0956e; margin-top: 4px; }
+
+  /* ── CHARTS ── */
+  .charts-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;
+  }
+  .chart-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .chart-card h3 {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+  }
+  .chart-wrap { position: relative; height: 210px; }
+
+  /* ── TABLE ── */
+  .table-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px;
+  }
+  .table-header {
+    background: var(--dark); padding: 14px 20px;
+    color: #faf7f2; font-size: 13px; font-weight: 700;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--light-bg); }
+  th {
+    padding: 10px 14px; font-size: 10px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+    border-bottom: 2px solid var(--border);
+  }
+  th:nth-child(1), th:nth-child(2) { text-align: left; }
+  th:nth-child(3), th:nth-child(4) { text-align: right; }
+  th:nth-child(5) { text-align: center; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f0e8d8; font-size: 13px; }
+  tbody tr:last-child td { border-bottom: none; }
+  td:nth-child(1) { font-weight: 700; }
+  td:nth-child(2) { text-align: center; }
+  td:nth-child(3) { text-align: right; font-weight: 600; color: var(--green); }
+  td:nth-child(4) { text-align: right; color: #5a3e2b; }
+  td:nth-child(5) { text-align: center; }
+  tfoot tr { background: var(--light-bg); border-top: 2px solid var(--gold); }
+  tfoot td { padding: 12px 14px; font-weight: 700; font-size: 14px; }
+  tfoot td:nth-child(3) { color: var(--green); font-size: 15px; text-align: right; }
+  tfoot td:nth-child(4) { text-align: right; font-size: 15px; }
+
+  .badge {
+    display: inline-block; border-radius: 20px;
+    padding: 2px 10px; font-size: 12px; font-weight: 700;
+  }
+  .badge-contracts { background: #fef3c7; color: #92400e; }
+  .badge-total { background: var(--dark); color: #faf7f2; }
+  .tag { display: inline-block; border-radius: 4px; padding: 1px 6px; font-size: 11px; margin: 0 2px; font-weight: 600; }
+  .tag-79  { background: #fce7f3; color: #9d174d; }
+  .tag-99  { background: #ede9fe; color: #5b21b6; }
+  .tag-349 { background: #d1fae5; color: #065f46; }
+
+  /* ── COMPARAISON ── */
+  .compare-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px;
+  }
+  .compare-card h3 {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+  }
+  .legend {
+    display: flex; gap: 20px; justify-content: center; margin-top: 12px; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ── NOTE ── */
+  .note {
+    background: #fef9f0; border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    font-size: 12px; color: var(--muted); line-height: 1.6;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { padding: 20px; background: white; }
+    .tabs, .no-print { display: none !important; }
+    .section { display: block !important; }
+    .charts-grid { grid-template-columns: 1fr 1fr; }
+    .kpis { grid-template-columns: repeat(4, 1fr); }
+    .page-break { page-break-before: always; }
+    .chart-wrap { height: 180px; }
+    .header h1 { font-size: 24px; }
+    * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="header-eyebrow">Bilan commercial · Équipe Famillys</div>
+    <h1>Suivi des ventes<br><span>2024 – 2025 – 2026</span></h1>
+    <div class="print-date" id="printDate"></div>
+  </div>
+  <div class="no-print" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+    <div class="tabs">
+      <button class="tab active" onclick="showYear('2024')">2024</button>
+      <button class="tab" onclick="showYear('2025')">2025</button>
+      <button class="tab" onclick="showYear('2026')">2026</button>
+    </div>
+    <button onclick="window.print()" style="background:var(--gold);color:white;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
+      🖨️ Imprimer / Enregistrer PDF
+    </button>
+  </div>
+</div>
+
+<!-- KPIs dynamiques -->
+<div class="kpis" id="kpiBlock"></div>
+
+<!-- GRAPHIQUES -->
+<div class="charts-grid">
+  <div class="chart-card">
+    <h3>Contrats signés / mois</h3>
+    <div class="chart-wrap"><canvas id="chartContracts"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <h3>CA mensuel &amp; Cumul (€)</h3>
+    <div class="chart-wrap"><canvas id="chartCA"></canvas></div>
+  </div>
+</div>
+
+<!-- TABLEAU DÉTAILLÉ -->
+<div class="table-card">
+  <div class="table-header" id="tableTitle">Bilan mensuel détaillé</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Mois</th><th>Contrats</th><th>CA mensuel</th>
+        <th>CA Cumulé</th><th>Répartition des prix</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+    <tfoot id="tableFoot"></tfoot>
+  </table>
+</div>
+
+<!-- COMPARAISON 3 ANS -->
+<div class="compare-card">
+  <h3>Comparaison 2024 / 2025 / 2026 — Contrats signés par mois</h3>
+  <div class="chart-wrap" style="height:230px;"><canvas id="chartCompare"></canvas></div>
+  <div class="legend" id="compareLegend"></div>
+</div>
+
+<!-- NOTE -->
+<div class="note">
+  <strong>Note :</strong> Tarifs appliqués tels qu'enregistrés dans le fichier source —
+  <span class="tag tag-349">349 €</span> tarif standard,
+  <span class="tag tag-99">99 €</span> et
+  <span class="tag tag-79">79 €</span> tarifs promotionnels (mars–août 2025).
+  En 2024, l'intégralité des contrats a été signée au tarif 349 €.
+  Les données 2026 couvrent janvier et février uniquement.
+  Extraction effectuée le <span id="noteDate"></span>.
+</div>
+
+<script>
+const MONTHS = ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"];
+
+const RAW = [
+  // 2024
+  {y:2024,m:1,n:33,p349:33,p99:0,p79:0},{y:2024,m:2,n:43,p349:43,p99:0,p79:0},
+  {y:2024,m:3,n:55,p349:55,p99:0,p79:0},{y:2024,m:4,n:38,p349:38,p99:0,p79:0},
+  {y:2024,m:5,n:42,p349:42,p99:0,p79:0},{y:2024,m:6,n:33,p349:33,p99:0,p79:0},
+  {y:2024,m:7,n:60,p349:60,p99:0,p79:0},{y:2024,m:8,n:51,p349:51,p99:0,p79:0},
+  {y:2024,m:9,n:45,p349:45,p99:0,p79:0},{y:2024,m:10,n:35,p349:35,p99:0,p79:0},
+  {y:2024,m:11,n:42,p349:42,p99:0,p79:0},{y:2024,m:12,n:53,p349:53,p99:0,p79:0},
+  // 2025
+  {y:2025,m:1,n:49,p349:49,p99:0,p79:0},{y:2025,m:2,n:30,p349:30,p99:0,p79:0},
+  {y:2025,m:3,n:55,p349:28,p99:0,p79:27},{y:2025,m:4,n:55,p349:18,p99:0,p79:37},
+  {y:2025,m:5,n:37,p349:13,p99:6,p79:18},{y:2025,m:6,n:30,p349:23,p99:7,p79:0},
+  {y:2025,m:7,n:33,p349:32,p99:1,p79:0},{y:2025,m:8,n:19,p349:14,p99:5,p79:0},
+  {y:2025,m:9,n:38,p349:38,p99:0,p79:0},{y:2025,m:10,n:23,p349:23,p99:0,p79:0},
+  {y:2025,m:11,n:23,p349:23,p99:0,p79:0},{y:2025,m:12,n:23,p349:23,p99:0,p79:0},
+  // 2026
+  {y:2026,m:1,n:34,p349:34,p99:0,p79:0},{y:2026,m:2,n:27,p349:27,p99:0,p79:0},
+];
+
+function getCA(d) { return d.p349*349 + d.p99*99 + d.p79*79; }
+
+function buildYear(year) {
+  let cumul = 0;
+  return RAW.filter(d => d.y === year).map(d => {
+    const ca = getCA(d);
+    cumul += ca;
+    return { ...d, ca, cumul, label: MONTHS[d.m-1] };
+  });
+}
+
+const D = { 2024: buildYear(2024), 2025: buildYear(2025), 2026: buildYear(2026) };
+
+function totals(year) {
+  const data = D[year];
+  return {
+    contracts: data.reduce((s,d)=>s+d.n,0),
+    ca: data.reduce((s,d)=>s+d.ca,0),
+    months: data.length
+  };
+}
+
+const fmt = v => v.toLocaleString('fr-FR');
+const fmtK = v => (v/1000).toFixed(1)+'k';
+
+let currentYear = 2024;
+let chartContracts, chartCA, chartCompare;
+
+function updateKPIs(year) {
+  const t = totals(year);
+  const data = D[year];
+  const moy = Math.round(t.contracts / data.length);
+  const panier = Math.round(t.ca / t.contracts);
+  const sub2026 = year == 2026 ? "jan–fév 2026" : "12 mois complets";
+  document.getElementById('kpiBlock').innerHTML = [
+    {label:"Contrats signés", value: t.contracts, sub: year==2026?'jan–fév':'12 mois', color:'#c8a96e'},
+    {label:"CA total", value: fmt(t.ca)+' €', sub:"chiffre d'affaires", color:'#1a5c3a'},
+    {label:"Moy. mensuelle", value: moy+' contrats', sub:"par mois", color:'#5b21b6'},
+    {label:"CA moyen / contrat", value: panier+' €', sub:"panier moyen", color:'#9d174d'},
+  ].map(k=>`
+    <div class="kpi" style="border-left:4px solid ${k.color}">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value">${k.value}</div>
+      <div class="kpi-sub">${k.sub}</div>
+    </div>`).join('');
+}
+
+function updateTable(year) {
+  const data = D[year];
+  const t = totals(year);
+  document.getElementById('tableTitle').textContent = `Bilan mensuel détaillé · ${year}`;
+
+  document.getElementById('tableBody').innerHTML = data.map(d => {
+    const tags = [
+      d.p79>0 ? `<span class="tag tag-79">${d.p79}×79€</span>` : '',
+      d.p99>0 ? `<span class="tag tag-99">${d.p99}×99€</span>` : '',
+      d.p349>0 ? `<span class="tag tag-349">${d.p349}×349€</span>` : '',
+    ].join('');
+    return `<tr>
+      <td>${d.label}</td>
+      <td><span class="badge badge-contracts">${d.n}</span></td>
+      <td>${fmt(d.ca)} €</td>
+      <td>${fmt(d.cumul)} €</td>
+      <td>${tags}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('tableFoot').innerHTML = `<tr>
+    <td>TOTAL</td>
+    <td><span class="badge badge-total">${t.contracts}</span></td>
+    <td>${fmt(t.ca)} €</td>
+    <td>${fmt(t.ca)} €</td>
+    <td></td>
+  </tr>`;
+}
+
+const CHART_OPTS = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false }, tooltip: {
+    backgroundColor: '#fffdf8', titleColor: '#8b7355', bodyColor: '#2c1a0e',
+    borderColor: '#e8dfc8', borderWidth: 1,
+    titleFont: { weight: '700', size: 12 }, bodyFont: { size: 13 }
+  }},
+  scales: {
+    x: { grid: { display: false }, ticks: { color: '#8b7355', font: { size: 11 } }, border: { display: false } },
+    y: { grid: { color: '#f0e8d8' }, ticks: { color: '#8b7355', font: { size: 11 } }, border: { display: false } }
+  }
+};
+
+function updateCharts(year) {
+  const data = D[year];
+  const labels = data.map(d => d.label);
+  const contracts = data.map(d => d.n);
+  const caVals = data.map(d => d.ca);
+  const cumulVals = data.map(d => d.cumul);
+
+  if (chartContracts) chartContracts.destroy();
+  chartContracts = new Chart(document.getElementById('chartContracts'), {
+    type: 'bar',
+    data: { labels, datasets: [{ data: contracts, backgroundColor: '#c8a96e', borderRadius: 5, label: 'Contrats' }] },
+    options: { ...CHART_OPTS, plugins: { ...CHART_OPTS.plugins, tooltip: { ...CHART_OPTS.plugins.tooltip,
+      callbacks: { label: ctx => ` ${ctx.raw} contrats` }
+    }}}
+  });
+
+  if (chartCA) chartCA.destroy();
+  chartCA = new Chart(document.getElementById('chartCA'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { type:'bar', data: caVals, backgroundColor: '#a3d9b8', borderRadius: 5, label: 'CA mensuel', yAxisID: 'y' },
+        { type:'line', data: cumulVals, borderColor: '#2c1a0e', borderWidth: 2.5, pointBackgroundColor: '#2c1a0e', pointRadius: 4, fill: false, label: 'Cumul', yAxisID: 'y2', tension: 0.3 }
+      ]
+    },
+    options: {
+      ...CHART_OPTS,
+      plugins: { ...CHART_OPTS.plugins, legend: { display: true, labels: { color: '#8b7355', font:{size:11}, boxWidth: 12 } },
+        tooltip: { ...CHART_OPTS.plugins.tooltip, callbacks: { label: ctx => ` ${fmt(ctx.raw)} €` } }
+      },
+      scales: {
+        x: CHART_OPTS.scales.x,
+        y: { ...CHART_OPTS.scales.y, position: 'left', ticks: { ...CHART_OPTS.scales.y.ticks, callback: v => fmtK(v)+'€' } },
+        y2: { ...CHART_OPTS.scales.y, position: 'right', grid: { display: false }, ticks: { ...CHART_OPTS.scales.y.ticks, callback: v => fmtK(v)+'€' } }
+      }
+    }
+  });
+}
+
+function buildCompareChart() {
+  const colors = { 2024:'#c8a96e', 2025:'#2c7a50', 2026:'#5b21b6' };
+  const datasets = [2024,2025,2026].map(y => ({
+    label: y.toString(),
+    data: MONTHS.map((_,i) => { const d=D[y].find(x=>x.m===i+1); return d?d.n:null; }),
+    backgroundColor: colors[y], borderRadius: 4
+  }));
+  if (chartCompare) chartCompare.destroy();
+  chartCompare = new Chart(document.getElementById('chartCompare'), {
+    type:'bar',
+    data: { labels: MONTHS, datasets },
+    options: {
+      ...CHART_OPTS,
+      plugins: { ...CHART_OPTS.plugins, legend: { display: false },
+        tooltip: { ...CHART_OPTS.plugins.tooltip, callbacks: { label: ctx => ` ${ctx.dataset.label} : ${ctx.raw} contrats` } }
+      }
+    }
+  });
+
+  const t24=totals(2024), t25=totals(2025), t26=totals(2026);
+  document.getElementById('compareLegend').innerHTML = [
+    [2024,'#c8a96e',`${t24.contracts} contrats · ${fmt(t24.ca)} €`],
+    [2025,'#2c7a50',`${t25.contracts} contrats · ${fmt(t25.ca)} €`],
+    [2026,'#5b21b6',`${t26.contracts} contrats · ${fmt(t26.ca)} € (jan–fév)`],
+  ].map(([y,c,l])=>`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div><strong>${y}</strong><span style="color:var(--muted)">${l}</span></div>`).join('');
+}
+
+function showYear(year) {
+  currentYear = +year;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.textContent === year));
+  updateKPIs(year);
+  updateTable(year);
+  updateCharts(year);
+}
+
+// Date du jour
+const now = new Date();
+const dateStr = now.toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'});
+document.getElementById('printDate').textContent = `Édité le ${dateStr}`;
+document.getElementById('noteDate').textContent = dateStr;
+
+// Init
+showYear('2024');
+buildCompareChart();
+</script>
+</body>
+</html>
