@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abonnements Mensuels Famillys – 2024 / 2025 / 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap');
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --gold:#c8a96e; --dark:#1a2744; --bg:#f4f7fb; --card:#ffffff;
+    --border:#dce6f0; --muted:#6b7a99; --green:#1a5c3a;
+    --blue:#2563eb; --teal:#0d9488; --amber:#d97706;
+  }
+  body { background:var(--bg); font-family:'Source Sans 3','Segoe UI',sans-serif; color:var(--dark); padding:36px 24px; max-width:1080px; margin:0 auto; }
+
+  .header { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px; padding-bottom:22px; border-bottom:2px solid var(--gold); margin-bottom:28px; }
+  .eyebrow { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+  h1 { font-family:'Playfair Display',Georgia,serif; font-size:28px; line-height:1.2; }
+  h1 span { color:var(--gold); }
+  .print-date { font-size:12px; color:var(--muted); margin-top:6px; }
+
+  .tabs-wrap { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:24px; }
+  .tabs { display:flex; gap:3px; background:#e4eaf4; border-radius:10px; padding:4px; flex-wrap:wrap; }
+  .tab { background:transparent; border:none; border-radius:7px; color:var(--muted); padding:7px 18px; font-size:13px; font-weight:700; cursor:pointer; transition:all .18s; font-family:inherit; white-space:nowrap; }
+  .tab.active { background:var(--dark); color:white; }
+  .print-btn { background:var(--gold); color:white; border:none; border-radius:8px; padding:8px 18px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:24px; }
+  .kpi { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 18px; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+  .kpi-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .kpi-value { font-size:20px; font-weight:700; }
+  .kpi-sub { font-size:11px; color:var(--muted); margin-top:3px; }
+
+  .charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px; }
+  .chart-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+  .chart-card h3 { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+  .chart-wrap { position:relative; height:200px; }
+  .chart-full { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; box-shadow:0 2px 8px rgba(0,0,0,.04); margin-bottom:20px; }
+  .chart-full h3 { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+
+  .table-card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.04); margin-bottom:20px; }
+  .table-head-bar { background:var(--dark); padding:12px 18px; color:white; font-size:13px; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+  .tsub { font-size:11px; font-weight:400; opacity:.7; }
+  table { width:100%; border-collapse:collapse; }
+  thead tr { background:#f0f4fb; }
+  th { padding:9px 14px; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--border); }
+  th.r { text-align:right; } th.c { text-align:center; }
+  td { padding:9px 14px; border-bottom:1px solid #edf2f9; font-size:13px; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:hover { background:#f7faff; }
+  td.r { text-align:right; } td.c { text-align:center; }
+  tfoot tr { background:#f0f4fb; border-top:2px solid var(--gold); }
+  tfoot td { padding:11px 14px; font-weight:700; font-size:13px; }
+
+  .badge { display:inline-block; border-radius:20px; padding:2px 9px; font-size:12px; font-weight:700; }
+  .b-dark { background:var(--dark); color:white; }
+  .b-new { background:#dcfce7; color:#166534; font-size:11px; }
+  .b-out { background:#fee2e2; color:#991b1b; font-size:11px; }
+  .tag49 { display:inline-block; border-radius:4px; padding:1px 7px; font-size:11px; font-weight:600; background:#dbeafe; color:#1e40af; }
+  .tag99 { display:inline-block; border-radius:4px; padding:1px 7px; font-size:11px; font-weight:600; background:#ede9fe; color:#5b21b6; }
+
+  .portfolio-table td:first-child { font-weight:600; }
+  .churn-row td { color:#991b1b; background:#fff8f8; }
+
+  .legend { display:flex; gap:16px; justify-content:center; margin-top:10px; flex-wrap:wrap; }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
+  .ldot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+
+  .note { background:#fffbf0; border:1px solid var(--border); border-radius:10px; padding:12px 16px; font-size:12px; color:var(--muted); line-height:1.6; }
+
+  @media print {
+    body { padding:16px; background:white; }
+    .no-print { display:none !important; }
+    .kpis { grid-template-columns:repeat(4,1fr); }
+    * { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="eyebrow">Bilan abonnements · Équipe Famillys</div>
+    <h1>Suivi des abonnements <em style="font-style:italic;font-size:22px;color:var(--muted)">"Mensuel"</em><br><span>2024 – 2025 – 2026</span></h1>
+    <div class="print-date" id="printDate"></div>
+  </div>
+</div>
+
+<div class="tabs-wrap no-print">
+  <div class="tabs">
+    <button class="tab" onclick="show('2024')">2024</button>
+    <button class="tab" onclick="show('2025')">2025</button>
+    <button class="tab" onclick="show('2026')">2026</button>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨️ Imprimer / PDF</button>
+</div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="charts-grid">
+  <div class="chart-card"><h3>Abonnements actifs / mois</h3><div class="chart-wrap"><canvas id="cN"></canvas></div></div>
+  <div class="chart-card"><h3>MRR mensuel (€)</h3><div class="chart-wrap"><canvas id="cMRR"></canvas></div></div>
+</div>
+
+<div class="table-card">
+  <div class="table-head-bar"><span id="tTitle">Bilan mensuel</span><span class="tsub" id="tSub"></span></div>
+  <table>
+    <thead><tr>
+      <th>Mois</th><th class="c">Abonnés actifs</th><th class="c">dont 49€</th><th class="c">dont 99€</th>
+      <th class="r">MRR</th><th class="r">CA cumulé</th><th class="c">Mouvements</th>
+    </tr></thead>
+    <tbody id="tBody"></tbody>
+    <tfoot id="tFoot"></tfoot>
+  </table>
+</div>
+
+<div class="chart-full">
+  <h3>Comparaison MRR — 2024 vs 2025 vs 2026</h3>
+  <div class="chart-wrap" style="height:220px"><canvas id="cComp"></canvas></div>
+  <div class="legend" id="leg"></div>
+</div>
+
+<div class="table-card">
+  <div class="table-head-bar"><span>Portefeuille clients actifs · <span id="portDate"></span></span><span class="tsub" id="portSub"></span></div>
+  <table class="portfolio-table">
+    <thead><tr>
+      <th>Client</th><th>Famille d'accueil</th><th class="c">Depuis</th><th class="c">Tarif</th><th class="r">CA généré</th>
+    </tr></thead>
+    <tbody id="portBody"></tbody>
+    <tfoot id="portFoot"></tfoot>
+  </table>
+</div>
+
+<div class="note">
+  <strong>Note :</strong> Données corrigées avec les dates de sortie réelles des clients résiliés.
+  MRR calculé client par client selon leur période d'activité effective.
+  20 abonnés actifs au <span id="nDate"></span> · MRR actuel : <strong>1 580 €/mois</strong>.
+</div>
+
+<script>
+const M = ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"];
+const fmt = v => v.toLocaleString('fr-FR');
+const COLORS = {2024:'#c8a96e', 2025:'#2563eb', 2026:'#0d9488'};
+
+// ── DONNÉES MENSUELLES CORRIGÉES (actifs + sortis avec dates réelles) ──
+const DATA = {
+  2024:[
+    {m:1, n:16, n49:7,  n99:9,  mrr:1234, cumul:1234,   in:0, out:0},
+    {m:2, n:17, n49:7,  n99:10, mrr:1333, cumul:2567,   in:1, out:0},
+    {m:3, n:17, n49:7,  n99:10, mrr:1333, cumul:3900,   in:0, out:0},
+    {m:4, n:17, n49:7,  n99:10, mrr:1333, cumul:5233,   in:0, out:0},
+    {m:5, n:17, n49:7,  n99:10, mrr:1333, cumul:6566,   in:0, out:0},
+    {m:6, n:18, n49:7,  n99:11, mrr:1432, cumul:7998,   in:1, out:0},
+    {m:7, n:18, n49:7,  n99:11, mrr:1432, cumul:9430,   in:0, out:0},
+    {m:8, n:19, n49:7,  n99:12, mrr:1531, cumul:10961,  in:1, out:0},
+    {m:9, n:19, n49:7,  n99:12, mrr:1531, cumul:12492,  in:0, out:0},
+    {m:10,n:20, n49:8,  n99:12, mrr:1630, cumul:14122,  in:1, out:0},
+    {m:11,n:21, n49:9,  n99:12, mrr:1679, cumul:15801,  in:1, out:0},
+    {m:12,n:22, n49:10, n99:12, mrr:1778, cumul:17579,  in:1, out:0},
+  ],
+  2025:[
+    {m:1, n:22, n49:10, n99:12, mrr:1778, cumul:1778,   in:0, out:0},
+    {m:2, n:22, n49:10, n99:12, mrr:1778, cumul:3556,   in:0, out:0},
+    {m:3, n:22, n49:10, n99:12, mrr:1778, cumul:5334,   in:0, out:0},
+    {m:4, n:22, n49:10, n99:12, mrr:1778, cumul:7112,   in:0, out:0},
+    {m:5, n:23, n49:10, n99:13, mrr:1827, cumul:8939,   in:2, out:1},
+    {m:6, n:22, n49:10, n99:12, mrr:1728, cumul:10667,  in:0, out:1},
+    {m:7, n:22, n49:10, n99:12, mrr:1728, cumul:12395,  in:0, out:0},
+    {m:8, n:22, n49:10, n99:12, mrr:1728, cumul:14123,  in:0, out:1},
+    {m:9, n:22, n49:11, n99:11, mrr:1728, cumul:15851,  in:1, out:1},
+    {m:10,n:21, n49:10, n99:11, mrr:1679, cumul:17530,  in:0, out:4},
+    {m:11,n:19, n49:9,  n99:10, mrr:1581, cumul:19111,  in:0, out:2},
+    {m:12,n:20, n49:10, n99:10, mrr:1580, cumul:20691,  in:2, out:1},
+  ],
+  2026:[
+    {m:1, n:20, n49:8, n99:12, mrr:1580, cumul:1580,  in:0, out:0},
+    {m:2, n:20, n49:8, n99:12, mrr:1580, cumul:3160,  in:0, out:0},
+  ],
+};
+
+// Portefeuille actifs au 20/02/2026
+const PORTFOLIO = [
+  {nom:'Acker',              fa:'Agasse',          depuis:'mai 2021',    tarif:49,  mois:57},
+  {nom:'Gayraud',            fa:'Dziurda',          depuis:'oct. 2021',   tarif:49,  mois:53},
+  {nom:'Montagnier/Schwartz',fa:'Pinheiro',         depuis:'nov. 2021',   tarif:49,  mois:52},
+  {nom:'Derre',              fa:'Froeliger',        depuis:'fév. 2022',   tarif:49,  mois:49},
+  {nom:'Madeleine Merlin',   fa:'Saint Aubin',      depuis:'mai 2022',    tarif:49,  mois:46},
+  {nom:'Almies / Pin',       fa:'Guibal',           depuis:'juin 2022',   tarif:49,  mois:45},
+  {nom:'Marillet Jacky',     fa:'Slimani',          depuis:'jan. 2023',   tarif:99,  mois:26},
+  {nom:'AC Andrée',          fa:'Olejniczak',       depuis:'jan. 2023',   tarif:99,  mois:26},
+  {nom:'Dalmau / Gilles',    fa:'Dascotte',         depuis:'jan. 2023',   tarif:99,  mois:26},
+  {nom:'Rivoal',             fa:'Arnould',          depuis:'mars 2023',   tarif:99,  mois:24},
+  {nom:'Guerin',             fa:'Pinheiro',         depuis:'août 2023',   tarif:99,  mois:19},
+  {nom:'Hatton',             fa:'Souillard',        depuis:'août 2023',   tarif:99,  mois:19},
+  {nom:'MUGUET',             fa:'Hornik',           depuis:'jan. 2024',   tarif:99,  mois:14},
+  {nom:'Eliane / Fleury',    fa:'Yon',              depuis:'jan. 2024',   tarif:99,  mois:14},
+  {nom:'Opigez Cathy',       fa:'Chaveroche',       depuis:'juin 2024',   tarif:99,  mois:9},
+  {nom:'Taillebois',         fa:'Lebreton',         depuis:'août 2024',   tarif:99,  mois:7},
+  {nom:'Bled',               fa:'Kouza',            depuis:'oct. 2024',   tarif:99,  mois:5},
+  {nom:'Mercier',            fa:'Pinheiro',         depuis:'déc. 2024',   tarif:99,  mois:3},
+  {nom:'HAMIOT',             fa:'Slimani',          depuis:'déc. 2025',   tarif:49,  mois:3},
+  {nom:'Goupil',             fa:'Ariscon',          depuis:'déc. 2025',   tarif:49,  mois:3},
+];
+
+let cN, cMRR, cComp;
+
+const BO = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{display:false}, tooltip:{backgroundColor:'#fffdf8',titleColor:'#6b7a99',bodyColor:'#1a2744',borderColor:'#dce6f0',borderWidth:1}},
+  scales:{x:{grid:{display:false},ticks:{color:'#6b7a99',font:{size:11}},border:{display:false}},y:{grid:{color:'#edf2f9'},ticks:{color:'#6b7a99',font:{size:11}},border:{display:false}}}
+};
+
+function kpi(items){ document.getElementById('kpis').innerHTML=items.map(k=>`<div class="kpi" style="border-left:4px solid ${k.c}"><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join(''); }
+
+function show(yr){
+  const y = +yr;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.textContent==yr));
+  const data = DATA[y];
+  const col = COLORS[y];
+  const tN  = data.reduce((s,d)=>s+d.mrr,0);
+  const maxMRR = Math.max(...data.map(d=>d.mrr));
+  const maxN   = Math.max(...data.map(d=>d.n));
+  const lastMRR = data[data.length-1].mrr;
+  const nbMois = data.length;
+
+  kpi([
+    {l:'MRR fin de période',    v:fmt(lastMRR)+' €',     s:'revenu mensuel récurrent',  c:col},
+    {l:'CA total facturé',      v:fmt(tN)+' €',          s:`${nbMois} mois`,            c:'#1a5c3a'},
+    {l:'MRR max atteint',       v:fmt(maxMRR)+' €',      s:'pic de la période',         c:'#7c3aed'},
+    {l:'Abonnés max',           v:maxN+' clients',       s:'pic de la période',         c:'#d97706'},
+  ]);
+
+  document.getElementById('tTitle').textContent=`Bilan mensuel · ${y}`;
+  document.getElementById('tSub').textContent=`CA total : ${fmt(tN)} €`;
+
+  document.getElementById('tBody').innerHTML=data.map(d=>{
+    const mouv = [
+      d.in>0  ? `<span class="b-new">+${d.in} entrée${d.in>1?'s':''}</span>` : '',
+      d.out>0 ? `<span class="b-out">-${d.out} sortie${d.out>1?'s':''}</span>` : '',
+    ].filter(Boolean).join(' ');
+    return `<tr>
+      <td>${M[d.m-1]}</td>
+      <td class="c"><span class="badge b-dark">${d.n}</span></td>
+      <td class="c"><span class="tag49">${d.n49}</span></td>
+      <td class="c"><span class="tag99">${d.n99}</span></td>
+      <td class="r" style="font-weight:600;color:var(--green)">${fmt(d.mrr)} €</td>
+      <td class="r" style="color:#3b5278">${fmt(d.cumul)} €</td>
+      <td class="c">${mouv||'–'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('tFoot').innerHTML=`<tr>
+    <td>TOTAL</td><td></td><td></td><td></td>
+    <td class="r" style="color:var(--green);font-size:14px">${fmt(lastMRR)} € /mois</td>
+    <td class="r" style="font-size:14px">${fmt(tN)} €</td>
+    <td></td>
+  </tr>`;
+
+  if(cN) cN.destroy();
+  cN = new Chart(document.getElementById('cN'),{
+    type:'bar',
+    data:{labels:data.map(d=>M[d.m-1]),datasets:[
+      {data:data.map(d=>d.n49), backgroundColor:'#93c5fd', borderRadius:4, label:'49 €', stack:'s'},
+      {data:data.map(d=>d.n99), backgroundColor:col,       borderRadius:4, label:'99 €', stack:'s'},
+    ]},
+    options:{...BO, plugins:{...BO.plugins, legend:{display:true,labels:{color:'#6b7a99',font:{size:11},boxWidth:12}}, tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.dataset.label} : ${ctx.raw} clients`}}}}
+  });
+
+  if(cMRR) cMRR.destroy();
+  cMRR = new Chart(document.getElementById('cMRR'),{
+    type:'bar',
+    data:{labels:data.map(d=>M[d.m-1]),datasets:[{data:data.map(d=>d.mrr), backgroundColor:col+'bb', borderRadius:5, label:'MRR'}]},
+    options:{...BO, plugins:{...BO.plugins, tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${fmt(ctx.raw)} €`}}}, scales:{...BO.scales,y:{...BO.scales.y,ticks:{...BO.scales.y.ticks,callback:v=>v+'€'}}}}
+  });
+
+  buildCompare(y);
+  buildPortfolio();
+}
+
+function buildCompare(activeY){
+  const years = [2024,2025,2026];
+  if(cComp) cComp.destroy();
+  cComp = new Chart(document.getElementById('cComp'),{
+    type:'bar',
+    data:{labels:M, datasets:years.map(y=>({
+      label:''+y,
+      data:M.map((_,i)=>{const d=(DATA[y]||[]).find(x=>x.m===i+1);return d?d.mrr:null;}),
+      backgroundColor:COLORS[y]+'aa', borderRadius:4
+    }))},
+    options:{...BO, plugins:{...BO.plugins, legend:{display:false}, tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.dataset.label} : ${fmt(ctx.raw)} €`}}},
+      scales:{...BO.scales,y:{...BO.scales.y,ticks:{...BO.scales.y.ticks,callback:v=>v+'€'}}}}
+  });
+  document.getElementById('leg').innerHTML=years.map(y=>{
+    const d=DATA[y], total=d.reduce((s,x)=>s+x.mrr,0), nb=d.length;
+    return `<div class="legend-item"><div class="ldot" style="background:${COLORS[y]}"></div><strong style="color:var(--dark)">${y}</strong><span>${fmt(total)} € facturés sur ${nb} mois</span></div>`;
+  }).join('');
+}
+
+function buildPortfolio(){
+  const now = new Date(2026,1,20);
+  document.getElementById('portDate').textContent='20 février 2026';
+  document.getElementById('portSub').textContent=`${PORTFOLIO.length} clients · MRR : 1 580 €/mois`;
+  const sorted = [...PORTFOLIO].sort((a,b)=>b.mois-a.mois);
+  const totalCA = sorted.reduce((s,c)=>s+c.tarif*c.mois,0);
+  document.getElementById('portBody').innerHTML=sorted.map(c=>`<tr>
+    <td>${c.nom}</td>
+    <td style="color:var(--muted)">${c.fa}</td>
+    <td class="c" style="color:var(--muted);font-size:12px">${c.depuis}</td>
+    <td class="c"><span class="${c.tarif===49?'tag49':'tag99'}">${c.tarif} €/mois</span></td>
+    <td class="r" style="font-weight:600;color:var(--green)">${fmt(c.tarif*c.mois)} €</td>
+  </tr>`).join('');
+  document.getElementById('portFoot').innerHTML=`<tr>
+    <td colspan="4">Total CA généré (portefeuille actif)</td>
+    <td class="r" style="color:var(--green);font-size:14px">${fmt(totalCA)} €</td>
+  </tr>`;
+}
+
+const ds = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+document.getElementById('printDate').textContent=`Mis à jour le ${ds}`;
+document.getElementById('nDate').textContent=ds;
+
+show('2026');
+</script>
+</body>
+</html>
