@@ -3,445 +3,361 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bilan Commercial Famillys – 2024 / 2025 / 2026</title>
+<title>Bilan Commercial Famillys – 2022 à 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --gold: #c8a96e;
-    --dark: #2c1a0e;
-    --bg: #faf7f2;
-    --card: #ffffff;
-    --border: #e8dfc8;
-    --muted: #8b7355;
-    --green: #1a5c3a;
-    --light-bg: #faf5ec;
+    --gold: #c8a96e; --dark: #2c1a0e; --bg: #faf7f2; --card: #ffffff;
+    --border: #e8dfc8; --muted: #8b7355; --green: #1a5c3a; --light-bg: #faf5ec;
   }
+  body { background:var(--bg); font-family:'Source Sans 3','Segoe UI',sans-serif; color:var(--dark); padding:36px 24px; max-width:1080px; margin:0 auto; }
 
-  body {
-    background: var(--bg);
-    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
-    color: var(--dark);
-    padding: 40px 28px;
-    max-width: 1060px;
-    margin: 0 auto;
-  }
+  .header { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px; padding-bottom:22px; border-bottom:2px solid var(--gold); margin-bottom:28px; }
+  .eyebrow { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+  h1 { font-family:'Playfair Display',Georgia,serif; font-size:28px; line-height:1.2; }
+  h1 span { color:var(--gold); }
+  .print-date { font-size:12px; color:var(--muted); margin-top:6px; }
 
-  /* ── HEADER ── */
-  .header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-    padding-bottom: 24px;
-    border-bottom: 2px solid var(--gold);
-    margin-bottom: 32px;
-  }
-  .header-eyebrow {
-    font-size: 11px; font-weight: 700; letter-spacing: 3px;
-    text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
-  }
-  .header h1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 30px; line-height: 1.2; color: var(--dark);
-  }
-  .header h1 span { color: var(--gold); }
+  .tabs-wrap { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:24px; }
+  .tabs { display:flex; gap:3px; background:#ede8df; border-radius:10px; padding:4px; flex-wrap:wrap; }
+  .tab { background:transparent; border:none; border-radius:7px; color:var(--muted); padding:7px 16px; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.18s; font-family:inherit; white-space:nowrap; }
+  .tab.active { background:var(--dark); color:#faf7f2; }
+  .tab.tw.active { background:#0d9488; color:white; }
+  .print-btn { background:var(--gold); color:white; border:none; border-radius:8px; padding:8px 18px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
 
-  .print-date { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:24px; }
+  .kpi { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 18px; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+  .kpi-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .kpi-value { font-size:20px; font-weight:700; }
+  .kpi-sub { font-size:11px; color:#b0956e; margin-top:3px; }
 
-  /* ── TABS ── */
-  .tabs {
-    display: flex; gap: 4px; background: #ede8df;
-    border-radius: 10px; padding: 4px; width: fit-content; margin-bottom: 28px;
-  }
-  .tab {
-    background: transparent; border: none; border-radius: 7px;
-    color: var(--muted); padding: 8px 24px; font-size: 14px; font-weight: 700;
-    cursor: pointer; transition: all 0.18s; font-family: inherit;
-  }
-  .tab.active { background: var(--dark); color: #faf7f2; }
+  .charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px; }
+  .chart-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+  .chart-card h3 { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+  .chart-wrap { position:relative; height:200px; }
+  .chart-full { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; box-shadow:0 2px 8px rgba(0,0,0,0.04); margin-bottom:20px; }
+  .chart-full h3 { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
 
-  /* ── KPIs ── */
-  .kpis {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 14px; margin-bottom: 28px;
-  }
-  .kpi {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 18px 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-  .kpi-label {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
-  }
-  .kpi-value { font-size: 21px; font-weight: 700; color: var(--dark); }
-  .kpi-sub { font-size: 11px; color: #b0956e; margin-top: 4px; }
+  .table-card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04); margin-bottom:20px; }
+  .table-head-bar { background:var(--dark); padding:12px 18px; color:white; font-size:13px; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+  .sub { font-size:11px; font-weight:400; opacity:.7; }
+  table { width:100%; border-collapse:collapse; }
+  thead tr { background:var(--light-bg); }
+  th { padding:9px 14px; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--border); }
+  th.r { text-align:right; } th.c { text-align:center; }
+  td { padding:9px 14px; border-bottom:1px solid #f0e8d8; font-size:13px; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:hover { background:#fdf9f3; }
+  td.r { text-align:right; } td.c { text-align:center; }
+  tfoot tr { background:var(--light-bg); border-top:2px solid var(--gold); }
+  tfoot td { padding:11px 14px; font-weight:700; font-size:13px; }
 
-  /* ── CHARTS ── */
-  .charts-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;
-  }
-  .chart-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-  .chart-card h3 {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
-  }
-  .chart-wrap { position: relative; height: 210px; }
+  .week-last { background:#eff6ff !important; }
+  .trend-up { color:#16a34a; font-weight:700; }
+  .trend-down { color:#dc2626; font-weight:700; }
+  .trend-eq { color:var(--muted); }
 
-  /* ── TABLE ── */
-  .table-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px;
-  }
-  .table-header {
-    background: var(--dark); padding: 14px 20px;
-    color: #faf7f2; font-size: 13px; font-weight: 700;
-  }
-  table { width: 100%; border-collapse: collapse; }
-  thead tr { background: var(--light-bg); }
-  th {
-    padding: 10px 14px; font-size: 10px; font-weight: 700;
-    letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
-    border-bottom: 2px solid var(--border);
-  }
-  th:nth-child(1), th:nth-child(2) { text-align: left; }
-  th:nth-child(3), th:nth-child(4) { text-align: right; }
-  th:nth-child(5) { text-align: center; }
-  td { padding: 10px 14px; border-bottom: 1px solid #f0e8d8; font-size: 13px; }
-  tbody tr:last-child td { border-bottom: none; }
-  td:nth-child(1) { font-weight: 700; }
-  td:nth-child(2) { text-align: center; }
-  td:nth-child(3) { text-align: right; font-weight: 600; color: var(--green); }
-  td:nth-child(4) { text-align: right; color: #5a3e2b; }
-  td:nth-child(5) { text-align: center; }
-  tfoot tr { background: var(--light-bg); border-top: 2px solid var(--gold); }
-  tfoot td { padding: 12px 14px; font-weight: 700; font-size: 14px; }
-  tfoot td:nth-child(3) { color: var(--green); font-size: 15px; text-align: right; }
-  tfoot td:nth-child(4) { text-align: right; font-size: 15px; }
+  .legend { display:flex; gap:16px; justify-content:center; margin-top:10px; flex-wrap:wrap; }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
+  .ldot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
 
-  .badge {
-    display: inline-block; border-radius: 20px;
-    padding: 2px 10px; font-size: 12px; font-weight: 700;
-  }
-  .badge-contracts { background: #fef3c7; color: #92400e; }
-  .badge-total { background: var(--dark); color: #faf7f2; }
-  .tag { display: inline-block; border-radius: 4px; padding: 1px 6px; font-size: 11px; margin: 0 2px; font-weight: 600; }
-  .tag-79  { background: #fce7f3; color: #9d174d; }
-  .tag-99  { background: #ede9fe; color: #5b21b6; }
-  .tag-349 { background: #d1fae5; color: #065f46; }
+  .badge { display:inline-block; border-radius:20px; padding:2px 9px; font-size:12px; font-weight:700; background:var(--dark); color:white; }
+  .tag { display:inline-block; border-radius:4px; padding:1px 7px; font-size:11px; font-weight:600; margin:0 2px; }
+  .t349 { background:#d1fae5; color:#065f46; }
+  .t99  { background:#ede9fe; color:#5b21b6; }
+  .t79  { background:#fce7f3; color:#9d174d; }
 
-  /* ── COMPARAISON ── */
-  .compare-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px;
-  }
-  .compare-card h3 {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
-  }
-  .legend {
-    display: flex; gap: 20px; justify-content: center; margin-top: 12px; flex-wrap: wrap;
-  }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
-  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .note { background:#fffbf0; border:1px solid var(--border); border-radius:10px; padding:12px 16px; font-size:12px; color:var(--muted); line-height:1.6; }
 
-  /* ── NOTE ── */
-  .note {
-    background: #fef9f0; border: 1px solid var(--border);
-    border-radius: 10px; padding: 14px 18px;
-    font-size: 12px; color: var(--muted); line-height: 1.6;
-  }
-
-  /* ── PRINT ── */
   @media print {
-    body { padding: 20px; background: white; }
-    .tabs, .no-print { display: none !important; }
-    .section { display: block !important; }
-    .charts-grid { grid-template-columns: 1fr 1fr; }
-    .kpis { grid-template-columns: repeat(4, 1fr); }
-    .page-break { page-break-before: always; }
-    .chart-wrap { height: 180px; }
-    .header h1 { font-size: 24px; }
-    * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    body { padding:16px; background:white; }
+    .no-print { display:none !important; }
+    .kpis { grid-template-columns:repeat(4,1fr); }
+    * { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
   }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div>
-    <div class="header-eyebrow">Bilan commercial · Équipe Famillys</div>
-    <h1>Suivi des ventes<br><span>2024 – 2025 – 2026</span></h1>
+    <div class="eyebrow">Bilan commercial · Équipe Famillys</div>
+    <h1>Suivi des ventes <em style="font-style:italic;font-size:22px;color:var(--muted)">"Contrat"</em><br><span>2022 – 2023 – 2024 – 2025 – 2026</span></h1>
     <div class="print-date" id="printDate"></div>
   </div>
-  <div class="no-print" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
-    <div class="tabs">
-      <button class="tab active" onclick="showYear('2024')">2024</button>
-      <button class="tab" onclick="showYear('2025')">2025</button>
-      <button class="tab" onclick="showYear('2026')">2026</button>
-    </div>
-    <button onclick="window.print()" style="background:var(--gold);color:white;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
-      🖨️ Imprimer / Enregistrer PDF
-    </button>
+</div>
+
+<div class="tabs-wrap no-print">
+  <div class="tabs">
+    <button class="tab" onclick="show('2022')">2022</button>
+    <button class="tab" onclick="show('2023')">2023</button>
+    <button class="tab" onclick="show('2024')">2024</button>
+    <button class="tab" onclick="show('2025')">2025</button>
+    <button class="tab" onclick="show('2026')">2026</button>
+    <button class="tab tw" onclick="show('2026w')">📅 Semaines 2026</button>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨️ Imprimer / PDF</button>
+</div>
+
+<div class="kpis" id="kpis"></div>
+
+<!-- VUE MENSUELLE -->
+<div id="vm">
+  <div class="charts-grid">
+    <div class="chart-card"><h3>Contrats signés / mois</h3><div class="chart-wrap"><canvas id="cC"></canvas></div></div>
+    <div class="chart-card"><h3>CA mensuel &amp; Cumul (€)</h3><div class="chart-wrap"><canvas id="cA"></canvas></div></div>
+  </div>
+  <div class="table-card">
+    <div class="table-head-bar"><span id="tTitle"></span><span class="sub" id="tSub"></span></div>
+    <table>
+      <thead><tr><th>Mois</th><th class="c">Contrats</th><th class="r">CA mensuel</th><th class="r">CA cumulé</th><th class="c">Répartition</th></tr></thead>
+      <tbody id="tBody"></tbody>
+      <tfoot id="tFoot"></tfoot>
+    </table>
   </div>
 </div>
 
-<!-- KPIs dynamiques -->
-<div class="kpis" id="kpiBlock"></div>
-
-<!-- GRAPHIQUES -->
-<div class="charts-grid">
-  <div class="chart-card">
-    <h3>Contrats signés / mois</h3>
-    <div class="chart-wrap"><canvas id="chartContracts"></canvas></div>
+<!-- VUE HEBDO -->
+<div id="vw" style="display:none">
+  <div class="charts-grid">
+    <div class="chart-card"><h3>Contrats / semaine</h3><div class="chart-wrap"><canvas id="cWC"></canvas></div></div>
+    <div class="chart-card"><h3>CA hebdo &amp; Cumul (€)</h3><div class="chart-wrap"><canvas id="cWA"></canvas></div></div>
   </div>
-  <div class="chart-card">
-    <h3>CA mensuel &amp; Cumul (€)</h3>
-    <div class="chart-wrap"><canvas id="chartCA"></canvas></div>
+  <div class="table-card">
+    <div class="table-head-bar"><span>Suivi hebdomadaire · 2026</span><span class="sub" id="wSub"></span></div>
+    <table>
+      <thead><tr>
+        <th>Semaine</th><th>Période</th><th class="c">Contrats</th>
+        <th class="c">vs préc.</th><th class="r">Commission sem.</th><th class="r">Commission cumul</th><th class="c">Moy/jour</th>
+      </tr></thead>
+      <tbody id="wBody"></tbody>
+      <tfoot id="wFoot"></tfoot>
+    </table>
   </div>
 </div>
 
-<!-- TABLEAU DÉTAILLÉ -->
-<div class="table-card">
-  <div class="table-header" id="tableTitle">Bilan mensuel détaillé</div>
-  <table>
-    <thead>
-      <tr>
-        <th>Mois</th><th>Contrats</th><th>CA mensuel</th>
-        <th>CA Cumulé</th><th>Répartition des prix</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-    <tfoot id="tableFoot"></tfoot>
-  </table>
+<!-- COMPARAISON -->
+<div class="chart-full" id="compareBlock">
+  <h3>Comparaison toutes années — Contrats par mois</h3>
+  <div class="chart-wrap" style="height:230px"><canvas id="cComp"></canvas></div>
+  <div class="legend" id="leg"></div>
 </div>
 
-<!-- COMPARAISON 3 ANS -->
-<div class="compare-card">
-  <h3>Comparaison 2024 / 2025 / 2026 — Contrats signés par mois</h3>
-  <div class="chart-wrap" style="height:230px;"><canvas id="chartCompare"></canvas></div>
-  <div class="legend" id="compareLegend"></div>
-</div>
-
-<!-- NOTE -->
 <div class="note">
-  <strong>Note :</strong> Tarifs appliqués tels qu'enregistrés dans le fichier source —
-  <span class="tag tag-349">349 €</span> tarif standard,
-  <span class="tag tag-99">99 €</span> et
-  <span class="tag tag-79">79 €</span> tarifs promotionnels (mars–août 2025).
-  En 2024, l'intégralité des contrats a été signée au tarif 349 €.
-  Les données 2026 couvrent janvier et février uniquement.
-  Extraction effectuée le <span id="noteDate"></span>.
+  <strong>Note :</strong> Tarifs enregistrés dans le fichier source —
+  <span class="tag t349">349 €</span> standard,
+  <span class="tag t99">99 €</span> et <span class="tag t79">79 €</span> promotionnels (mars–août 2025).
+  2026 couvre S01→S08 (jusqu'au 18 fév.). Mis à jour le <span id="nDate"></span>.
 </div>
 
 <script>
-const MONTHS = ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"];
-
-const RAW = [
-  // 2024
-  {y:2024,m:1,n:33,p349:33,p99:0,p79:0},{y:2024,m:2,n:43,p349:43,p99:0,p79:0},
-  {y:2024,m:3,n:55,p349:55,p99:0,p79:0},{y:2024,m:4,n:38,p349:38,p99:0,p79:0},
-  {y:2024,m:5,n:42,p349:42,p99:0,p79:0},{y:2024,m:6,n:33,p349:33,p99:0,p79:0},
-  {y:2024,m:7,n:60,p349:60,p99:0,p79:0},{y:2024,m:8,n:51,p349:51,p99:0,p79:0},
-  {y:2024,m:9,n:45,p349:45,p99:0,p79:0},{y:2024,m:10,n:35,p349:35,p99:0,p79:0},
-  {y:2024,m:11,n:42,p349:42,p99:0,p79:0},{y:2024,m:12,n:53,p349:53,p99:0,p79:0},
-  // 2025
-  {y:2025,m:1,n:49,p349:49,p99:0,p79:0},{y:2025,m:2,n:30,p349:30,p99:0,p79:0},
-  {y:2025,m:3,n:55,p349:28,p99:0,p79:27},{y:2025,m:4,n:55,p349:18,p99:0,p79:37},
-  {y:2025,m:5,n:37,p349:13,p99:6,p79:18},{y:2025,m:6,n:30,p349:23,p99:7,p79:0},
-  {y:2025,m:7,n:33,p349:32,p99:1,p79:0},{y:2025,m:8,n:19,p349:14,p99:5,p79:0},
-  {y:2025,m:9,n:38,p349:38,p99:0,p79:0},{y:2025,m:10,n:23,p349:23,p99:0,p79:0},
-  {y:2025,m:11,n:23,p349:23,p99:0,p79:0},{y:2025,m:12,n:23,p349:23,p99:0,p79:0},
-  // 2026
-  {y:2026,m:1,n:34,p349:34,p99:0,p79:0},{y:2026,m:2,n:27,p349:27,p99:0,p79:0},
-];
-
-function getCA(d) { return d.p349*349 + d.p99*99 + d.p79*79; }
-
-function buildYear(year) {
-  let cumul = 0;
-  return RAW.filter(d => d.y === year).map(d => {
-    const ca = getCA(d);
-    cumul += ca;
-    return { ...d, ca, cumul, label: MONTHS[d.m-1] };
-  });
-}
-
-const D = { 2024: buildYear(2024), 2025: buildYear(2025), 2026: buildYear(2026) };
-
-function totals(year) {
-  const data = D[year];
-  return {
-    contracts: data.reduce((s,d)=>s+d.n,0),
-    ca: data.reduce((s,d)=>s+d.ca,0),
-    months: data.length
-  };
-}
-
+const M = ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"];
 const fmt = v => v.toLocaleString('fr-FR');
-const fmtK = v => (v/1000).toFixed(1)+'k';
+const fK = v => v>=1000?(v/1000).toFixed(1)+'k':v;
 
-let currentYear = 2024;
-let chartContracts, chartCA, chartCompare;
-
-function updateKPIs(year) {
-  const t = totals(year);
-  const data = D[year];
-  const moy = Math.round(t.contracts / data.length);
-  const panier = Math.round(t.ca / t.contracts);
-  const sub2026 = year == 2026 ? "jan–fév 2026" : "12 mois complets";
-  document.getElementById('kpiBlock').innerHTML = [
-    {label:"Contrats signés", value: t.contracts, sub: year==2026?'jan–fév':'12 mois', color:'#c8a96e'},
-    {label:"CA total", value: fmt(t.ca)+' €', sub:"chiffre d'affaires", color:'#1a5c3a'},
-    {label:"Moy. mensuelle", value: moy+' contrats', sub:"par mois", color:'#5b21b6'},
-    {label:"CA moyen / contrat", value: panier+' €', sub:"panier moyen", color:'#9d174d'},
-  ].map(k=>`
-    <div class="kpi" style="border-left:4px solid ${k.color}">
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-value">${k.value}</div>
-      <div class="kpi-sub">${k.sub}</div>
-    </div>`).join('');
-}
-
-function updateTable(year) {
-  const data = D[year];
-  const t = totals(year);
-  document.getElementById('tableTitle').textContent = `Bilan mensuel détaillé · ${year}`;
-
-  document.getElementById('tableBody').innerHTML = data.map(d => {
-    const tags = [
-      d.p79>0 ? `<span class="tag tag-79">${d.p79}×79€</span>` : '',
-      d.p99>0 ? `<span class="tag tag-99">${d.p99}×99€</span>` : '',
-      d.p349>0 ? `<span class="tag tag-349">${d.p349}×349€</span>` : '',
-    ].join('');
-    return `<tr>
-      <td>${d.label}</td>
-      <td><span class="badge badge-contracts">${d.n}</span></td>
-      <td>${fmt(d.ca)} €</td>
-      <td>${fmt(d.cumul)} €</td>
-      <td>${tags}</td>
-    </tr>`;
-  }).join('');
-
-  document.getElementById('tableFoot').innerHTML = `<tr>
-    <td>TOTAL</td>
-    <td><span class="badge badge-total">${t.contracts}</span></td>
-    <td>${fmt(t.ca)} €</td>
-    <td>${fmt(t.ca)} €</td>
-    <td></td>
-  </tr>`;
-}
-
-const CHART_OPTS = {
-  responsive: true, maintainAspectRatio: false,
-  plugins: { legend: { display: false }, tooltip: {
-    backgroundColor: '#fffdf8', titleColor: '#8b7355', bodyColor: '#2c1a0e',
-    borderColor: '#e8dfc8', borderWidth: 1,
-    titleFont: { weight: '700', size: 12 }, bodyFont: { size: 13 }
-  }},
-  scales: {
-    x: { grid: { display: false }, ticks: { color: '#8b7355', font: { size: 11 } }, border: { display: false } },
-    y: { grid: { color: '#f0e8d8' }, ticks: { color: '#8b7355', font: { size: 11 } }, border: { display: false } }
-  }
+const MD = {
+  2022:[{m:1,n:31,p3:31,p9:0,p7:0},{m:2,n:37,p3:37,p9:0,p7:0},{m:3,n:44,p3:44,p9:0,p7:0},{m:4,n:36,p3:36,p9:0,p7:0},{m:5,n:30,p3:30,p9:0,p7:0},{m:6,n:31,p3:31,p9:0,p7:0},{m:7,n:21,p3:21,p9:0,p7:0},{m:8,n:42,p3:42,p9:0,p7:0},{m:9,n:33,p3:33,p9:0,p7:0},{m:10,n:26,p3:26,p9:0,p7:0},{m:11,n:23,p3:23,p9:0,p7:0},{m:12,n:13,p3:13,p9:0,p7:0}],
+  2023:[{m:1,n:20,p3:20,p9:0,p7:0},{m:2,n:34,p3:34,p9:0,p7:0},{m:3,n:33,p3:33,p9:0,p7:0},{m:4,n:17,p3:17,p9:0,p7:0},{m:5,n:40,p3:40,p9:0,p7:0},{m:6,n:41,p3:41,p9:0,p7:0},{m:7,n:33,p3:33,p9:0,p7:0},{m:8,n:28,p3:28,p9:0,p7:0},{m:9,n:40,p3:40,p9:0,p7:0},{m:10,n:44,p3:44,p9:0,p7:0},{m:11,n:48,p3:48,p9:0,p7:0},{m:12,n:32,p3:32,p9:0,p7:0}],
+  2024:[{m:1,n:33,p3:33,p9:0,p7:0},{m:2,n:43,p3:43,p9:0,p7:0},{m:3,n:55,p3:55,p9:0,p7:0},{m:4,n:38,p3:38,p9:0,p7:0},{m:5,n:42,p3:42,p9:0,p7:0},{m:6,n:33,p3:33,p9:0,p7:0},{m:7,n:60,p3:60,p9:0,p7:0},{m:8,n:51,p3:51,p9:0,p7:0},{m:9,n:45,p3:45,p9:0,p7:0},{m:10,n:35,p3:35,p9:0,p7:0},{m:11,n:42,p3:42,p9:0,p7:0},{m:12,n:53,p3:53,p9:0,p7:0}],
+  2025:[{m:1,n:49,p3:49,p9:0,p7:0},{m:2,n:30,p3:30,p9:0,p7:0},{m:3,n:55,p3:28,p9:0,p7:27},{m:4,n:55,p3:18,p9:0,p7:37},{m:5,n:37,p3:13,p9:6,p7:18},{m:6,n:30,p3:23,p9:7,p7:0},{m:7,n:33,p3:32,p9:1,p7:0},{m:8,n:19,p3:14,p9:5,p7:0},{m:9,n:38,p3:38,p9:0,p7:0},{m:10,n:23,p3:23,p9:0,p7:0},{m:11,n:23,p3:23,p9:0,p7:0},{m:12,n:23,p3:23,p9:0,p7:0}],
+  2026:[{m:1,n:34,p3:34,p9:0,p7:0},{m:2,n:27,p3:27,p9:0,p7:0}],
 };
 
-function updateCharts(year) {
-  const data = D[year];
-  const labels = data.map(d => d.label);
-  const contracts = data.map(d => d.n);
-  const caVals = data.map(d => d.ca);
-  const cumulVals = data.map(d => d.cumul);
+const WD = [
+  {w:'S01',period:'29/12→04/01',n:2, ca:698},
+  {w:'S02',period:'05/01→11/01',n:10,ca:3490},
+  {w:'S03',period:'12/01→18/01',n:8, ca:2792},
+  {w:'S04',period:'19/01→25/01',n:10,ca:3490},
+  {w:'S05',period:'26/01→01/02',n:4, ca:1396},
+  {w:'S06',period:'02/02→08/02',n:12,ca:4188},
+  {w:'S07',period:'09/02→15/02',n:11,ca:3839},
+  {w:'S08',period:'16/02→22/02',n:4, ca:1396},
+];
 
-  if (chartContracts) chartContracts.destroy();
-  chartContracts = new Chart(document.getElementById('chartContracts'), {
-    type: 'bar',
-    data: { labels, datasets: [{ data: contracts, backgroundColor: '#c8a96e', borderRadius: 5, label: 'Contrats' }] },
-    options: { ...CHART_OPTS, plugins: { ...CHART_OPTS.plugins, tooltip: { ...CHART_OPTS.plugins.tooltip,
-      callbacks: { label: ctx => ` ${ctx.raw} contrats` }
-    }}}
-  });
+const COLORS = {2022:'#d4a853',2023:'#8b5cf6',2024:'#c8a96e',2025:'#2c7a50',2026:'#2563eb'};
+const ca = d => d.p3*349+(d.p9||0)*99+(d.p7||0)*79;
 
-  if (chartCA) chartCA.destroy();
-  chartCA = new Chart(document.getElementById('chartCA'), {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [
-        { type:'bar', data: caVals, backgroundColor: '#a3d9b8', borderRadius: 5, label: 'CA mensuel', yAxisID: 'y' },
-        { type:'line', data: cumulVals, borderColor: '#2c1a0e', borderWidth: 2.5, pointBackgroundColor: '#2c1a0e', pointRadius: 4, fill: false, label: 'Cumul', yAxisID: 'y2', tension: 0.3 }
-      ]
-    },
-    options: {
-      ...CHART_OPTS,
-      plugins: { ...CHART_OPTS.plugins, legend: { display: true, labels: { color: '#8b7355', font:{size:11}, boxWidth: 12 } },
-        tooltip: { ...CHART_OPTS.plugins.tooltip, callbacks: { label: ctx => ` ${fmt(ctx.raw)} €` } }
-      },
-      scales: {
-        x: CHART_OPTS.scales.x,
-        y: { ...CHART_OPTS.scales.y, position: 'left', ticks: { ...CHART_OPTS.scales.y.ticks, callback: v => fmtK(v)+'€' } },
-        y2: { ...CHART_OPTS.scales.y, position: 'right', grid: { display: false }, ticks: { ...CHART_OPTS.scales.y.ticks, callback: v => fmtK(v)+'€' } }
-      }
-    }
+function buildM(y){ let c=0; return MD[y].map(d=>({...d,ca:ca(d),cumul:c+=ca(d),label:M[d.m-1]})); }
+function buildW(){ let c=0; return WD.map((d,i)=>({...d,cumul:c+=d.ca,diff:i>0?d.n-WD[i-1].n:null})); }
+
+const BO = {
+  responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{backgroundColor:'#fffdf8',titleColor:'#8b7355',bodyColor:'#2c1a0e',borderColor:'#e8dfc8',borderWidth:1}},
+  scales:{x:{grid:{display:false},ticks:{color:'#8b7355',font:{size:11}},border:{display:false}},y:{grid:{color:'#f0e8d8'},ticks:{color:'#8b7355',font:{size:11}},border:{display:false}}}
+};
+
+let cC,cA,cWC,cWA,cComp;
+
+function kpi(items){ document.getElementById('kpis').innerHTML=items.map(k=>`<div class="kpi" style="border-left:4px solid ${k.c}"><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join(''); }
+
+function show(yr){
+  document.querySelectorAll('.tab').forEach(t=>{
+    const match = t.textContent.includes('Semaines') ? yr==='2026w' : t.textContent==yr;
+    t.classList.toggle('active',match);
   });
+  const isW = yr==='2026w';
+  document.getElementById('vm').style.display = isW?'none':'block';
+  document.getElementById('vw').style.display = isW?'block':'none';
+  isW ? renderWeekly() : renderMonthly(+yr);
 }
 
-function buildCompareChart() {
-  const colors = { 2024:'#c8a96e', 2025:'#2c7a50', 2026:'#5b21b6' };
-  const datasets = [2024,2025,2026].map(y => ({
-    label: y.toString(),
-    data: MONTHS.map((_,i) => { const d=D[y].find(x=>x.m===i+1); return d?d.n:null; }),
-    backgroundColor: colors[y], borderRadius: 4
-  }));
-  if (chartCompare) chartCompare.destroy();
-  chartCompare = new Chart(document.getElementById('chartCompare'), {
+function renderMonthly(y){
+  const data = buildM(y);
+  const tN=data.reduce((s,d)=>s+d.n,0), tC=data.reduce((s,d)=>s+d.ca,0);
+  const col = COLORS[y]||'#c8a96e';
+
+  kpi([
+    {l:'Contrats signés',v:tN,s:y===2026?'jan–fév':'12 mois',c:col},
+    {l:'CA total',v:fmt(tC)+' €',s:"chiffre d'affaires",c:'#1a5c3a'},
+    {l:'Moy. mensuelle',v:Math.round(tN/data.length)+' contrats',s:'par mois',c:'#5b21b6'},
+    {l:'CA moy/contrat',v:Math.round(tC/tN)+' €',s:'panier moyen',c:'#9d174d'},
+  ]);
+
+  document.getElementById('tTitle').textContent=`Bilan mensuel · ${y}`;
+  document.getElementById('tSub').textContent=`${tN} contrats · ${fmt(tC)} €`;
+  document.getElementById('tBody').innerHTML=data.map(d=>`<tr>
+    <td>${d.label}</td><td class="c"><span class="badge">${d.n}</span></td>
+    <td class="r" style="font-weight:600;color:var(--green)">${fmt(d.ca)} €</td>
+    <td class="r" style="color:#5a3e2b">${fmt(d.cumul)} €</td>
+    <td class="c">${[d.p7>0?`<span class="tag t79">${d.p7}×79€</span>`:'',d.p9>0?`<span class="tag t99">${d.p9}×99€</span>`:'',d.p3>0?`<span class="tag t349">${d.p3}×349€</span>`:''].join('')}</td>
+  </tr>`).join('');
+  document.getElementById('tFoot').innerHTML=`<tr><td>TOTAL</td><td class="c"><span class="badge">${tN}</span></td><td class="r" style="color:var(--green);font-size:14px">${fmt(tC)} €</td><td class="r" style="font-size:14px">${fmt(tC)} €</td><td></td></tr>`;
+
+  if(cC)cC.destroy();
+  cC=new Chart(document.getElementById('cC'),{
     type:'bar',
-    data: { labels: MONTHS, datasets },
-    options: {
-      ...CHART_OPTS,
-      plugins: { ...CHART_OPTS.plugins, legend: { display: false },
-        tooltip: { ...CHART_OPTS.plugins.tooltip, callbacks: { label: ctx => ` ${ctx.dataset.label} : ${ctx.raw} contrats` } }
-      }
-    }
+    data:{labels:data.map(d=>d.label),datasets:[{data:data.map(d=>d.n),backgroundColor:col,borderRadius:5,label:'Contrats'}]},
+    options:{...BO,plugins:{...BO.plugins,tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.raw} contrats`}}}}
   });
 
-  const t24=totals(2024), t25=totals(2025), t26=totals(2026);
-  document.getElementById('compareLegend').innerHTML = [
-    [2024,'#c8a96e',`${t24.contracts} contrats · ${fmt(t24.ca)} €`],
-    [2025,'#2c7a50',`${t25.contracts} contrats · ${fmt(t25.ca)} €`],
-    [2026,'#5b21b6',`${t26.contracts} contrats · ${fmt(t26.ca)} € (jan–fév)`],
-  ].map(([y,c,l])=>`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div><strong>${y}</strong><span style="color:var(--muted)">${l}</span></div>`).join('');
+  if(cA)cA.destroy();
+  cA=new Chart(document.getElementById('cA'),{
+    type:'bar',
+    data:{labels:data.map(d=>d.label),datasets:[
+      {data:data.map(d=>d.ca),  backgroundColor:col+'99', borderRadius:5, label:'CA mensuel'},
+      {data:data.map(d=>d.cumul), backgroundColor:col+'33', borderRadius:5, label:'CA cumulé', stack:'cumul'}
+    ]},
+    options:{...BO,
+      plugins:{...BO.plugins,legend:{display:true,labels:{color:'#8b7355',font:{size:11},boxWidth:12}},tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${fmt(ctx.raw)} €`}}},
+      scales:{x:BO.scales.x,y:{...BO.scales.y,ticks:{...BO.scales.y.ticks,callback:v=>fK(v)+'€'}}}
+    }
+  });
 }
 
-function showYear(year) {
-  currentYear = +year;
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.textContent === year));
-  updateKPIs(year);
-  updateTable(year);
-  updateCharts(year);
+// Commission : 7.5% × (349 TTC / 1.2) = 21.81 € par contrat signé, quel que soit le tarif pratiqué
+// Commission : 21.81 € uniquement sur les contrats à 349€ (79€ et 99€ exclus - tarifs promo arrêtés mi-2025)
+const COMM_UNIT = Math.round(349 / 1.2 * 0.075 * 100) / 100; // 21.81 €
+const commN = n => +(n * COMM_UNIT).toFixed(2); // pour la vue hebdo (tout à 349€ en 2026)
+const commLine = d => +((d.p3||0) * COMM_UNIT).toFixed(2); // pour la vue mensuelle : p3 = contrats 349€ uniquement
+
+function renderWeekly(){
+  const data = buildW();
+  const tN = data.reduce((s,d)=>s+d.n,0);
+  const tComm = commN(tN);
+  const last = data[data.length-1];
+
+  kpi([
+    {l:'Contrats cumulés',   v:tN,                          s:`${data.length} semaines`, c:'#2563eb'},
+    {l:'Commission cumulée', v:tComm.toFixed(2)+' €',       s:'7,5% du HT (21,81 €/contrat)', c:'#b45309'},
+    {l:'Dernière semaine',   v:last.n+' contrats',           s:last.period,               c:'#d97706'},
+    {l:'Moy. hebdomadaire',  v:Math.round(tN/data.length)+' contrats', s:'par semaine',  c:'#7c3aed'},
+  ]);
+
+  document.getElementById('wSub').textContent=`${tN} contrats · commission cumulée : ${tComm.toFixed(2)} €`;
+
+  // Tableau exhaustif (toutes semaines) avec commission
+  let cumulComm = 0;
+  document.getElementById('wBody').innerHTML=data.map((d,i)=>{
+    const tr = d.diff===null ? '' : d.diff>0 ? `<span class="trend-up">▲ +${d.diff}</span>` : d.diff<0 ? `<span class="trend-down">▼ ${d.diff}</span>` : `<span class="trend-eq">= 0</span>`;
+    const cm = commN(d.n);
+    cumulComm = +(cumulComm + cm).toFixed(2);
+    return `<tr class="${i===data.length-1?'week-last':''}">
+      <td><strong>${d.w}</strong></td>
+      <td style="color:var(--muted);font-size:12px">${d.period}</td>
+      <td class="c"><span class="badge">${d.n}</span></td>
+      <td class="c">${tr}</td>
+      <td class="r" style="font-weight:600;color:#b45309">${cm.toFixed(2)} €</td>
+      <td class="r" style="color:#92400e">${cumulComm.toFixed(2)} €</td>
+      <td class="c" style="color:var(--muted)">${(d.n/5).toFixed(1)}/j</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('wFoot').innerHTML=`<tr>
+    <td colspan="2">TOTAL · ${data.length} sem.</td>
+    <td class="c"><span class="badge">${tN}</span></td>
+    <td></td>
+    <td class="r" style="color:#b45309;font-size:14px;font-weight:700">${tComm.toFixed(2)} €</td>
+    <td class="r" style="color:#92400e;font-size:14px;font-weight:700">${tComm.toFixed(2)} €</td>
+    <td class="c" style="color:var(--muted)">${(tN/(data.length*5)).toFixed(1)}/j</td>
+  </tr>`;
+
+  // Graphiques : 5 dernières semaines uniquement
+  const last5 = data.slice(-5);
+
+  if(cWC)cWC.destroy();
+  cWC=new Chart(document.getElementById('cWC'),{
+    type:'bar',
+    data:{labels:last5.map(d=>d.w), datasets:[{data:last5.map(d=>d.n), backgroundColor:'#2563eb', borderRadius:5, label:'Contrats'}]},
+    options:{...BO, plugins:{...BO.plugins, tooltip:{...BO.plugins.tooltip, callbacks:{label:ctx=>` ${ctx.raw} contrats`}}}}
+  });
+
+  if(cWA)cWA.destroy();
+  cWA=new Chart(document.getElementById('cWA'),{
+    type:'bar',
+    data:{labels:last5.map(d=>d.w), datasets:[
+      {data:last5.map(d=>commN(d.n)), backgroundColor:'#fbbf24', borderRadius:5, label:'Commission sem.'},
+      {data:last5.map((_,i)=>commN(data.slice(0,data.indexOf(last5[i])+1).reduce((s,x)=>s+x.n,0))), backgroundColor:'#f59e0b55', borderRadius:5, label:'Cumul comm.'}
+    ]},
+    options:{...BO,
+      plugins:{...BO.plugins, legend:{display:true,labels:{color:'#8b7355',font:{size:11},boxWidth:12}}, tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${Number(ctx.raw).toFixed(2)} €`}}},
+      scales:{x:BO.scales.x, y:{...BO.scales.y, ticks:{...BO.scales.y.ticks,callback:v=>v+'€'}}}
+    }
+  });
 }
 
-// Date du jour
-const now = new Date();
-const dateStr = now.toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'});
-document.getElementById('printDate').textContent = `Édité le ${dateStr}`;
-document.getElementById('noteDate').textContent = dateStr;
+function buildCompare(activeYear){
+  const y = activeYear==='2026w' ? 2026 : +activeYear;
+  const years = [y-2, y-1, y].filter(x=>MD[x]);
+  if(cComp)cComp.destroy();
+  cComp=new Chart(document.getElementById('cComp'),{
+    type:'bar',
+    data:{labels:M, datasets:years.map(yr=>({
+      label:''+yr,
+      data:M.map((_,i)=>{const d=MD[yr].find(x=>x.m===i+1);return d?d.n:null;}),
+      backgroundColor:COLORS[yr]+'bb', borderRadius:4, borderSkipped:false
+    }))},
+    options:{...BO,
+      plugins:{...BO.plugins, legend:{display:false}, tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.dataset.label} : ${ctx.raw} contrats`}}},
+      scales:{x:{...BO.scales.x}, y:{...BO.scales.y}}
+    }
+  });
+  document.getElementById('leg').innerHTML=years.map(yr=>{
+    const d=MD[yr], tN=d.reduce((s,x)=>s+x.n,0), tC=d.reduce((s,x)=>s+ca(x),0);
+    return `<div class="legend-item"><div class="ldot" style="background:${COLORS[yr]}"></div><strong style="color:var(--dark)">${yr}</strong><span>${tN} contrats · ${fmt(tC)} €${yr===2026?' (jan–fév)':''}</span></div>`;
+  }).join('');
+}
 
-// Init
-showYear('2024');
-buildCompareChart();
+// Surcharge show() pour appeler buildCompare avec l'année active
+const _show = show;
+function show(yr){
+  document.querySelectorAll('.tab').forEach(t=>{
+    const match = t.textContent.includes('Semaines') ? yr==='2026w' : t.textContent==yr;
+    t.classList.toggle('active',match);
+  });
+  const isW = yr==='2026w';
+  document.getElementById('vm').style.display = isW?'none':'block';
+  document.getElementById('vw').style.display = isW?'block':'none';
+  if(isW){ renderWeekly(); } else { renderMonthly(+yr); }
+  document.getElementById('compareBlock').style.display = isW ? 'none' : 'block';
+  if(!isW) buildCompare(yr);
+}
+
+const ds = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+document.getElementById('printDate').textContent=`Mis à jour le ${ds}`;
+document.getElementById('nDate').textContent=ds;
+
+show('2026w');
 </script>
 </body>
 </html>
