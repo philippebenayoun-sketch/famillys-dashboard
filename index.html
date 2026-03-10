@@ -3,78 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bilan Commercial Famillys – Contrats 2024/2025/2026</title>
+<title>Bilan Commercial Famillys – Contrats</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#c8a96e;--dark:#2c1a0e;--bg:#faf7f2;--card:#ffffff;--border:#e8dfc8;--muted:#8b7355;--green:#1a5c3a;--blue:#1d4ed8;--purple:#7c3aed}
-body{background:var(--bg);font-family:'Source Sans 3','Segoe UI',sans-serif;color:var(--dark);padding:32px 24px;max-width:1080px;margin:0 auto}
+body{background:var(--bg);font-family:'Source Sans 3','Segoe UI',sans-serif;color:var(--dark);padding:32px 24px;max-width:1100px;margin:0 auto}
 .header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-bottom:20px;border-bottom:2px solid var(--gold);margin-bottom:28px}
-.header-left .eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.header .eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .header h1{font-family:'Playfair Display',Georgia,serif;font-size:26px;color:var(--dark)}
 .header-right{text-align:right;font-size:12px;color:var(--muted)}
 .header-right strong{display:block;font-size:14px;color:var(--dark)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:24px}
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
-.kpi .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.kpi .value{font-size:26px;font-weight:700;color:var(--dark)}
-.kpi .sub{font-size:12px;color:var(--muted);margin-top:2px}
-.kpi .badge-up{display:inline-block;background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:4px}
-.kpi .badge-down{display:inline-block;background:#fee2e2;color:#991b1b;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:4px}
-.section{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px}
-.section-title{font-family:'Playfair Display',Georgia,serif;font-size:16px;color:var(--dark);margin-bottom:4px}
-.section-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
-.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
-.tab{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .2s}
+.kpi .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.kpi .value{font-size:26px;font-weight:700;color:var(--dark);line-height:1.1}
+.kpi .sub{font-size:12px;color:var(--muted);margin-top:3px}
+.badge-up{display:inline-block;background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:4px}
+.badge-down{display:inline-block;background:#fee2e2;color:#991b1b;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:4px}
+.section{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:18px}
+.section-title{font-family:'Playfair Display',Georgia,serif;font-size:16px;color:var(--dark);margin-bottom:3px}
+.section-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .15s}
 .tab.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+.tab:hover:not(.active){background:#f0ebe0}
 .chart-wrap{position:relative;height:220px}
+.chart-wrap-tall{position:relative;height:280px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead tr{border-bottom:2px solid var(--border)}
 th{padding:8px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 td{padding:8px 10px;border-bottom:1px solid #f0ebe0}
 td.r{text-align:right}td.c{text-align:center}
-tr.week-last{background:#fffbf0;font-weight:700}
+tr.last-full{background:#fffbf0;font-weight:700}
 tr:hover{background:#faf5ec}
 .badge{display:inline-block;background:#dbeafe;color:#1e40af;font-size:12px;font-weight:700;padding:2px 8px;border-radius:12px}
 .trend-up{color:#16a34a;font-weight:700}.trend-down{color:#dc2626;font-weight:700}.trend-eq{color:var(--muted)}
 .comm{color:var(--purple);font-weight:600}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.legend-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px}
-.leg{display:flex;align-items:center;gap:5px;font-size:12px}
-.leg-dot{width:10px;height:10px;border-radius:2px}
-.note{font-size:11px;color:var(--muted);margin-top:12px;font-style:italic}
+.legend-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.note{font-size:11px;color:var(--muted);margin-top:10px;font-style:italic}
+.yearly-bar{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.yearly-bar .yr-label{font-size:12px;font-weight:700;width:36px;color:var(--dark)}
+.yearly-bar .bar-track{flex:1;background:#f0ebe0;border-radius:4px;height:22px;overflow:hidden}
+.yearly-bar .bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:12px;font-weight:700;color:#fff;transition:width .6s ease}
+.yearly-bar .yr-total{font-size:12px;font-weight:700;color:var(--dark);width:80px;text-align:right}
 @media(max-width:640px){.grid2{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}}
-@media print{body{padding:16px}.header{page-break-inside:avoid}}
+@media print{body{padding:16px}.section{break-inside:avoid}}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-left">
+  <div>
     <div class="eyebrow">Famillys · Rapport interne</div>
     <h1>Bilan Ventes Contrats</h1>
   </div>
   <div class="header-right">
     <strong>Semaine S10 · Mars 2026</strong>
     Mis à jour le 10/03/2026<br>
-    Cumul total : <strong>2 002 contrats</strong>
+    Cumul total depuis 2021 : <strong>1 950 contrats</strong>
   </div>
 </div>
 
 <!-- KPIs -->
 <div class="kpi-row">
   <div class="kpi">
-    <div class="label">S10 · 2–7 mars</div>
+    <div class="label">S10 · 2–5 mars</div>
     <div class="value">10</div>
-    <div class="sub">contrats cette semaine</div>
-    <span class="badge-up">▲ +5 vs S10 2025</span>
-  </div>
-  <div class="kpi">
-    <div class="label">Mars 2026 (partiel)</div>
-    <div class="value">11</div>
-    <div class="sub">contrats · 3 841 €</div>
-    <div class="sub">S10 + 1 contrat S11</div>
+    <div class="sub">contrats · 3 490 €</div>
+    <span class="badge-up">▲ ×2 vs S10 2025</span>
   </div>
   <div class="kpi">
     <div class="label">Février 2026</div>
@@ -86,17 +87,22 @@ tr:hover{background:#faf5ec}
     <div class="label">2026 · Cumul YTD</div>
     <div class="value">82</div>
     <div class="sub">contrats · 28 618 €</div>
-    <span class="badge-down">▼ –6% vs S10 2025 (87)</span>
+    <span class="badge-down">▼ vs S10 2025 (87)</span>
   </div>
   <div class="kpi">
     <div class="label">2025 · Année complète</div>
     <div class="value">415</div>
-    <div class="sub">contrats · 136 785 €</div>
+    <div class="sub">contrats · 144 835 €</div>
   </div>
   <div class="kpi">
     <div class="label">2024 · Année complète</div>
     <div class="value">530</div>
     <div class="sub">contrats · 184 970 €</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Cumul 2021→2025</div>
+    <div class="value">1 868</div>
+    <div class="sub">contrats toutes années</div>
   </div>
 </div>
 
@@ -116,34 +122,49 @@ tr:hover{background:#faf5ec}
     <tbody id="wBody"></tbody>
     <tfoot id="wFoot" style="font-weight:700;background:#faf5ec"></tfoot>
   </table>
-  <p class="note">Prix standard : 349 € TTC. Commission : 7,5 % du HT (349 € / 1,2 × 7,5 %). S11 partielle (1 contrat au 09/03).</p>
+  <p class="note">Prix standard : 349 € TTC. Commission : 7,5 % du HT (349 € ÷ 1,2 × 7,5 %). S11 partielle (1 contrat au 09/03).</p>
 </div>
 
-<!-- Mois comparatif -->
+<!-- Bilan par année -->
 <div class="section">
-  <div class="section-title">Comparaison mensuelle 2024 · 2025 · 2026</div>
-  <div class="section-sub">Nombre de contrats signés par mois</div>
-  <div class="legend-row">
-    <div class="leg"><div class="leg-dot" style="background:#e5a823"></div><span>2024 (530 contrats)</span></div>
-    <div class="leg"><div class="leg-dot" style="background:#2c7a50"></div><span>2025 (415 contrats)</span></div>
-    <div class="leg"><div class="leg-dot" style="background:#5b21b6"></div><span>2026 (82 YTD)</span></div>
-  </div>
-  <div class="chart-wrap" style="height:240px"><canvas id="cMonth"></canvas></div>
-  <p class="note">2026 couvre S01→S10 (jusqu'au 07/03). Les données de mars 2026 sont partielles (11 contrats au 09/03).</p>
+  <div class="section-title">Bilan annuel 2021 → 2026</div>
+  <div class="section-sub">Volume total de contrats signés par année</div>
+  <div id="yearlyBars"></div>
+  <div class="chart-wrap-tall" style="margin-top:16px"><canvas id="cYearly"></canvas></div>
 </div>
 
-<!-- Mois détail -->
+<!-- Comparaison mensuelle -->
+<div class="section">
+  <div class="section-title">Comparaison mensuelle par année</div>
+  <div class="section-sub">Nombre de contrats signés par mois — sélectionner les années à comparer</div>
+  <div class="tabs" id="monthCompareTabs">
+    <button class="tab active" onclick="toggleYearCompare(2026,this)">2026</button>
+    <button class="tab active" onclick="toggleYearCompare(2025,this)">2025</button>
+    <button class="tab active" onclick="toggleYearCompare(2024,this)">2024</button>
+    <button class="tab" onclick="toggleYearCompare(2023,this)">2023</button>
+    <button class="tab" onclick="toggleYearCompare(2022,this)">2022</button>
+    <button class="tab" onclick="toggleYearCompare(2021,this)">2021</button>
+  </div>
+  <div class="legend-row" id="monthCompareLegend"></div>
+  <div class="chart-wrap-tall"><canvas id="cMonth"></canvas></div>
+  <p class="note">2026 couvre S01→S10 (jusqu'au 07/03). Mars 2026 partiel (11 contrats).</p>
+</div>
+
+<!-- Détail mensuel par année -->
 <div class="section">
   <div class="section-title">Détail mensuel</div>
-  <div class="section-sub">Sélectionner une année</div>
+  <div class="section-sub">Tableau complet par année</div>
   <div class="tabs" id="yearTabs">
     <button class="tab active" onclick="showYear(2026,this)">2026</button>
     <button class="tab" onclick="showYear(2025,this)">2025</button>
     <button class="tab" onclick="showYear(2024,this)">2024</button>
+    <button class="tab" onclick="showYear(2023,this)">2023</button>
+    <button class="tab" onclick="showYear(2022,this)">2022</button>
+    <button class="tab" onclick="showYear(2021,this)">2021</button>
   </div>
   <table>
     <thead><tr>
-      <th>Mois</th><th class="c">Contrats</th><th class="r">CA TTC</th><th class="r">Cumul CA</th><th class="c">Évol. N-1</th>
+      <th>Mois</th><th class="c">Contrats</th><th class="r">CA TTC</th><th class="r">Cumul CA</th><th class="c">Évol. N−1</th>
     </tr></thead>
     <tbody id="mBody"></tbody>
     <tfoot id="mFoot" style="font-weight:700;background:#faf5ec"></tfoot>
@@ -152,19 +173,26 @@ tr:hover{background:#faf5ec}
 
 <script>
 const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-const fmt = v => v.toLocaleString('fr-FR');
-const fK = v => v>=1000?Math.round(v/100)/10+'k':v;
+const fmt  = v => v.toLocaleString('fr-FR');
+const fK   = v => v>=1000 ? (Math.round(v/100)/10)+'k' : v;
 const comm = ttc => Math.round(ttc/1.2*0.075*100)/100;
 
-// ── DATA ────────────────────────────────────────────────────
+// ── ALL MONTHLY DATA ────────────────────────────────────────
 const mdData = {
+  2021:[{m:7,n:24},{m:8,n:22},{m:9,n:29},{m:10,n:31},{m:11,n:28},{m:12,n:12}],
+  2022:[{m:1,n:31},{m:2,n:37},{m:3,n:44},{m:4,n:36},{m:5,n:30},{m:6,n:31},{m:7,n:21},{m:8,n:42},{m:9,n:33},{m:10,n:26},{m:11,n:23},{m:12,n:13}],
+  2023:[{m:1,n:20},{m:2,n:34},{m:3,n:33},{m:4,n:17},{m:5,n:40},{m:6,n:41},{m:7,n:33},{m:8,n:28},{m:9,n:40},{m:10,n:44},{m:11,n:48},{m:12,n:32}],
   2024:[{m:1,n:33},{m:2,n:43},{m:3,n:55},{m:4,n:38},{m:5,n:42},{m:6,n:33},{m:7,n:60},{m:8,n:51},{m:9,n:45},{m:10,n:35},{m:11,n:42},{m:12,n:53}],
   2025:[{m:1,n:49},{m:2,n:30},{m:3,n:55},{m:4,n:55},{m:5,n:37},{m:6,n:30},{m:7,n:33},{m:8,n:19},{m:9,n:38},{m:10,n:23},{m:11,n:23},{m:12,n:23}],
   2026:[{m:1,n:34},{m:2,n:37},{m:3,n:11}],
 };
 
+const yearlyTotals = {2021:146,2022:367,2023:410,2024:530,2025:415,2026:82};
+const yearColors   = {2021:'#9ca3af',2022:'#f59e0b',2023:'#10b981',2024:'#e5a823',2025:'#2c7a50',2026:'#5b21b6'};
+
+// ── WEEKLY DATA 2026 ────────────────────────────────────────
 const wkData = [
-  {w:'S01',period:'02/01→04/01',n:2},
+  {w:'S01',period:'02/01→02/01',n:2},
   {w:'S02',period:'05/01→10/01',n:10},
   {w:'S03',period:'12/01→16/01',n:8},
   {w:'S04',period:'19/01→23/01',n:10},
@@ -176,30 +204,36 @@ const wkData = [
   {w:'S10',period:'02/03→05/03',n:10},
   {w:'S11',period:'09/03→09/03',n:1,partial:true},
 ];
-
-// Compare S2025
 const wk2025 = {1:5,2:10,3:13,4:13,5:12,6:8,7:3,8:7,9:11,10:5,11:18};
 
-// ── WEEKLY TABLE ────────────────────────────────────────────
+// ── BASE CHART OPTIONS ──────────────────────────────────────
+const BO = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{backgroundColor:'#2c1a0e',padding:10,cornerRadius:6}},
+  scales:{
+    x:{grid:{display:false},ticks:{color:'#8b7355',font:{size:11}}},
+    y:{grid:{color:'#f0ebe0'},ticks:{color:'#8b7355',font:{size:11}}}
+  }
+};
+
+// ── WEEKLY TABLE & CHARTS ───────────────────────────────────
 let cWC, cWA;
 (function buildWeekly(){
-  const data = wkData.map((d,i) => {
-    const ca = d.n * 349;
-    const cumul = wkData.slice(0,i+1).reduce((s,x)=>s+x.n*349,0);
-    const prev = i>0 ? wkData[i-1].n : null;
-    const diff = prev===null ? null : d.n - prev;
-    return {...d, ca, cumul, diff};
-  });
-
+  const data = wkData.map((d,i)=>({
+    ...d,
+    ca: d.n*349,
+    cumul: wkData.slice(0,i+1).reduce((s,x)=>s+x.n*349,0),
+    diff: i>0 ? d.n-wkData[i-1].n : null
+  }));
   const tN = data.reduce((s,d)=>s+d.n,0);
   const tC = data.reduce((s,d)=>s+d.ca,0);
   document.getElementById('wSub').textContent=`${tN} contrats · ${fmt(tC)} € cumulés (S01→S11 partielle)`;
 
+  const lastFull = data.filter(d=>!d.partial).length - 1;
   document.getElementById('wBody').innerHTML = data.map((d,i)=>{
     const tr = d.diff===null?'':d.diff>0?`<span class="trend-up">▲ +${d.diff}</span>`:d.diff<0?`<span class="trend-down">▼ ${d.diff}</span>`:`<span class="trend-eq">= 0</span>`;
     const c = comm(349)*d.n;
-    const isLast = !d.partial && i===data.filter(x=>!x.partial).length-1;
-    return `<tr class="${isLast?'week-last':''}">
+    return `<tr class="${i===lastFull&&!d.partial?'last-full':''}">
       <td><strong>${d.w}</strong>${d.partial?' <em style="color:var(--muted);font-size:10px">(partielle)</em>':''}</td>
       <td style="color:var(--muted);font-size:12px">${d.period}</td>
       <td class="c"><span class="badge">${d.n}</span></td>
@@ -212,68 +246,116 @@ let cWC, cWA;
   }).join('');
 
   const tComm = Math.round(comm(349)*tN*100)/100;
-  document.getElementById('wFoot').innerHTML=`<tr><td colspan="2">TOTAL · ${data.length} semaines</td><td class="c"><span class="badge">${tN}</span></td><td></td><td class="r" style="color:var(--green);font-size:14px">${fmt(tC)} €</td><td class="r" style="font-size:14px">${fmt(tC)} €</td><td></td><td class="r comm">${fmt(tComm)} €</td></tr>`;
+  document.getElementById('wFoot').innerHTML=`<tr><td colspan="2">TOTAL · ${data.length} semaines</td><td class="c"><span class="badge">${tN}</span></td><td></td><td class="r" style="color:var(--green)">${fmt(tC)} €</td><td class="r">${fmt(tC)} €</td><td></td><td class="r comm">${fmt(tComm)} €</td></tr>`;
 
-  const BO = {responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#2c1a0e',padding:10,cornerRadius:6,callbacks:{}}},scales:{x:{grid:{display:false},ticks:{color:'#8b7355',font:{size:11}}},y:{grid:{color:'#f0ebe0'},ticks:{color:'#8b7355',font:{size:11}}}}};
+  cWC = new Chart(document.getElementById('cWC'),{type:'bar',data:{
+    labels:data.map(d=>d.w),
+    datasets:[{data:data.map(d=>d.n),backgroundColor:data.map(d=>d.partial?'#c4b5fd':'#2563eb'),borderRadius:5,label:'Contrats'}]
+  },options:{...BO,plugins:{...BO.plugins,tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.raw} contrats`}}},scales:{...BO.scales,y:{...BO.scales.y,suggestedMax:16}}}});
 
-  cWC = new Chart(document.getElementById('cWC'),{type:'bar',data:{labels:data.map(d=>d.w),datasets:[{data:data.map(d=>d.n),backgroundColor:data.map(d=>d.partial?'#c4b5fd':'#2563eb'),borderRadius:5,label:'Contrats'}]},options:{...BO,plugins:{...BO.plugins,tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.raw} contrats`}}},scales:{...BO.scales,y:{...BO.scales.y,suggestedMax:16}}}});
-
-  cWA = new Chart(document.getElementById('cWA'),{type:'bar',data:{labels:data.map(d=>d.w),datasets:[{type:'bar',data:data.map(d=>d.ca),backgroundColor:'#93c5fd',borderRadius:5,label:'CA semaine',yAxisID:'y'},{type:'line',data:data.map(d=>d.cumul),borderColor:'#1d4ed8',borderWidth:2.5,pointBackgroundColor:'#1d4ed8',pointRadius:4,fill:false,label:'Cumul',yAxisID:'y2',tension:0.3}]},options:{...BO,plugins:{...BO.plugins,legend:{display:true,labels:{color:'#8b7355',font:{size:10},boxWidth:10}},tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${fmt(ctx.raw)} €`}}},scales:{x:BO.scales.x,y:{...BO.scales.y,position:'left',ticks:{...BO.scales.y.ticks,callback:v=>fK(v)+'€'}},y2:{...BO.scales.y,position:'right',grid:{display:false},ticks:{...BO.scales.y.ticks,callback:v=>fK(v)+'€'}}}}});
+  cWA = new Chart(document.getElementById('cWA'),{type:'bar',data:{
+    labels:data.map(d=>d.w),
+    datasets:[
+      {type:'bar',data:data.map(d=>d.ca),backgroundColor:'#93c5fd',borderRadius:5,label:'CA sem.',yAxisID:'y'},
+      {type:'line',data:data.map(d=>d.cumul),borderColor:'#1d4ed8',borderWidth:2.5,pointBackgroundColor:'#1d4ed8',pointRadius:4,fill:false,label:'Cumul',yAxisID:'y2',tension:0.3}
+    ]
+  },options:{...BO,plugins:{...BO.plugins,legend:{display:true,labels:{color:'#8b7355',font:{size:10},boxWidth:10}},tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${fmt(ctx.raw)} €`}}},scales:{
+    x:BO.scales.x,
+    y:{...BO.scales.y,position:'left',ticks:{...BO.scales.y.ticks,callback:v=>fK(v)+'€'}},
+    y2:{...BO.scales.y,position:'right',grid:{display:false},ticks:{...BO.scales.y.ticks,callback:v=>fK(v)+'€'}}
+  }}});
 })();
 
-// ── MONTHLY CHART ────────────────────────────────────────────
-(function buildMonthChart(){
-  const labels = MONTHS;
-  const d2024 = labels.map((_,i)=>{ const r=mdData[2024].find(x=>x.m===i+1); return r?r.n:0; });
-  const d2025 = labels.map((_,i)=>{ const r=mdData[2025].find(x=>x.m===i+1); return r?r.n:0; });
-  const d2026 = labels.map((_,i)=>{ const r=mdData[2026].find(x=>x.m===i+1); return r?r.n:null; });
+// ── YEARLY BARS ─────────────────────────────────────────────
+(function buildYearlyBars(){
+  const maxVal = Math.max(...Object.values(yearlyTotals));
+  const html = Object.entries(yearlyTotals).map(([yr,n])=>{
+    const pct = Math.round(n/maxVal*100);
+    const ca  = n*349;
+    return `<div class="yearly-bar">
+      <span class="yr-label">${yr}</span>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${yearColors[yr]}">${n}</div>
+      </div>
+      <span class="yr-total">${fK(ca)}€</span>
+    </div>`;
+  }).join('');
+  document.getElementById('yearlyBars').innerHTML = html;
 
-  new Chart(document.getElementById('cMonth'),{type:'bar',data:{labels,datasets:[
-    {label:'2024',data:d2024,backgroundColor:'#e5a82355',borderColor:'#e5a823',borderWidth:2,borderRadius:4},
-    {label:'2025',data:d2025,backgroundColor:'#2c7a5055',borderColor:'#2c7a50',borderWidth:2,borderRadius:4},
-    {label:'2026',data:d2026,backgroundColor:'#5b21b655',borderColor:'#5b21b6',borderWidth:2,borderRadius:4,spanGaps:false},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{color:'#8b7355',font:{size:11},boxWidth:12}},tooltip:{backgroundColor:'#2c1a0e',padding:10,cornerRadius:6,callbacks:{label:ctx=>` ${ctx.raw} contrats`}}},scales:{x:{grid:{display:false},ticks:{color:'#8b7355'}},y:{grid:{color:'#f0ebe0'},ticks:{color:'#8b7355'},suggestedMax:75}}}});
+  new Chart(document.getElementById('cYearly'),{type:'bar',data:{
+    labels:Object.keys(yearlyTotals),
+    datasets:[{
+      data:Object.values(yearlyTotals),
+      backgroundColor:Object.keys(yearlyTotals).map(y=>yearColors[y]),
+      borderRadius:6
+    }]
+  },options:{...BO,plugins:{...BO.plugins,tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.raw} contrats · ${fmt(ctx.raw*349)} €`}}},scales:{...BO.scales,y:{...BO.scales.y,suggestedMax:600}}}});
 })();
 
-// ── MONTHLY TABLE ────────────────────────────────────────────
-let currentYear = 2026;
+// ── MONTHLY COMPARE CHART ───────────────────────────────────
+let cMonth;
+let activeYears = new Set([2026,2025,2024]);
+
+function buildLegend(){
+  document.getElementById('monthCompareLegend').innerHTML = [...activeYears].sort().reverse().map(yr=>`
+    <div class="leg"><div class="leg-dot" style="background:${yearColors[yr]}"></div><span>${yr} (${yearlyTotals[yr]} contrats)</span></div>
+  `).join('');
+}
+
+function buildMonthChart(){
+  if(cMonth) cMonth.destroy();
+  const datasets = [...activeYears].sort().map(yr=>({
+    label: String(yr),
+    data: MONTHS.map((_,i)=>{ const r=mdData[yr]?.find(x=>x.m===i+1); return r?r.n:null; }),
+    backgroundColor: yearColors[yr]+'55',
+    borderColor: yearColors[yr],
+    borderWidth:2, borderRadius:4,
+    spanGaps:false
+  }));
+  cMonth = new Chart(document.getElementById('cMonth'),{type:'bar',data:{labels:MONTHS,datasets},options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{color:'#8b7355',font:{size:11},boxWidth:12}},tooltip:{backgroundColor:'#2c1a0e',padding:10,cornerRadius:6,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw} contrats`}}},
+    scales:{x:{grid:{display:false},ticks:{color:'#8b7355'}},y:{grid:{color:'#f0ebe0'},ticks:{color:'#8b7355'},suggestedMax:70}}
+  }});
+  buildLegend();
+}
+
+function toggleYearCompare(yr, btn){
+  if(activeYears.has(yr)){
+    if(activeYears.size<=1) return;
+    activeYears.delete(yr);
+    btn.classList.remove('active');
+  } else {
+    activeYears.add(yr);
+    btn.classList.add('active');
+  }
+  buildMonthChart();
+}
+
+buildMonthChart();
+
+// ── MONTHLY TABLE ───────────────────────────────────────────
 function showYear(yr, btn){
-  currentYear = yr;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#yearTabs .tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  renderMonthTable(yr);
-}
-
-function renderMonthTable(yr){
   const rows = mdData[yr]||[];
-  const prevYr = yr-1;
-  const prevData = mdData[prevYr]||[];
-  let cumul = 0;
-  let html = '';
+  const prev = mdData[yr-1]||[];
+  let cumul=0, html='';
   rows.forEach(r=>{
-    const ca = r.n * 349;
-    cumul += ca;
-    const prev = prevData.find(x=>x.m===r.m);
-    const diff = prev ? r.n - prev.n : null;
-    const evol = diff===null?'—':diff>0?`<span class="trend-up">▲ +${diff}</span>`:diff<0?`<span class="trend-down">▼ ${diff}</span>`:`<span class="trend-eq">= 0</span>`;
-    html += `<tr>
-      <td>${MONTHS[r.m-1]}</td>
-      <td class="c"><span class="badge">${r.n}</span></td>
-      <td class="r" style="font-weight:600;color:var(--green)">${fmt(ca)} €</td>
-      <td class="r" style="color:#5a3e2b">${fmt(cumul)} €</td>
-      <td class="c">${evol}</td>
-    </tr>`;
+    const ca=r.n*349; cumul+=ca;
+    const p=prev.find(x=>x.m===r.m);
+    const diff=p?r.n-p.n:null;
+    const evol=diff===null?'—':diff>0?`<span class="trend-up">▲ +${diff}</span>`:diff<0?`<span class="trend-down">▼ ${diff}</span>`:`<span class="trend-eq">= 0</span>`;
+    html+=`<tr><td>${MONTHS[r.m-1]}</td><td class="c"><span class="badge">${r.n}</span></td><td class="r" style="font-weight:600;color:var(--green)">${fmt(ca)} €</td><td class="r">${fmt(cumul)} €</td><td class="c">${evol}</td></tr>`;
   });
-  document.getElementById('mBody').innerHTML = html;
-
-  const tN = rows.reduce((s,r)=>s+r.n,0);
-  const tCA = tN*349;
-  const suffix = yr===2026 ? ' (YTD)' : '';
-  document.getElementById('mFoot').innerHTML=`<tr><td>TOTAL${suffix}</td><td class="c"><span class="badge">${tN}</span></td><td class="r" style="color:var(--green)">${fmt(tCA)} €</td><td class="r">${fmt(tCA)} €</td><td></td></tr>`;
+  document.getElementById('mBody').innerHTML=html;
+  const tN=rows.reduce((s,r)=>s+r.n,0);
+  const tCA=tN*349;
+  const suf=yr===2026?' (YTD)':'';
+  document.getElementById('mFoot').innerHTML=`<tr><td>TOTAL${suf}</td><td class="c"><span class="badge">${tN}</span></td><td class="r" style="color:var(--green)">${fmt(tCA)} €</td><td class="r">${fmt(tCA)} €</td><td></td></tr>`;
 }
 
-renderMonthTable(2026);
+showYear(2026, document.querySelector('#yearTabs .tab'));
 </script>
-
 </body>
 </html>
