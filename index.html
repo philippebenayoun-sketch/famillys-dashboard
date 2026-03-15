@@ -3,359 +3,467 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bilan Commercial Famillys – Contrats</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<title>Dashboard Famillys – Contrats</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap');
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--gold:#c8a96e;--dark:#2c1a0e;--bg:#faf7f2;--card:#ffffff;--border:#e8dfc8;--muted:#8b7355;--green:#1a5c3a;--blue:#1d4ed8;--purple:#7c3aed}
-body{background:var(--bg);font-family:'Source Sans 3','Segoe UI',sans-serif;color:var(--dark);padding:32px 24px;max-width:1100px;margin:0 auto}
-.header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-bottom:20px;border-bottom:2px solid var(--gold);margin-bottom:28px}
-.header .eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
-.header h1{font-family:'Playfair Display',Georgia,serif;font-size:26px;color:var(--dark)}
-.header-right{text-align:right;font-size:12px;color:var(--muted)}
-.header-right strong{display:block;font-size:14px;color:var(--dark)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:24px}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
-.kpi .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
-.kpi .value{font-size:26px;font-weight:700;color:var(--dark);line-height:1.1}
-.kpi .sub{font-size:12px;color:var(--muted);margin-top:3px}
-.badge-up{display:inline-block;background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:4px}
-.badge-down{display:inline-block;background:#fee2e2;color:#991b1b;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:4px}
-.section{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:18px}
-.section-title{font-family:'Playfair Display',Georgia,serif;font-size:16px;color:var(--dark);margin-bottom:3px}
-.section-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
-.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
-.tab{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .15s}
-.tab.active{background:var(--dark);color:#fff;border-color:var(--dark)}
-.tab:hover:not(.active){background:#f0ebe0}
-.chart-wrap{position:relative;height:220px}
-.chart-wrap-tall{position:relative;height:280px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead tr{border-bottom:2px solid var(--border)}
-th{padding:8px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-td{padding:8px 10px;border-bottom:1px solid #f0ebe0}
-td.r{text-align:right}td.c{text-align:center}
-tr.last-full{background:#fffbf0;font-weight:700}
-tr:hover{background:#faf5ec}
-.badge{display:inline-block;background:#dbeafe;color:#1e40af;font-size:12px;font-weight:700;padding:2px 8px;border-radius:12px}
-.trend-up{color:#16a34a;font-weight:700}.trend-down{color:#dc2626;font-weight:700}.trend-eq{color:var(--muted)}
-.comm{color:var(--purple);font-weight:600}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.legend-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
-.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-.note{font-size:11px;color:var(--muted);margin-top:10px;font-style:italic}
-.yearly-bar{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.yearly-bar .yr-label{font-size:12px;font-weight:700;width:36px;color:var(--dark)}
-.yearly-bar .bar-track{flex:1;background:#f0ebe0;border-radius:4px;height:22px;overflow:hidden}
-.yearly-bar .bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:12px;font-weight:700;color:#fff;transition:width .6s ease}
-.yearly-bar .yr-total{font-size:12px;font-weight:700;color:var(--dark);width:80px;text-align:right}
-@media(max-width:640px){.grid2{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}}
-@media print{body{padding:16px}.section{break-inside:avoid}}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #222; }
+  header {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
+    color: white; padding: 18px 30px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px; }
+  header .subtitle { font-size: 0.85rem; opacity: 0.8; margin-top: 2px; }
+  .badge { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; }
+
+  nav {
+    background: #1a3a5c; display: flex; gap: 4px; padding: 0 30px;
+    border-bottom: 3px solid #2563a8;
+  }
+  nav button {
+    background: none; border: none; color: rgba(255,255,255,0.7);
+    padding: 12px 20px; font-size: 0.9rem; cursor: pointer;
+    border-bottom: 3px solid transparent; margin-bottom: -3px;
+    transition: all 0.2s;
+  }
+  nav button.active, nav button:hover {
+    color: white; border-bottom-color: #4da6ff;
+  }
+
+  .tab { display: none; padding: 24px 30px; }
+  .tab.active { display: block; }
+
+  .kpi-row { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .kpi {
+    background: white; border-radius: 10px; padding: 18px 24px;
+    flex: 1; min-width: 160px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 4px solid #2563a8;
+  }
+  .kpi.green { border-left-color: #16a34a; }
+  .kpi.orange { border-left-color: #ea580c; }
+  .kpi.purple { border-left-color: #7c3aed; }
+  .kpi label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi .val { font-size: 2rem; font-weight: 700; color: #1a3a5c; line-height: 1.1; }
+  .kpi .sub { font-size: 0.8rem; color: #888; margin-top: 2px; }
+
+  .chart-card {
+    background: white; border-radius: 10px; padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+  }
+  .chart-card h2 { font-size: 1rem; color: #1a3a5c; margin-bottom: 16px; font-weight: 600; }
+  .chart-wrap { position: relative; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { background: #1a3a5c; color: white; padding: 8px 12px; text-align: center; font-weight: 600; }
+  td { padding: 7px 12px; text-align: center; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) td { background: #f8f9fb; }
+  tr:hover td { background: #e8f0fe; }
+  .td-week { font-weight: 600; color: #1a3a5c; }
+  .comm { color: #16a34a; font-weight: 600; }
+
+  .year-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .year-btn {
+    border: 2px solid #2563a8; border-radius: 6px; background: white;
+    color: #2563a8; padding: 5px 14px; cursor: pointer; font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .year-btn.active { background: #2563a8; color: white; }
+
+  @media (max-width: 700px) {
+    .grid2 { grid-template-columns: 1fr; }
+    .tab { padding: 16px; }
+    nav { padding: 0 10px; }
+    nav button { padding: 10px 12px; font-size: 0.8rem; }
+  }
 </style>
 </head>
 <body>
 
-<div class="header">
+<header>
   <div>
-    <div class="eyebrow">Famillys · Rapport interne</div>
-    <h1>Bilan Ventes Contrats</h1>
+    <h1>📋 Famillys – Suivi des Contrats</h1>
+    <div class="subtitle">Tableau de bord commercial · Mise à jour S11 2026</div>
   </div>
-  <div class="header-right">
-    <strong>Semaine S10 · Mars 2026</strong>
-    Mis à jour le 10/03/2026<br>
-    Cumul total depuis 2021 : <strong>1 950 contrats</strong>
+  <div class="badge">93 contrats 2026</div>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('tab2026')">🔵 Semaines 2026</button>
+  <button onclick="showTab('tabMois')">📅 Par mois</button>
+  <button onclick="showTab('tabAnnees')">📊 Années</button>
+  <button onclick="showTab('tabCompa')">🔄 Comparatif</button>
+</nav>
+
+<!-- ===================== TAB 1 : SEMAINES 2026 ===================== -->
+<div id="tab2026" class="tab active">
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <label>Contrats YTD 2026</label>
+      <div class="val">93</div>
+      <div class="sub">S1 → S11 · 2026</div>
+    </div>
+    <div class="kpi green">
+      <label>CA HT total 2026</label>
+      <div class="val">27 027 €</div>
+      <div class="sub">93 × 290,83 € HT</div>
+    </div>
+    <div class="kpi orange">
+      <label>Commissions 2026</label>
+      <div class="val">2 029 €</div>
+      <div class="sub">7,5 % du CA HT</div>
+    </div>
+    <div class="kpi purple">
+      <label>Moy. hebdo 2026</label>
+      <div class="val">8,5</div>
+      <div class="sub">contrats / semaine</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Ventes hebdomadaires 2026 (contrats signés)</h2>
+    <div class="chart-wrap" style="height:280px">
+      <canvas id="chartWeek2026"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Cumul contrats 2026</h2>
+    <div class="chart-wrap" style="height:220px">
+      <canvas id="chartCumul2026"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Détail semaines 2026</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Semaine</th><th>Contrats</th><th>CA HT (€)</th><th>Commission (€)</th><th>Cumul YTD</th>
+        </tr>
+      </thead>
+      <tbody id="tableWeeks2026"></tbody>
+    </table>
   </div>
 </div>
 
-<!-- KPIs -->
-<div class="kpi-row">
-  <div class="kpi">
-    <div class="label">S10 · 2–5 mars</div>
-    <div class="value">10</div>
-    <div class="sub">contrats · 3 490 €</div>
-    <span class="badge-up">▲ ×2 vs S10 2025</span>
+<!-- ===================== TAB 2 : MOIS ===================== -->
+<div id="tabMois" class="tab">
+  <div class="year-selector" id="yearSelectorMois"></div>
+  <div class="chart-card">
+    <h2 id="titleMois">Contrats par mois</h2>
+    <div class="chart-wrap" style="height:300px">
+      <canvas id="chartMois"></canvas>
+    </div>
   </div>
-  <div class="kpi">
-    <div class="label">Février 2026</div>
-    <div class="value">37</div>
-    <div class="sub">contrats · 12 913 €</div>
-    <span class="badge-up">▲ +23% vs fév. 2025</span>
-  </div>
-  <div class="kpi">
-    <div class="label">2026 · Cumul YTD</div>
-    <div class="value">82</div>
-    <div class="sub">contrats · 28 618 €</div>
-    <span class="badge-down">▼ vs S10 2025 (87)</span>
-  </div>
-  <div class="kpi">
-    <div class="label">2025 · Année complète</div>
-    <div class="value">415</div>
-    <div class="sub">contrats · 144 835 €</div>
-  </div>
-  <div class="kpi">
-    <div class="label">2024 · Année complète</div>
-    <div class="value">530</div>
-    <div class="sub">contrats · 184 970 €</div>
-  </div>
-  <div class="kpi">
-    <div class="label">Cumul 2021→2025</div>
-    <div class="value">1 868</div>
-    <div class="sub">contrats toutes années</div>
+  <div class="chart-card">
+    <h2>Tableau mensuel</h2>
+    <table>
+      <thead>
+        <tr><th>Mois</th><th id="moisYearHead">2026</th></tr>
+      </thead>
+      <tbody id="tableMois"></tbody>
+    </table>
   </div>
 </div>
 
-<!-- Semaines 2026 -->
-<div class="section">
-  <div class="section-title">Suivi hebdomadaire 2026</div>
-  <div class="section-sub" id="wSub">Chargement…</div>
-  <div class="grid2" style="margin-bottom:16px">
-    <div class="chart-wrap"><canvas id="cWC"></canvas></div>
-    <div class="chart-wrap"><canvas id="cWA"></canvas></div>
+<!-- ===================== TAB 3 : ANNÉES ===================== -->
+<div id="tabAnnees" class="tab">
+  <div class="kpi-row">
+    <div class="kpi"><label>2021 (jul→déc)</label><div class="val">146</div></div>
+    <div class="kpi"><label>2022</label><div class="val">367</div></div>
+    <div class="kpi"><label>2023</label><div class="val">410</div></div>
+    <div class="kpi"><label>2024</label><div class="val">526</div></div>
+    <div class="kpi"><label>2025</label><div class="val">416</div></div>
+    <div class="kpi green"><label>2026 YTD</label><div class="val">93</div><div class="sub">S11</div></div>
   </div>
-  <table>
-    <thead><tr>
-      <th>Semaine</th><th>Période</th><th class="c">Contrats</th><th class="c">Évol.</th>
-      <th class="r">CA TTC</th><th class="r">Cumul CA</th><th class="c">Moy/j</th><th class="c">Commission</th>
-    </tr></thead>
-    <tbody id="wBody"></tbody>
-    <tfoot id="wFoot" style="font-weight:700;background:#faf5ec"></tfoot>
-  </table>
-  <p class="note">Prix standard : 349 € TTC. Commission : 7,5 % du HT (349 € ÷ 1,2 × 7,5 %). S11 partielle (1 contrat au 09/03).</p>
+  <div class="chart-card">
+    <h2>Contrats annuels (2021–2026 YTD)</h2>
+    <div class="chart-wrap" style="height:300px">
+      <canvas id="chartAnnees"></canvas>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="chart-card">
+      <h2>Évolution annuelle</h2>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chartEvol"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h2>Totaux & CA</h2>
+      <table>
+        <thead><tr><th>Année</th><th>Contrats</th><th>CA HT (€)</th></tr></thead>
+        <tbody id="tableAnnees"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<!-- Bilan par année -->
-<div class="section">
-  <div class="section-title">Bilan annuel 2021 → 2026</div>
-  <div class="section-sub">Volume total de contrats signés par année</div>
-  <div id="yearlyBars"></div>
-  <div class="chart-wrap-tall" style="margin-top:16px"><canvas id="cYearly"></canvas></div>
-</div>
-
-<!-- Comparaison mensuelle -->
-<div class="section">
-  <div class="section-title">Comparaison mensuelle par année</div>
-  <div class="section-sub">Nombre de contrats signés par mois — sélectionner les années à comparer</div>
-  <div class="tabs" id="monthCompareTabs">
-    <button class="tab active" onclick="toggleYearCompare(2026,this)">2026</button>
-    <button class="tab active" onclick="toggleYearCompare(2025,this)">2025</button>
-    <button class="tab active" onclick="toggleYearCompare(2024,this)">2024</button>
-    <button class="tab" onclick="toggleYearCompare(2023,this)">2023</button>
-    <button class="tab" onclick="toggleYearCompare(2022,this)">2022</button>
-    <button class="tab" onclick="toggleYearCompare(2021,this)">2021</button>
+<!-- ===================== TAB 4 : COMPARATIF ===================== -->
+<div id="tabCompa" class="tab">
+  <div class="chart-card">
+    <h2>Comparatif hebdomadaire – S1 à S11 (toutes années)</h2>
+    <div class="chart-wrap" style="height:340px">
+      <canvas id="chartCompa"></canvas>
+    </div>
   </div>
-  <div class="legend-row" id="monthCompareLegend"></div>
-  <div class="chart-wrap-tall"><canvas id="cMonth"></canvas></div>
-  <p class="note">2026 couvre S01→S10 (jusqu'au 07/03). Mars 2026 partiel (11 contrats).</p>
-</div>
-
-<!-- Détail mensuel par année -->
-<div class="section">
-  <div class="section-title">Détail mensuel</div>
-  <div class="section-sub">Tableau complet par année</div>
-  <div class="tabs" id="yearTabs">
-    <button class="tab active" onclick="showYear(2026,this)">2026</button>
-    <button class="tab" onclick="showYear(2025,this)">2025</button>
-    <button class="tab" onclick="showYear(2024,this)">2024</button>
-    <button class="tab" onclick="showYear(2023,this)">2023</button>
-    <button class="tab" onclick="showYear(2022,this)">2022</button>
-    <button class="tab" onclick="showYear(2021,this)">2021</button>
+  <div class="chart-card">
+    <h2>Cumul progressif S1→S11 par année</h2>
+    <div class="chart-wrap" style="height:280px">
+      <canvas id="chartCumulCompa"></canvas>
+    </div>
   </div>
-  <table>
-    <thead><tr>
-      <th>Mois</th><th class="c">Contrats</th><th class="r">CA TTC</th><th class="r">Cumul CA</th><th class="c">Évol. N−1</th>
-    </tr></thead>
-    <tbody id="mBody"></tbody>
-    <tfoot id="mFoot" style="font-weight:700;background:#faf5ec"></tfoot>
-  </table>
 </div>
 
 <script>
-const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-const fmt  = v => v.toLocaleString('fr-FR');
-const fK   = v => v>=1000 ? (Math.round(v/100)/10)+'k' : v;
-const comm = ttc => Math.round(ttc/1.2*0.075*100)/100;
+// ===================== DATA =====================
+const PRICE_HT = 349 / 1.2;
+const COMM_RATE = 0.075;
 
-// ── ALL MONTHLY DATA ────────────────────────────────────────
-const mdData = {
-  2021:[{m:7,n:24},{m:8,n:22},{m:9,n:29},{m:10,n:31},{m:11,n:28},{m:12,n:12}],
-  2022:[{m:1,n:31},{m:2,n:37},{m:3,n:44},{m:4,n:36},{m:5,n:30},{m:6,n:31},{m:7,n:21},{m:8,n:42},{m:9,n:33},{m:10,n:26},{m:11,n:23},{m:12,n:13}],
-  2023:[{m:1,n:20},{m:2,n:34},{m:3,n:33},{m:4,n:17},{m:5,n:40},{m:6,n:41},{m:7,n:33},{m:8,n:28},{m:9,n:40},{m:10,n:44},{m:11,n:48},{m:12,n:32}],
-  2024:[{m:1,n:33},{m:2,n:43},{m:3,n:55},{m:4,n:38},{m:5,n:42},{m:6,n:33},{m:7,n:60},{m:8,n:51},{m:9,n:45},{m:10,n:35},{m:11,n:42},{m:12,n:53}],
-  2025:[{m:1,n:49},{m:2,n:30},{m:3,n:55},{m:4,n:55},{m:5,n:37},{m:6,n:30},{m:7,n:33},{m:8,n:19},{m:9,n:38},{m:10,n:23},{m:11,n:23},{m:12,n:23}],
-  2026:[{m:1,n:34},{m:2,n:37},{m:3,n:11}],
+const weekly = {
+  2021: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,5,3,6,7,4,6,4,5,7,4,7,5,10,8,8,6,8,5,6,7,7,4,2,5,2,2],
+  2022: [5,10,6,7,7,10,12,6,10,8,9,12,11,10,7,7,11,9,5,6,7,5,5,8,8,9,4,6,4,6,14,5,7,6,10,3,13,8,9,7,7,7,4,3,7,6,7,3,5,1,1,4],
+  2023: [4,5,8,0,8,11,9,7,8,8,6,7,6,6,4,2,5,7,11,8,12,4,12,8,7,12,5,10,7,8,8,4,2,11,8,13,8,11,6,9,8,11,11,10,15,6,11,13,5,8,9,8],
+  2024: [4,13,7,7,3,12,8,8,17,10,11,9,22,8,13,10,5,10,10,8,11,5,11,9,10,3,14,22,14,5,6,10,6,22,12,14,11,10,7,4,8,12,7,7,11,6,10,15,12,16,12,9],
+  2025: [6,10,13,13,12,8,3,7,11,5,18,21,9,7,16,11,12,12,7,11,12,6,9,6,4,8,7,9,7,6,10,7,1,3,5,9,10,10,2,10,5,7,4,4,2,6,11,4,3,4,7,6],
+  2026: [5,10,8,10,4,12,11,5,9,10,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 };
 
-const yearlyTotals = {2021:146,2022:367,2023:410,2024:530,2025:415,2026:82};
-const yearColors   = {2021:'#9ca3af',2022:'#f59e0b',2023:'#10b981',2024:'#e5a823',2025:'#2c7a50',2026:'#5b21b6'};
-
-// ── WEEKLY DATA 2026 ────────────────────────────────────────
-const wkData = [
-  {w:'S01',period:'02/01→02/01',n:2},
-  {w:'S02',period:'05/01→10/01',n:10},
-  {w:'S03',period:'12/01→16/01',n:8},
-  {w:'S04',period:'19/01→23/01',n:10},
-  {w:'S05',period:'26/01→29/01',n:4},
-  {w:'S06',period:'02/02→06/02',n:12},
-  {w:'S07',period:'09/02→14/02',n:11},
-  {w:'S08',period:'17/02→19/02',n:5},
-  {w:'S09',period:'23/02→25/02',n:9},
-  {w:'S10',period:'02/03→05/03',n:10},
-  {w:'S11',period:'09/03→09/03',n:1,partial:true},
-];
-const wk2025 = {1:5,2:10,3:13,4:13,5:12,6:8,7:3,8:7,9:11,10:5,11:18};
-
-// ── BASE CHART OPTIONS ──────────────────────────────────────
-const BO = {
-  responsive:true, maintainAspectRatio:false,
-  plugins:{legend:{display:false},tooltip:{backgroundColor:'#2c1a0e',padding:10,cornerRadius:6}},
-  scales:{
-    x:{grid:{display:false},ticks:{color:'#8b7355',font:{size:11}}},
-    y:{grid:{color:'#f0ebe0'},ticks:{color:'#8b7355',font:{size:11}}}
-  }
+const monthly = {
+  2021: [0,0,0,0,0,0,24,22,29,31,28,12],
+  2022: [31,37,44,36,30,31,21,42,33,26,23,13],
+  2023: [20,34,33,17,40,41,33,28,40,44,48,32],
+  2024: [33,43,55,38,42,33,60,51,45,35,42,49],
+  2025: [49,30,55,55,37,30,33,19,38,23,23,24],
+  2026: [34,37,19,0,0,0,0,0,0,0,0,0]
 };
 
-// ── WEEKLY TABLE & CHARTS ───────────────────────────────────
-let cWC, cWA;
-(function buildWeekly(){
-  const data = wkData.map((d,i)=>({
-    ...d,
-    ca: d.n*349,
-    cumul: wkData.slice(0,i+1).reduce((s,x)=>s+x.n*349,0),
-    diff: i>0 ? d.n-wkData[i-1].n : null
-  }));
-  const tN = data.reduce((s,d)=>s+d.n,0);
-  const tC = data.reduce((s,d)=>s+d.ca,0);
-  document.getElementById('wSub').textContent=`${tN} contrats · ${fmt(tC)} € cumulés (S01→S11 partielle)`;
+const annual = { 2021: 146, 2022: 367, 2023: 410, 2024: 526, 2025: 416, 2026: 93 };
+const MOIS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const YEARS = [2021,2022,2023,2024,2025,2026];
+const COLORS = {
+  2021: '#94a3b8', 2022: '#60a5fa', 2023: '#34d399',
+  2024: '#f97316', 2025: '#a78bfa', 2026: '#ef4444'
+};
 
-  const lastFull = data.filter(d=>!d.partial).length - 1;
-  document.getElementById('wBody').innerHTML = data.map((d,i)=>{
-    const tr = d.diff===null?'':d.diff>0?`<span class="trend-up">▲ +${d.diff}</span>`:d.diff<0?`<span class="trend-down">▼ ${d.diff}</span>`:`<span class="trend-eq">= 0</span>`;
-    const c = comm(349)*d.n;
-    return `<tr class="${i===lastFull&&!d.partial?'last-full':''}">
-      <td><strong>${d.w}</strong>${d.partial?' <em style="color:var(--muted);font-size:10px">(partielle)</em>':''}</td>
-      <td style="color:var(--muted);font-size:12px">${d.period}</td>
-      <td class="c"><span class="badge">${d.n}</span></td>
-      <td class="c">${tr}</td>
-      <td class="r" style="font-weight:600;color:var(--green)">${fmt(d.ca)} €</td>
-      <td class="r" style="color:#5a3e2b">${fmt(d.cumul)} €</td>
-      <td class="c" style="color:var(--muted)">${(d.n/5).toFixed(1)}/j</td>
-      <td class="r comm">${fmt(c)} €</td>
-    </tr>`;
-  }).join('');
+// ===================== TAB NAV =====================
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
 
-  const tComm = Math.round(comm(349)*tN*100)/100;
-  document.getElementById('wFoot').innerHTML=`<tr><td colspan="2">TOTAL · ${data.length} semaines</td><td class="c"><span class="badge">${tN}</span></td><td></td><td class="r" style="color:var(--green)">${fmt(tC)} €</td><td class="r">${fmt(tC)} €</td><td></td><td class="r comm">${fmt(tComm)} €</td></tr>`;
+// ===================== SEMAINES 2026 =====================
+const weeks2026 = weekly[2026].slice(0, 11);
+const labels2026 = weeks2026.map((_, i) => `S${i+1}`);
 
-  cWC = new Chart(document.getElementById('cWC'),{type:'bar',data:{
-    labels:data.map(d=>d.w),
-    datasets:[{data:data.map(d=>d.n),backgroundColor:data.map(d=>d.partial?'#c4b5fd':'#2563eb'),borderRadius:5,label:'Contrats'}]
-  },options:{...BO,plugins:{...BO.plugins,tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.raw} contrats`}}},scales:{...BO.scales,y:{...BO.scales.y,suggestedMax:16}}}});
-
-  cWA = new Chart(document.getElementById('cWA'),{type:'bar',data:{
-    labels:data.map(d=>d.w),
-    datasets:[
-      {type:'bar',data:data.map(d=>d.ca),backgroundColor:'#93c5fd',borderRadius:5,label:'CA sem.',yAxisID:'y'},
-      {type:'line',data:data.map(d=>d.cumul),borderColor:'#1d4ed8',borderWidth:2.5,pointBackgroundColor:'#1d4ed8',pointRadius:4,fill:false,label:'Cumul',yAxisID:'y2',tension:0.3}
-    ]
-  },options:{...BO,plugins:{...BO.plugins,legend:{display:true,labels:{color:'#8b7355',font:{size:10},boxWidth:10}},tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${fmt(ctx.raw)} €`}}},scales:{
-    x:BO.scales.x,
-    y:{...BO.scales.y,position:'left',ticks:{...BO.scales.y.ticks,callback:v=>fK(v)+'€'}},
-    y2:{...BO.scales.y,position:'right',grid:{display:false},ticks:{...BO.scales.y.ticks,callback:v=>fK(v)+'€'}}
-  }}});
-})();
-
-// ── YEARLY BARS ─────────────────────────────────────────────
-(function buildYearlyBars(){
-  const maxVal = Math.max(...Object.values(yearlyTotals));
-  const html = Object.entries(yearlyTotals).map(([yr,n])=>{
-    const pct = Math.round(n/maxVal*100);
-    const ca  = n*349;
-    return `<div class="yearly-bar">
-      <span class="yr-label">${yr}</span>
-      <div class="bar-track">
-        <div class="bar-fill" style="width:${pct}%;background:${yearColors[yr]}">${n}</div>
-      </div>
-      <span class="yr-total">${fK(ca)}€</span>
-    </div>`;
-  }).join('');
-  document.getElementById('yearlyBars').innerHTML = html;
-
-  new Chart(document.getElementById('cYearly'),{type:'bar',data:{
-    labels:Object.keys(yearlyTotals),
-    datasets:[{
-      data:Object.values(yearlyTotals),
-      backgroundColor:Object.keys(yearlyTotals).map(y=>yearColors[y]),
-      borderRadius:6
+new Chart(document.getElementById('chartWeek2026'), {
+  type: 'bar',
+  data: {
+    labels: labels2026,
+    datasets: [{
+      label: 'Contrats', data: weeks2026,
+      backgroundColor: '#2563a8', borderRadius: 5
     }]
-  },options:{...BO,plugins:{...BO.plugins,tooltip:{...BO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.raw} contrats · ${fmt(ctx.raw*349)} €`}}},scales:{...BO.scales,y:{...BO.scales.y,suggestedMax:600}}}});
-})();
-
-// ── MONTHLY COMPARE CHART ───────────────────────────────────
-let cMonth;
-let activeYears = new Set([2026,2025,2024]);
-
-function buildLegend(){
-  document.getElementById('monthCompareLegend').innerHTML = [...activeYears].sort().reverse().map(yr=>`
-    <div class="leg"><div class="leg-dot" style="background:${yearColors[yr]}"></div><span>${yr} (${yearlyTotals[yr]} contrats)</span></div>
-  `).join('');
-}
-
-function buildMonthChart(){
-  if(cMonth) cMonth.destroy();
-  const datasets = [...activeYears].sort().map(yr=>({
-    label: String(yr),
-    data: MONTHS.map((_,i)=>{ const r=mdData[yr]?.find(x=>x.m===i+1); return r?r.n:null; }),
-    backgroundColor: yearColors[yr]+'55',
-    borderColor: yearColors[yr],
-    borderWidth:2, borderRadius:4,
-    spanGaps:false
-  }));
-  cMonth = new Chart(document.getElementById('cMonth'),{type:'bar',data:{labels:MONTHS,datasets},options:{
-    responsive:true, maintainAspectRatio:false,
-    plugins:{legend:{display:true,labels:{color:'#8b7355',font:{size:11},boxWidth:12}},tooltip:{backgroundColor:'#2c1a0e',padding:10,cornerRadius:6,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw} contrats`}}},
-    scales:{x:{grid:{display:false},ticks:{color:'#8b7355'}},y:{grid:{color:'#f0ebe0'},ticks:{color:'#8b7355'},suggestedMax:70}}
-  }});
-  buildLegend();
-}
-
-function toggleYearCompare(yr, btn){
-  if(activeYears.has(yr)){
-    if(activeYears.size<=1) return;
-    activeYears.delete(yr);
-    btn.classList.remove('active');
-  } else {
-    activeYears.add(yr);
-    btn.classList.add('active');
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { stepSize: 2 } } }
   }
-  buildMonthChart();
-}
+});
 
-buildMonthChart();
+// Cumul 2026
+let cum = 0;
+const cumData = weeks2026.map(v => { cum += v; return cum; });
+new Chart(document.getElementById('chartCumul2026'), {
+  type: 'bar',
+  data: {
+    labels: labels2026,
+    datasets: [{
+      label: 'Cumul', data: cumData,
+      backgroundColor: '#16a34a', borderRadius: 5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true } }
+  }
+});
 
-// ── MONTHLY TABLE ───────────────────────────────────────────
-function showYear(yr, btn){
-  document.querySelectorAll('#yearTabs .tab').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  const rows = mdData[yr]||[];
-  const prev = mdData[yr-1]||[];
-  let cumul=0, html='';
-  rows.forEach(r=>{
-    const ca=r.n*349; cumul+=ca;
-    const p=prev.find(x=>x.m===r.m);
-    const diff=p?r.n-p.n:null;
-    const evol=diff===null?'—':diff>0?`<span class="trend-up">▲ +${diff}</span>`:diff<0?`<span class="trend-down">▼ ${diff}</span>`:`<span class="trend-eq">= 0</span>`;
-    html+=`<tr><td>${MONTHS[r.m-1]}</td><td class="c"><span class="badge">${r.n}</span></td><td class="r" style="font-weight:600;color:var(--green)">${fmt(ca)} €</td><td class="r">${fmt(cumul)} €</td><td class="c">${evol}</td></tr>`;
+// Table semaines 2026
+const tbody = document.getElementById('tableWeeks2026');
+let cumYTD = 0;
+weeks2026.forEach((n, i) => {
+  cumYTD += n;
+  const caHT = (n * PRICE_HT).toFixed(2);
+  const comm = (n * PRICE_HT * COMM_RATE).toFixed(2);
+  const tr = `<tr>
+    <td class="td-week">S${i+1}</td>
+    <td>${n}</td>
+    <td>${parseFloat(caHT).toLocaleString('fr-FR')} €</td>
+    <td class="comm">${parseFloat(comm).toLocaleString('fr-FR')} €</td>
+    <td>${cumYTD}</td>
+  </tr>`;
+  tbody.innerHTML += tr;
+});
+// Total row
+const totalCA = (93 * PRICE_HT).toFixed(2);
+const totalComm = (93 * PRICE_HT * COMM_RATE).toFixed(2);
+tbody.innerHTML += `<tr style="font-weight:700;background:#e8f0fe">
+  <td>TOTAL</td><td>93</td>
+  <td>${parseFloat(totalCA).toLocaleString('fr-FR')} €</td>
+  <td class="comm">${parseFloat(totalComm).toLocaleString('fr-FR')} €</td>
+  <td>93</td>
+</tr>`;
+
+// ===================== MOIS =====================
+let selectedYearMois = 2026;
+const chartMoisInstance = new Chart(document.getElementById('chartMois'), {
+  type: 'bar',
+  data: { labels: MOIS, datasets: [] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true } }
+  }
+});
+
+function updateMois(yr) {
+  selectedYearMois = yr;
+  document.querySelectorAll('#yearSelectorMois .year-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.yr) === yr);
   });
-  document.getElementById('mBody').innerHTML=html;
-  const tN=rows.reduce((s,r)=>s+r.n,0);
-  const tCA=tN*349;
-  const suf=yr===2026?' (YTD)':'';
-  document.getElementById('mFoot').innerHTML=`<tr><td>TOTAL${suf}</td><td class="c"><span class="badge">${tN}</span></td><td class="r" style="color:var(--green)">${fmt(tCA)} €</td><td class="r">${fmt(tCA)} €</td><td></td></tr>`;
+  document.getElementById('titleMois').textContent = `Contrats par mois – ${yr}`;
+  document.getElementById('moisYearHead').textContent = yr;
+
+  const data = monthly[yr];
+  chartMoisInstance.data.datasets = [{
+    label: yr, data: data,
+    backgroundColor: COLORS[yr] || '#2563a8', borderRadius: 5
+  }];
+  chartMoisInstance.update();
+
+  const tb = document.getElementById('tableMois');
+  tb.innerHTML = '';
+  let total = 0;
+  data.forEach((v, i) => {
+    total += v;
+    tb.innerHTML += `<tr><td>${MOIS[i]}</td><td>${v > 0 ? v : '–'}</td></tr>`;
+  });
+  tb.innerHTML += `<tr style="font-weight:700;background:#e8f0fe"><td>Total</td><td>${total}</td></tr>`;
 }
 
-showYear(2026, document.querySelector('#yearTabs .tab'));
+// Build year selector mois
+const selMois = document.getElementById('yearSelectorMois');
+YEARS.forEach(yr => {
+  const btn = document.createElement('button');
+  btn.className = 'year-btn' + (yr === 2026 ? ' active' : '');
+  btn.dataset.yr = yr;
+  btn.textContent = yr;
+  btn.onclick = () => updateMois(yr);
+  selMois.appendChild(btn);
+});
+updateMois(2026);
+
+// ===================== ANNÉES =====================
+const annualLabels = ['2021','2022','2023','2024','2025','2026 YTD'];
+const annualData = [146, 367, 410, 526, 416, 93];
+
+new Chart(document.getElementById('chartAnnees'), {
+  type: 'bar',
+  data: {
+    labels: annualLabels,
+    datasets: [{
+      label: 'Contrats',
+      data: annualData,
+      backgroundColor: ['#94a3b8','#60a5fa','#34d399','#f97316','#a78bfa','#ef4444'],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true } }
+  }
+});
+
+new Chart(document.getElementById('chartEvol'), {
+  type: 'bar',
+  data: {
+    labels: annualLabels,
+    datasets: [{
+      label: 'Contrats',
+      data: annualData,
+      backgroundColor: '#2563a8', borderRadius: 5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: false } }
+  }
+});
+
+// Table années
+const tbAnnees = document.getElementById('tableAnnees');
+YEARS.forEach(yr => {
+  const n = annual[yr];
+  const ca = (n * PRICE_HT).toFixed(0);
+  tbAnnees.innerHTML += `<tr>
+    <td>${yr}${yr===2026?' (YTD)':''}</td>
+    <td>${n}</td>
+    <td>${parseInt(ca).toLocaleString('fr-FR')} €</td>
+  </tr>`;
+});
+
+// ===================== COMPARATIF =====================
+const MAX_WEEK_COMPA = 11;
+const compaLabels = Array.from({length: MAX_WEEK_COMPA}, (_, i) => `S${i+1}`);
+
+const compaDatasets = YEARS.map(yr => ({
+  label: String(yr),
+  data: weekly[yr].slice(0, MAX_WEEK_COMPA),
+  backgroundColor: COLORS[yr],
+  borderRadius: 3
+}));
+
+new Chart(document.getElementById('chartCompa'), {
+  type: 'bar',
+  data: { labels: compaLabels, datasets: compaDatasets },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: { x: { stacked: false }, y: { beginAtZero: true } }
+  }
+});
+
+// Cumul comparatif
+const cumulCompaDatasets = YEARS.map(yr => {
+  let c = 0;
+  return {
+    label: String(yr),
+    data: weekly[yr].slice(0, MAX_WEEK_COMPA).map(v => { c += v; return c; }),
+    backgroundColor: COLORS[yr],
+    borderRadius: 3
+  };
+});
+
+new Chart(document.getElementById('chartCumulCompa'), {
+  type: 'bar',
+  data: { labels: compaLabels, datasets: cumulCompaDatasets },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: { x: { stacked: false }, y: { beginAtZero: true } }
+  }
+});
 </script>
 </body>
 </html>
