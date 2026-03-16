@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap Retraite — Leads Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2235;
+    --border: #2a3050;
+    --text: #e8eaf2;
+    --text-muted: #7a84a8;
+    --accent: #4f8ef7;
+    --accent2: #e86c3a;
+    --green: #34c98a;
+    --yellow: #f5c842;
+    --famillys: #4f8ef7;
+    --papybnb: #e86c3a;
+    --zoneA: #f5c842;
+    --zoneB: #4f8ef7;
+    --zoneC: #7a84a8;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .logo-pill {
+    background: linear-gradient(135deg, #e86c3a, #f5c842);
+    color: #fff;
+    font-family: 'DM Serif Display', serif;
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .header-right {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 20px 32px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .tab {
+    padding: 10px 22px;
+    border-radius: 8px 8px 0 0;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-muted);
+    border: 1px solid transparent;
+    border-bottom: none;
+    transition: all 0.2s;
+    background: transparent;
+  }
+  .tab:hover { color: var(--text); background: var(--surface2); }
+  .tab.active {
+    color: var(--text);
+    background: var(--bg);
+    border-color: var(--border);
+    border-bottom-color: var(--bg);
+    margin-bottom: -1px;
+  }
+
+  /* CONTENT */
+  .content { padding: 28px 32px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* KPI CARDS */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--accent);
+  }
+  .kpi.orange::before { background: var(--accent2); }
+  .kpi.green::before { background: var(--green); }
+  .kpi.yellow::before { background: var(--yellow); }
+  .kpi-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .kpi-value { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--text); line-height: 1; }
+  .kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+  .kpi-delta { font-size: 12px; font-weight: 600; margin-top: 4px; }
+  .kpi-delta.up { color: var(--green); }
+  .kpi-delta.down { color: var(--accent2); }
+
+  /* CHART SECTIONS */
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .chart-grid.full { grid-template-columns: 1fr; }
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .chart-card h3 {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 16px;
+  }
+  .chart-wrap { position: relative; height: 220px; }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .data-table th {
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 10px 14px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table th:first-child { text-align: left; }
+  .data-table td {
+    padding: 9px 14px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .data-table td:first-child { text-align: left; font-weight: 500; }
+  .data-table tr:last-child td { border-bottom: none; font-weight: 600; background: var(--surface2); }
+  .data-table tr:hover td { background: rgba(79,142,247,0.05); }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .pill-A { background: rgba(245,200,66,0.15); color: var(--yellow); }
+  .pill-B { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .pill-C { background: rgba(122,132,168,0.15); color: var(--text-muted); }
+
+  /* FACTURES RECONCILIATION */
+  .reconcile-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .reconcile-card h3 { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 16px; }
+  .facture-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .facture-row:last-child { border-bottom: none; }
+  .facture-mois { width: 80px; font-weight: 600; color: var(--text); }
+  .facture-col { flex: 1; text-align: right; color: var(--text-muted); font-size: 12px; }
+  .facture-col.highlight { color: var(--text); }
+  .facture-col.money { color: var(--green); font-weight: 600; }
+  .facture-col.diff { }
+  .diff-pos { color: var(--accent2); }
+  .diff-zero { color: var(--green); }
+
+  /* YEAR SELECTOR */
+  .year-toggle {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .year-btn {
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .year-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* YAGO bar */
+  .yago-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 8px;
+  }
+
+  @media(max-width: 900px) {
+    .chart-grid { grid-template-columns: 1fr; }
+    .content { padding: 20px 16px; }
+    .tabs { padding: 12px 16px 0; }
+    .header { padding: 14px 16px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo-pill">Cap Retraite</div>
+    <h1>Tableau de bord Leads</h1>
+  </div>
+  <div class="header-right">Mis à jour · Mars 2026</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('vue-globale')">Vue globale</div>
+  <div class="tab" onclick="switchTab('sources')">Sources 2025</div>
+  <div class="tab" onclick="switchTab('remuneration')">Rémunération</div>
+  <div class="tab" onclick="switchTab('factures')">Factures</div>
+</div>
+
+<div class="content">
+
+  <!-- ========== TAB 1 : VUE GLOBALE ========== -->
+  <div class="tab-panel active" id="tab-vue-globale">
+
+    <div class="year-toggle">
+      <button class="year-btn active" onclick="setYear(2025, this)">2025</button>
+      <button class="year-btn" onclick="setYear(2026, this)">2026</button>
+      <button class="year-btn" onclick="setYear('compare', this)">Comparaison</button>
+    </div>
+
+    <div class="kpi-row" id="kpi-globale"></div>
+
+    <p class="section-title">Évolution mensuelle des leads envoyés
+      <span id="yago-label">vs 2025</span>
+    </p>
+    <div class="chart-grid full">
+      <div class="chart-card">
+        <h3 id="chart-global-title">Leads mensuels 2025 — Famillys + Papybnb</h3>
+        <div class="chart-wrap"><canvas id="chartGlobal"></canvas></div>
+        <div class="legend" id="legendGlobal"></div>
+      </div>
+    </div>
+
+    <p class="section-title">Cumul annuel à date</p>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Cumul mensuel 2025</h3>
+        <div class="chart-wrap"><canvas id="chartCumul2025"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Cumul mensuel 2026</h3>
+        <div class="chart-wrap"><canvas id="chartCumul2026"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 2 : SOURCES 2025 ========== -->
+  <div class="tab-panel" id="tab-sources">
+    <div class="kpi-row" id="kpi-sources"></div>
+
+    <p class="section-title">Répartition Famillys / Papybnb par mois
+      <span>2025 uniquement · Papybnb arrêté en août 2025</span>
+    </p>
+    <div class="chart-grid full">
+      <div class="chart-card">
+        <h3>Volume mensuel par source (leads enregistrés)</h3>
+        <div class="chart-wrap"><canvas id="chartSources"></canvas></div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--famillys)"></div>Famillys</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--papybnb)"></div>Papybnb</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="section-title">Poids de chaque source par mois</p>
+    <div class="chart-grid full">
+      <div class="chart-card">
+        <h3>Part en % — Famillys vs Papybnb</h3>
+        <div class="chart-wrap"><canvas id="chartPoids"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-top:20px">
+      <h3>Détail mensuel par source — 2025</h3>
+      <table class="data-table" id="tableSources"></table>
+    </div>
+  </div>
+
+  <!-- ========== TAB 3 : RÉMUNÉRATION ========== -->
+  <div class="tab-panel" id="tab-remuneration">
+
+    <div style="background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:24px; font-size:13px; display:flex; gap:24px; flex-wrap:wrap;">
+      <div><strong>Zone A</strong> — IDF + PACA <span style="color:var(--yellow);font-weight:700;margin-left:8px">20 €/lead</span></div>
+      <div><strong>Zone B</strong> — Nouvelle Aquitaine + Hauts de France + Grand Est <span style="color:var(--accent);font-weight:700;margin-left:8px">12 €/lead</span></div>
+      <div><strong>Zone C</strong> — Reste de la France <span style="color:var(--text-muted);font-weight:700;margin-left:8px">6 €/lead</span></div>
+      <div style="color:var(--text-muted);font-size:11px;align-self:center">⚠ Basé sur les données enregistrées (CLIENTS) — tarification post août 2025</div>
+    </div>
+
+    <div class="kpi-row" id="kpi-remu"></div>
+
+    <p class="section-title">Volume de leads par zone</p>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Répartition en volume — 2025</h3>
+        <div class="chart-wrap"><canvas id="chartZoneVol2025"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Répartition en valeur estimée — 2025</h3>
+        <div class="chart-wrap"><canvas id="chartZoneVal2025"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Répartition en volume — 2026 (jan–mar)</h3>
+        <div class="chart-wrap"><canvas id="chartZoneVol2026"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Répartition en valeur estimée — 2026 (jan–mar)</h3>
+        <div class="chart-wrap"><canvas id="chartZoneVal2026"></canvas></div>
+      </div>
+    </div>
+
+    <p class="section-title">Évolution mensuelle par zone</p>
+    <div class="chart-grid full">
+      <div class="chart-card">
+        <h3>Volume mensuel A / B / C — 2025</h3>
+        <div class="chart-wrap"><canvas id="chartZoneMensuel2025"></canvas></div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--zoneA)"></div>Zone A — 20€</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--zoneB)"></div>Zone B — 12€</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--zoneC)"></div>Zone C — 6€</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-top:20px">
+      <h3>Détail mensuel par zone — valeur estimée HT</h3>
+      <table class="data-table" id="tableZones"></table>
+    </div>
+  </div>
+
+  <!-- ========== TAB 4 : FACTURES ========== -->
+  <div class="tab-panel" id="tab-factures">
+
+    <div class="kpi-row" id="kpi-factures"></div>
+
+    <div class="reconcile-card">
+      <h3>Récapitulatif des factures émises — 2025</h3>
+      <div style="display:flex; gap:8px; padding:8px 0; font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--border);">
+        <div style="width:80px">Facture</div>
+        <div style="flex:1; text-align:right">Zone A</div>
+        <div style="flex:1; text-align:right">Zone B</div>
+        <div style="flex:1; text-align:right">Zone C</div>
+        <div style="flex:1; text-align:right">Total leads</div>
+        <div style="flex:1; text-align:right">Total HT</div>
+      </div>
+      <div id="facturesList"></div>
+    </div>
+
+    <div class="chart-grid full">
+      <div class="chart-card">
+        <h3>CA facturé mensuel HT — 2025 (mois avec facture)</h3>
+        <div class="chart-wrap"><canvas id="chartFactures"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-top:20px">
+      <h3>Note sur la tarification</h3>
+      <div style="font-size:13px; color:var(--text-muted); line-height:1.8; padding:8px 0;">
+        <strong style="color:var(--text)">Factures 03, 06, 07 / 2025</strong> — Ancienne tarification avec deux sources distinctes (Famillys + Pilote 2 = Papybnb) et des barèmes différenciés :<br>
+        &nbsp;&nbsp;• Zone 1 Famillys : 20€ · Zone 2 : 15€ · Zone 3 : 8€<br>
+        &nbsp;&nbsp;• Zone 1 Pilote 2 : 10€ · Zone 2 : 7,5€ · Zone 3 : 4€<br><br>
+        <strong style="color:var(--text)">Factures 08 à 11 / 2025</strong> — Nouvelle tarification unifiée : Zone A = 20€ · Zone B = 12€ · Zone C = 6€<br>
+        (Papybnb arrêté, facturation Famillys uniquement)
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+// ===================== DONNÉES =====================
+
+const MOIS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+
+const data2025 = {
+  1:  {famillys:32, papybnb:13, total:45},
+  2:  {famillys:16, papybnb:67, total:83},
+  3:  {famillys:30, papybnb:128, total:158},
+  4:  {famillys:20, papybnb:108, total:128},
+  5:  {famillys:57, papybnb:85, total:142},
+  6:  {famillys:70, papybnb:111, total:181},
+  7:  {famillys:58, papybnb:76, total:134},
+  8:  {famillys:36, papybnb:0, total:36},
+  9:  {famillys:37, papybnb:0, total:37},
+  10: {famillys:40, papybnb:0, total:40},
+  11: {famillys:51, papybnb:0, total:51},
+  12: {famillys:43, papybnb:0, total:43},
+};
+
+const data2026 = {
+  1:  {famillys:67, total:67},
+  2:  {famillys:41, total:41},
+  3:  {famillys:51, total:51},
+};
+
+const zones2025 = {
+  1:  {A:11,B:12,C:22}, 2:{A:14,B:20,C:49}, 3:{A:20,B:35,C:103},
+  4:  {A:13,B:31,C:84}, 5:{A:20,B:46,C:76}, 6:{A:23,B:43,C:115},
+  7:  {A:11,B:36,C:87}, 8:{A:7,B:8,C:21},   9:{A:6,B:16,C:15},
+  10: {A:8,B:7,C:25},  11:{A:8,B:14,C:29}, 12:{A:6,B:16,C:21},
+};
+
+const zones2026 = {
+  1:{A:11,B:24,C:32}, 2:{A:9,B:9,C:23}, 3:{A:10,B:15,C:26},
+};
+
+const factures = [
+  {mois:'01/2025', A:8,  B:9,  C:19, Ap2:26, Bp2:44, Cp2:67,  total:173, HT:1305, ancien:true},
+  {mois:'02/2025', A:14, B:7,  C:43, Ap2:23, Bp2:26, Cp2:84,  total:197, HT:1490, ancien:true},
+  {mois:'03/2025', A:5,  B:25, C:96, Ap2:18, Bp2:66, Cp2:136, total:346, HT:2462, ancien:true},
+  {mois:'04/2025', A:5,  B:29, C:81, Ap2:6,  Bp2:36, Cp2:69,  total:226, HT:1789, ancien:true},
+  {mois:'05/2025', A:7,  B:37, C:71, Ap2:3,  Bp2:9,  Cp2:34,  total:161, HT:1496.5, ancien:true},
+  {mois:'06/2025', A:3,  B:28, C:85, Ap2:4,  Bp2:34, Cp2:37,  total:191, HT:1603, ancien:true},
+  {mois:'07/2025', A:9,  B:36, C:78, Ap2:15, Bp2:28, Cp2:61,  total:227, HT:1948, ancien:true},
+  {mois:'08/2025', A:10, B:29, C:91, total:130, HT:1094, ancien:false},
+  {mois:'09/2025', A:35, B:50, C:84, total:169, HT:1804, ancien:false},
+  {mois:'10/2025', A:30, B:26, C:83, total:139, HT:1410, ancien:false},
+  {mois:'11/2025', A:29, B:47, C:100, total:176, HT:1744, ancien:false},
+  {mois:'12/2025', A:43, B:56, C:101, total:200, HT:2138, ancien:false},
+];
+
+// ===================== CHART DEFAULTS =====================
+Chart.defaults.color = '#7a84a8';
+Chart.defaults.borderColor = '#2a3050';
+Chart.defaults.font.family = 'DM Sans';
+
+function baseBarOptions(xTitle='') {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#181c27',
+        borderColor: '#2a3050',
+        borderWidth: 1,
+        titleColor: '#e8eaf2',
+        bodyColor: '#7a84a8',
+        padding: 10,
+      }
+    },
+    scales: {
+      x: { grid:{color:'rgba(255,255,255,0.04)'}, ticks:{font:{size:11}} },
+      y: { grid:{color:'rgba(255,255,255,0.04)'}, ticks:{font:{size:11}} }
+    }
+  };
+}
+
+function basePieOptions() {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'right',
+        labels: { color:'#7a84a8', font:{size:11}, padding:12, boxWidth:12 }
+      },
+      tooltip: {
+        backgroundColor: '#181c27', borderColor: '#2a3050', borderWidth:1,
+        titleColor:'#e8eaf2', bodyColor:'#7a84a8', padding:10,
+        callbacks: {
+          label: (ctx) => ` ${ctx.label}: ${ctx.parsed} leads (${Math.round(ctx.parsed/ctx.dataset.data.reduce((a,b)=>a+b,0)*100)}%)`
+        }
+      }
+    }
+  };
+}
+
+// ===================== STATE =====================
+let currentYear = 2025;
+let charts = {};
+
+function destroyChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+// ===================== INIT =====================
+window.addEventListener('DOMContentLoaded', () => {
+  renderVueGlobale();
+  renderSources();
+  renderRemuneration();
+  renderFactures();
+});
+
+// ===================== TAB SWITCH =====================
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===================== VUE GLOBALE =====================
+function setYear(year, btn) {
+  currentYear = year;
+  document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderVueGlobale();
+}
+
+function renderVueGlobale() {
+  const yr = currentYear;
+
+  // KPIs
+  const kpiEl = document.getElementById('kpi-globale');
+  const tot2025 = Object.values(data2025).reduce((s,d) => s+d.total, 0);
+  const tot2026 = Object.values(data2026).reduce((s,d) => s+d.total, 0);
+  const moisActifs2026 = Object.keys(data2026).length;
+  const moisEq2025 = Object.entries(data2025).slice(0, moisActifs2026).reduce((s,[,d]) => s+d.total, 0);
+  const evol = moisEq2025 > 0 ? ((tot2026 - moisEq2025) / moisEq2025 * 100).toFixed(0) : 'N/A';
+  const evolDir = tot2026 >= moisEq2025 ? 'up' : 'down';
+  const evolSign = tot2026 >= moisEq2025 ? '+' : '';
+
+  if (yr === 2025 || yr === 'compare') {
+    kpiEl.innerHTML = `
+      <div class="kpi"><div class="kpi-label">Total leads 2025</div><div class="kpi-value">${tot2025}</div><div class="kpi-sub">Famillys + Papybnb (jan–déc)</div></div>
+      <div class="kpi orange"><div class="kpi-label">Papybnb 2025</div><div class="kpi-value">${Object.values(data2025).reduce((s,d)=>s+d.papybnb,0)}</div><div class="kpi-sub">Arrêté depuis août 2025</div></div>
+      <div class="kpi"><div class="kpi-label">Famillys 2025</div><div class="kpi-value">${Object.values(data2025).reduce((s,d)=>s+d.famillys,0)}</div><div class="kpi-sub">Uniquement Famillys</div></div>
+      <div class="kpi green"><div class="kpi-label">Moy. mensuelle 2025</div><div class="kpi-value">${Math.round(tot2025/12)}</div><div class="kpi-sub">leads/mois</div></div>
+    `;
+  }
+  if (yr === 2026) {
+    kpiEl.innerHTML = `
+      <div class="kpi"><div class="kpi-label">Total leads 2026</div><div class="kpi-value">${tot2026}</div><div class="kpi-sub">Jan–Mar (${moisActifs2026} mois)</div></div>
+      <div class="kpi green"><div class="kpi-label">Moy. mensuelle 2026</div><div class="kpi-value">${Math.round(tot2026/moisActifs2026)}</div><div class="kpi-sub">leads/mois</div></div>
+      <div class="kpi ${evolDir}"><div class="kpi-label">vs même période 2025</div><div class="kpi-value">${evolSign}${evol}%</div><div class="kpi-delta ${evolDir}">${tot2026} vs ${moisEq2025}</div></div>
+      <div class="kpi"><div class="kpi-label">Projection 2026</div><div class="kpi-value">~${Math.round(tot2026/moisActifs2026*12)}</div><div class="kpi-sub">sur base actuelle</div></div>
+    `;
+  }
+  if (yr === 'compare') {
+    kpiEl.innerHTML = `
+      <div class="kpi"><div class="kpi-label">Total 2025</div><div class="kpi-value">${tot2025}</div><div class="kpi-sub">12 mois complets</div></div>
+      <div class="kpi green"><div class="kpi-label">Total 2026 YTD</div><div class="kpi-value">${tot2026}</div><div class="kpi-sub">${moisActifs2026} mois (jan–mar)</div></div>
+      <div class="kpi ${evolDir}"><div class="kpi-label">Évolution YAGO</div><div class="kpi-value ${evolDir}">${evolSign}${evol}%</div><div class="kpi-delta ${evolDir}">${tot2026} vs ${moisEq2025} (jan–mar 2025)</div></div>
+      <div class="kpi"><div class="kpi-label">Moy. mensuelle</div><div class="kpi-value">${Math.round(tot2026/moisActifs2026)}</div><div class="kpi-sub">vs ${Math.round(tot2025/12)} en 2025</div></div>
+    `;
+  }
+
+  // Graphique principal
+  destroyChart('chartGlobal');
+  const titleEl = document.getElementById('chart-global-title');
+  const legendEl = document.getElementById('legendGlobal');
+  const yago = document.getElementById('yago-label');
+
+  if (yr === 2025) {
+    titleEl.textContent = 'Leads mensuels 2025 — Famillys + Papybnb';
+    yago.textContent = 'données 2025';
+    legendEl.innerHTML = `<div class="legend-item"><div class="legend-dot" style="background:var(--famillys)"></div>Famillys</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--papybnb)"></div>Papybnb</div>`;
+    charts['chartGlobal'] = new Chart(document.getElementById('chartGlobal'), {
+      type: 'bar',
+      data: {
+        labels: MOIS,
+        datasets: [
+          { label:'Famillys', data: Array.from({length:12},(_,i)=>data2025[i+1].famillys), backgroundColor:'rgba(79,142,247,0.8)', borderRadius:4, stack:'s' },
+          { label:'Papybnb',  data: Array.from({length:12},(_,i)=>data2025[i+1].papybnb),  backgroundColor:'rgba(232,108,58,0.8)',  borderRadius:4, stack:'s' },
+        ]
+      },
+      options: { ...baseBarOptions(), plugins:{...baseBarOptions().plugins,legend:{display:false}}, scales:{...baseBarOptions().scales, x:{...baseBarOptions().scales.x,stacked:true}, y:{...baseBarOptions().scales.y,stacked:true}} }
+    });
+  } else if (yr === 2026) {
+    titleEl.textContent = 'Leads mensuels 2026 — Famillys';
+    yago.textContent = 'vs 2025';
+    legendEl.innerHTML = `<div class="legend-item"><div class="legend-dot" style="background:var(--famillys)"></div>2026</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(79,142,247,0.3)"></div>2025 (référence)</div>`;
+    charts['chartGlobal'] = new Chart(document.getElementById('chartGlobal'), {
+      type: 'bar',
+      data: {
+        labels: MOIS.slice(0,3),
+        datasets: [
+          { label:'2025', data:[data2025[1].total,data2025[2].total,data2025[3].total], backgroundColor:'rgba(79,142,247,0.25)', borderRadius:4 },
+          { label:'2026', data:[data2026[1].total,data2026[2].total,data2026[3].total], backgroundColor:'rgba(79,142,247,0.85)', borderRadius:4 },
+        ]
+      },
+      options: {...baseBarOptions(), plugins:{...baseBarOptions().plugins,legend:{display:false}}}
+    });
+  } else {
+    // Comparaison superposée
+    titleEl.textContent = 'Comparaison YAGO — 2025 vs 2026 (jan–mar)';
+    yago.textContent = 'comparaison 2025/2026';
+    legendEl.innerHTML = `<div class="legend-item"><div class="legend-dot" style="background:rgba(79,142,247,0.3)"></div>2025</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>2026</div>`;
+    charts['chartGlobal'] = new Chart(document.getElementById('chartGlobal'), {
+      type: 'bar',
+      data: {
+        labels: MOIS.slice(0,3),
+        datasets: [
+          { label:'2025', data:[data2025[1].total,data2025[2].total,data2025[3].total], backgroundColor:'rgba(79,142,247,0.3)', borderRadius:4 },
+          { label:'2026', data:[data2026[1].total,data2026[2].total,data2026[3].total], backgroundColor:'rgba(79,142,247,0.85)', borderRadius:4 },
+        ]
+      },
+      options: {...baseBarOptions(), plugins:{...baseBarOptions().plugins,legend:{display:false}}}
+    });
+  }
+
+  // Cumulatifs
+  destroyChart('chartCumul2025');
+  let cum25 = 0;
+  const cums25 = Array.from({length:12},(_,i) => {cum25 += data2025[i+1].total; return cum25;});
+  charts['chartCumul2025'] = new Chart(document.getElementById('chartCumul2025'), {
+    type:'bar',
+    data:{labels:MOIS, datasets:[{label:'Cumul 2025', data:cums25, backgroundColor:'rgba(79,142,247,0.6)', borderRadius:4}]},
+    options: baseBarOptions()
+  });
+
+  destroyChart('chartCumul2026');
+  let cum26 = 0;
+  const cums26 = [1,2,3].map(m => {cum26 += data2026[m].total; return cum26;});
+  charts['chartCumul2026'] = new Chart(document.getElementById('chartCumul2026'), {
+    type:'bar',
+    data:{labels:MOIS.slice(0,3), datasets:[{label:'Cumul 2026', data:cums26, backgroundColor:'rgba(52,201,138,0.6)', borderRadius:4}]},
+    options: baseBarOptions()
+  });
+}
+
+// ===================== SOURCES =====================
+function renderSources() {
+  const tot = Object.values(data2025).reduce((s,d)=>s+d.total,0);
+  const totFam = Object.values(data2025).reduce((s,d)=>s+d.famillys,0);
+  const totPap = Object.values(data2025).reduce((s,d)=>s+d.papybnb,0);
+  const moisAvecPap = Object.values(data2025).filter(d=>d.papybnb>0).length;
+
+  document.getElementById('kpi-sources').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Total 2025</div><div class="kpi-value">${tot}</div><div class="kpi-sub">toutes sources</div></div>
+    <div class="kpi"><div class="kpi-label">Famillys 2025</div><div class="kpi-value">${totFam}</div><div class="kpi-sub">${Math.round(totFam/tot*100)}% du total</div></div>
+    <div class="kpi orange"><div class="kpi-label">Papybnb 2025</div><div class="kpi-value">${totPap}</div><div class="kpi-sub">${Math.round(totPap/tot*100)}% — actif ${moisAvecPap} mois</div></div>
+    <div class="kpi green"><div class="kpi-label">Depuis août 2025</div><div class="kpi-value">100%</div><div class="kpi-sub">Famillys uniquement</div></div>
+  `;
+
+  // Barres empilées
+  charts['chartSources'] = new Chart(document.getElementById('chartSources'), {
+    type:'bar',
+    data:{
+      labels:MOIS,
+      datasets:[
+        {label:'Famillys', data:Array.from({length:12},(_,i)=>data2025[i+1].famillys), backgroundColor:'rgba(79,142,247,0.85)', borderRadius:4, stack:'s'},
+        {label:'Papybnb',  data:Array.from({length:12},(_,i)=>data2025[i+1].papybnb),  backgroundColor:'rgba(232,108,58,0.85)',  borderRadius:4, stack:'s'},
+      ]
+    },
+    options:{...baseBarOptions(), plugins:{...baseBarOptions().plugins,legend:{display:false}}, scales:{x:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:11}}},y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:11}}}}}
+  });
+
+  // % part
+  const pctFam = Array.from({length:12},(_,i) => data2025[i+1].total>0 ? Math.round(data2025[i+1].famillys/data2025[i+1].total*100) : 0);
+  const pctPap = pctFam.map(v=>100-v);
+  charts['chartPoids'] = new Chart(document.getElementById('chartPoids'), {
+    type:'bar',
+    data:{
+      labels:MOIS,
+      datasets:[
+        {label:'Famillys %', data:pctFam, backgroundColor:'rgba(79,142,247,0.85)', borderRadius:4, stack:'s'},
+        {label:'Papybnb %',  data:pctPap, backgroundColor:'rgba(232,108,58,0.85)',  borderRadius:4, stack:'s'},
+      ]
+    },
+    options:{
+      ...baseBarOptions(),
+      plugins:{...baseBarOptions().plugins,legend:{display:false},tooltip:{...baseBarOptions().plugins.tooltip,callbacks:{label:(ctx)=>` ${ctx.dataset.label}: ${ctx.parsed.y}%`}}},
+      scales:{x:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:11}}},y:{stacked:true,max:100,grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:11},callback:(v)=>v+'%'}}}
+    }
+  });
+
+  // Table
+  let html = `<thead><tr><th>Mois</th><th>Famillys</th><th>Papybnb</th><th>Total</th><th>% Famillys</th><th>% Papybnb</th></tr></thead><tbody>`;
+  let sf=0, sp=0, st=0;
+  for(let m=1;m<=12;m++) {
+    const d=data2025[m];
+    sf+=d.famillys; sp+=d.papybnb; st+=d.total;
+    const pf=d.total>0?Math.round(d.famillys/d.total*100):0;
+    const pp=100-pf;
+    html+=`<tr><td>${MOIS[m-1]}</td><td>${d.famillys}</td><td>${d.papybnb>0?d.papybnb:'—'}</td><td>${d.total}</td><td>${pf}%</td><td>${d.papybnb>0?pp+'%':'—'}</td></tr>`;
+  }
+  const pf=Math.round(sf/st*100);
+  html+=`<tr><td>TOTAL 2025</td><td>${sf}</td><td>${sp}</td><td>${st}</td><td>${pf}%</td><td>${100-pf}%</td></tr></tbody>`;
+  document.getElementById('tableSources').innerHTML = html;
+}
+
+// ===================== RÉMUNÉRATION =====================
+function renderRemuneration() {
+  const TARIF = {A:20,B:12,C:6};
+
+  let totA=0,totB=0,totC=0,totVal=0;
+  Object.values(zones2025).forEach(z=>{
+    totA+=z.A; totB+=z.B; totC+=z.C;
+    totVal += z.A*20+z.B*12+z.C*6;
+  });
+  const totLeads = totA+totB+totC;
+
+  let totA26=0,totB26=0,totC26=0,totVal26=0;
+  Object.values(zones2026).forEach(z=>{
+    totA26+=z.A; totB26+=z.B; totC26+=z.C;
+    totVal26 += z.A*20+z.B*12+z.C*6;
+  });
+
+  document.getElementById('kpi-remu').innerHTML = `
+    <div class="kpi yellow"><div class="kpi-label">Zone A — 2025</div><div class="kpi-value">${totA}</div><div class="kpi-sub">${Math.round(totA/totLeads*100)}% du volume · ${(totA*20).toLocaleString('fr')} €</div></div>
+    <div class="kpi"><div class="kpi-label">Zone B — 2025</div><div class="kpi-value">${totB}</div><div class="kpi-sub">${Math.round(totB/totLeads*100)}% du volume · ${(totB*12).toLocaleString('fr')} €</div></div>
+    <div class="kpi"><div class="kpi-label">Zone C — 2025</div><div class="kpi-value">${totC}</div><div class="kpi-sub">${Math.round(totC/totLeads*100)}% du volume · ${(totC*6).toLocaleString('fr')} €</div></div>
+    <div class="kpi green"><div class="kpi-label">Valeur estimée 2025</div><div class="kpi-value">${(totVal).toLocaleString('fr')} €</div><div class="kpi-sub">tarif post août 2025 · HT</div></div>
+  `;
+
+  // Donut 2025 volume
+  charts['chartZoneVol2025'] = new Chart(document.getElementById('chartZoneVol2025'), {
+    type:'doughnut',
+    data:{labels:['Zone A (20€)','Zone B (12€)','Zone C (6€)'], datasets:[{data:[totA,totB,totC], backgroundColor:['rgba(245,200,66,0.85)','rgba(79,142,247,0.85)','rgba(122,132,168,0.55)'], borderWidth:0, hoverOffset:6}]},
+    options:basePieOptions()
+  });
+  // Donut 2025 valeur
+  charts['chartZoneVal2025'] = new Chart(document.getElementById('chartZoneVal2025'), {
+    type:'doughnut',
+    data:{labels:['Zone A (20€)','Zone B (12€)','Zone C (6€)'], datasets:[{data:[totA*20,totB*12,totC*6], backgroundColor:['rgba(245,200,66,0.85)','rgba(79,142,247,0.85)','rgba(122,132,168,0.55)'], borderWidth:0, hoverOffset:6}]},
+    options:{...basePieOptions(), plugins:{...basePieOptions().plugins, tooltip:{...basePieOptions().plugins.tooltip, callbacks:{label:(ctx)=>`Zone ${['A','B','C'][ctx.dataIndex]}: ${ctx.parsed.toLocaleString('fr')} €`}}}}
+  });
+  // Donut 2026 volume
+  const tot26 = totA26+totB26+totC26;
+  charts['chartZoneVol2026'] = new Chart(document.getElementById('chartZoneVol2026'), {
+    type:'doughnut',
+    data:{labels:['Zone A (20€)','Zone B (12€)','Zone C (6€)'], datasets:[{data:[totA26,totB26,totC26], backgroundColor:['rgba(245,200,66,0.85)','rgba(79,142,247,0.85)','rgba(122,132,168,0.55)'], borderWidth:0, hoverOffset:6}]},
+    options:basePieOptions()
+  });
+  charts['chartZoneVal2026'] = new Chart(document.getElementById('chartZoneVal2026'), {
+    type:'doughnut',
+    data:{labels:['Zone A (20€)','Zone B (12€)','Zone C (6€)'], datasets:[{data:[totA26*20,totB26*12,totC26*6], backgroundColor:['rgba(245,200,66,0.85)','rgba(79,142,247,0.85)','rgba(122,132,168,0.55)'], borderWidth:0, hoverOffset:6}]},
+    options:{...basePieOptions(), plugins:{...basePieOptions().plugins, tooltip:{...basePieOptions().plugins.tooltip, callbacks:{label:(ctx)=>`Zone ${['A','B','C'][ctx.dataIndex]}: ${ctx.parsed.toLocaleString('fr')} €`}}}}
+  });
+
+  // Bar mensuel zones
+  charts['chartZoneMensuel2025'] = new Chart(document.getElementById('chartZoneMensuel2025'), {
+    type:'bar',
+    data:{
+      labels:MOIS,
+      datasets:[
+        {label:'Zone A', data:Object.values(zones2025).map(z=>z.A), backgroundColor:'rgba(245,200,66,0.85)', borderRadius:4, stack:'s'},
+        {label:'Zone B', data:Object.values(zones2025).map(z=>z.B), backgroundColor:'rgba(79,142,247,0.85)',  borderRadius:4, stack:'s'},
+        {label:'Zone C', data:Object.values(zones2025).map(z=>z.C), backgroundColor:'rgba(122,132,168,0.55)', borderRadius:4, stack:'s'},
+      ]
+    },
+    options:{...baseBarOptions(), plugins:{...baseBarOptions().plugins,legend:{display:false}}, scales:{x:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:11}}},y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:11}}}}}
+  });
+
+  // Table zones
+  let html = `<thead><tr><th>Mois</th><th><span class="pill pill-A">A</span> Vol.</th><th><span class="pill pill-A">A</span> Val.</th><th><span class="pill pill-B">B</span> Vol.</th><th><span class="pill pill-B">B</span> Val.</th><th><span class="pill pill-C">C</span> Vol.</th><th><span class="pill pill-C">C</span> Val.</th><th>Total leads</th><th>Valeur HT</th></tr></thead><tbody>`;
+  let sA=0,sB=0,sC=0,sV=0;
+  for(let m=1;m<=12;m++){
+    const z=zones2025[m]||{A:0,B:0,C:0};
+    const val=z.A*20+z.B*12+z.C*6;
+    sA+=z.A; sB+=z.B; sC+=z.C; sV+=val;
+    html+=`<tr><td>${MOIS[m-1]}</td><td>${z.A}</td><td>${(z.A*20).toLocaleString('fr')} €</td><td>${z.B}</td><td>${(z.B*12).toLocaleString('fr')} €</td><td>${z.C}</td><td>${(z.C*6).toLocaleString('fr')} €</td><td>${z.A+z.B+z.C}</td><td style="color:var(--green);font-weight:600">${val.toLocaleString('fr')} €</td></tr>`;
+  }
+  html+=`<tr><td>TOTAL 2025</td><td>${sA}</td><td>${(sA*20).toLocaleString('fr')} €</td><td>${sB}</td><td>${(sB*12).toLocaleString('fr')} €</td><td>${sC}</td><td>${(sC*6).toLocaleString('fr')} €</td><td>${sA+sB+sC}</td><td style="color:var(--green)">${sV.toLocaleString('fr')} €</td></tr></tbody>`;
+  document.getElementById('tableZones').innerHTML = html;
+}
+
+// ===================== FACTURES =====================
+function renderFactures() {
+  const totLeads = factures.reduce((s,f)=>s+f.total,0);
+  const totHT = factures.reduce((s,f)=>s+f.HT,0);
+  const totTTC = totHT * 1.2;
+
+  document.getElementById('kpi-factures').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Factures émises</div><div class="kpi-value">${factures.length}</div><div class="kpi-sub">12 mois · année complète 2025</div></div>
+    <div class="kpi"><div class="kpi-label">Leads facturés</div><div class="kpi-value">${totLeads}</div><div class="kpi-sub">après déduplication doublons</div></div>
+    <div class="kpi green"><div class="kpi-label">CA total HT</div><div class="kpi-value">${totHT.toLocaleString('fr')} €</div><div class="kpi-sub">TVA 20% : ${Math.round(totHT*0.2).toLocaleString('fr')} €</div></div>
+    <div class="kpi"><div class="kpi-label">CA total TTC</div><div class="kpi-value">${Math.round(totTTC).toLocaleString('fr')} €</div><div class="kpi-sub">mois facturés uniquement</div></div>
+  `;
+
+  // Liste factures
+  let html = '';
+  factures.forEach(f => {
+    const Atot = f.ancien ? (f.A||0)+(f.Ap2||0) : (f.A||0);
+    const Btot = f.ancien ? (f.B||0)+(f.Bp2||0) : (f.B||0);
+    const Ctot = f.ancien ? (f.C||0)+(f.Cp2||0) : (f.C||0);
+    const note = f.ancien ? ' <span style="font-size:10px;color:var(--accent2);background:rgba(232,108,58,0.1);padding:2px 6px;border-radius:8px;margin-left:6px">ancienne tarif.</span>' : '';
+    html += `<div class="facture-row">
+      <div class="facture-mois">${f.mois}${note}</div>
+      <div class="facture-col">${Atot} <span style="font-size:10px;color:var(--yellow)">A</span></div>
+      <div class="facture-col">${Btot} <span style="font-size:10px;color:var(--accent)">B</span></div>
+      <div class="facture-col">${Ctot} <span style="font-size:10px;color:var(--text-muted)">C</span></div>
+      <div class="facture-col highlight">${f.total}</div>
+      <div class="facture-col money">${f.HT.toLocaleString('fr')} €</div>
+    </div>`;
+  });
+  // Total
+  const totA2=factures.reduce((s,f)=>s+(f.ancien?(f.A||0)+(f.Ap2||0):(f.A||0)),0);
+  const totB2=factures.reduce((s,f)=>s+(f.ancien?(f.B||0)+(f.Bp2||0):(f.B||0)),0);
+  const totC2=factures.reduce((s,f)=>s+(f.ancien?(f.C||0)+(f.Cp2||0):(f.C||0)),0);
+  html += `<div class="facture-row" style="font-weight:700;border-top:2px solid var(--border)">
+    <div class="facture-mois" style="color:var(--text)">TOTAL</div>
+    <div class="facture-col highlight">${totA2}</div>
+    <div class="facture-col highlight">${totB2}</div>
+    <div class="facture-col highlight">${totC2}</div>
+    <div class="facture-col highlight">${totLeads}</div>
+    <div class="facture-col money">${totHT.toLocaleString('fr')} €</div>
+  </div>`;
+  document.getElementById('facturesList').innerHTML = html;
+
+  // Bar chart HT
+  charts['chartFactures'] = new Chart(document.getElementById('chartFactures'), {
+    type:'bar',
+    data:{
+      labels: factures.map(f=>f.mois),
+      datasets:[
+        {label:'CA HT (€)', data: factures.map(f=>f.HT), backgroundColor: factures.map(f=>f.ancien?'rgba(232,108,58,0.7)':'rgba(52,201,138,0.7)'), borderRadius:6}
+      ]
+    },
+    options:{
+      ...baseBarOptions(),
+      plugins:{...baseBarOptions().plugins, tooltip:{...baseBarOptions().plugins.tooltip, callbacks:{label:(ctx)=>` ${ctx.parsed.y.toLocaleString('fr')} € HT`}}}
+    }
+  });
+}
+</script>
+</body>
+</html>
