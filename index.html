@@ -3,80 +3,173 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Famillys – Contrats</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<title>Famillys – Dashboard Signatures</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #222; }
-  header {
-    background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
-    color: white; padding: 18px 30px;
-    display: flex; align-items: center; justify-content: space-between;
+  :root {
+    --blue-dark: #1a3a5c;
+    --blue-mid: #2563a8;
+    --blue-light: #93c5fd;
+    --blue-proj: #bfdbfe;
+    --green: #16a34a;
+    --orange: #ea580c;
+    --red: #dc2626;
+    --grey-bg: #f1f5f9;
+    --grey-card: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
   }
-  header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px; }
-  header .subtitle { font-size: 0.85rem; opacity: 0.8; margin-top: 2px; }
-  .badge { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--grey-bg); color: var(--text); }
+
+  header {
+    background: var(--blue-dark);
+    color: white;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: .3px; }
+  header .subtitle { font-size: .85rem; opacity: .75; }
+  .date-badge {
+    background: rgba(255,255,255,.15);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: .82rem;
+    font-weight: 600;
+  }
 
   nav {
-    background: #1a3a5c; display: flex; gap: 4px; padding: 0 30px;
-    border-bottom: 3px solid #2563a8;
+    background: var(--blue-mid);
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
   }
-  nav button {
-    background: none; border: none; color: rgba(255,255,255,0.7);
-    padding: 12px 20px; font-size: 0.9rem; cursor: pointer;
-    border-bottom: 3px solid transparent; margin-bottom: -3px;
-    transition: all 0.2s;
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: 10px 22px;
+    font-size: .85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
   }
-  nav button.active, nav button:hover {
-    color: white; border-bottom-color: #4da6ff;
-  }
+  nav a:hover { background: rgba(255,255,255,.1); color: white; }
+  nav a.active { background: rgba(255,255,255,.15); color: white; border-bottom-color: #93c5fd; }
 
-  .tab { display: none; padding: 24px 30px; }
-  .tab.active { display: block; }
-
-  .kpi-row { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
-  .kpi {
-    background: white; border-radius: 10px; padding: 18px 24px;
-    flex: 1; min-width: 160px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border-left: 4px solid #2563a8;
+  /* SYNTHÈSE INTRO */
+  .synthese-block {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
+    color: white;
+    margin: 20px 20px 0;
+    border-radius: 12px;
+    padding: 22px 28px;
   }
-  .kpi.green { border-left-color: #16a34a; }
-  .kpi.orange { border-left-color: #ea580c; }
-  .kpi.purple { border-left-color: #7c3aed; }
-  .kpi label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-  .kpi .val { font-size: 2rem; font-weight: 700; color: #1a3a5c; line-height: 1.1; }
-  .kpi .sub { font-size: 0.8rem; color: #888; margin-top: 2px; }
+  .synthese-block h2 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; opacity: .85; text-transform: uppercase; letter-spacing: .5px; }
+  .synthese-block p { font-size: .92rem; line-height: 1.65; opacity: .92; }
+  .synthese-block strong { color: #bfdbfe; }
 
+  .main { padding: 20px; max-width: 1200px; margin: 0 auto; }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .kpi-card {
+    background: var(--grey-card);
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--blue-mid);
+    box-shadow: 0 1px 4px rgba(0,0,0,.07);
+  }
+  .kpi-card.green { border-left-color: var(--green); }
+  .kpi-card.orange { border-left-color: var(--orange); }
+  .kpi-card.proj { border-left-color: var(--blue-light); }
+  .kpi-label { font-size: .75rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px; }
+  .kpi-value { font-size: 1.9rem; font-weight: 800; color: var(--blue-dark); line-height: 1; }
+  .kpi-sub { font-size: .78rem; color: var(--text-light); margin-top: 5px; }
+  .badge-proj { font-size: .7rem; font-weight: 700; background: #dbeafe; color: #1e40af; border-radius: 4px; padding: 2px 7px; margin-left: 6px; }
+  .badge-down { color: var(--red); font-weight: 700; }
+  .badge-up { color: var(--green); font-weight: 700; }
+
+  /* CHARTS */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 18px;
+    margin-bottom: 22px;
+  }
   .chart-card {
-    background: white; border-radius: 10px; padding: 20px 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+    background: var(--grey-card);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.07);
   }
-  .chart-card h2 { font-size: 1rem; color: #1a3a5c; margin-bottom: 16px; font-weight: 600; }
-  .chart-wrap { position: relative; }
-
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th { background: #1a3a5c; color: white; padding: 8px 12px; text-align: center; font-weight: 600; }
-  td { padding: 7px 12px; text-align: center; border-bottom: 1px solid #eee; }
-  tr:nth-child(even) td { background: #f8f9fb; }
-  tr:hover td { background: #e8f0fe; }
-  .td-week { font-weight: 600; color: #1a3a5c; }
-  .comm { color: #16a34a; font-weight: 600; }
-
-  .year-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-  .year-btn {
-    border: 2px solid #2563a8; border-radius: 6px; background: white;
-    color: #2563a8; padding: 5px 14px; cursor: pointer; font-size: 0.85rem;
-    transition: all 0.2s;
+  .chart-card h3 {
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
   }
-  .year-btn.active { background: #2563a8; color: white; }
+  .chart-wrap { position: relative; height: 240px; }
 
-  @media (max-width: 700px) {
-    .grid2 { grid-template-columns: 1fr; }
-    .tab { padding: 16px; }
-    nav { padding: 0 10px; }
-    nav button { padding: 10px 12px; font-size: 0.8rem; }
+  /* LEGEND */
+  .legend-row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    font-size: .78rem;
+    color: var(--text-light);
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+  .legend-dot.solid { background: var(--blue-dark); }
+  .legend-dot.proj { background: var(--blue-proj); border: 1.5px dashed #93c5fd; }
+
+  /* TABLE */
+  .table-card {
+    background: var(--grey-card);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    margin-bottom: 22px;
+    overflow-x: auto;
+  }
+  .table-card h3 {
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  th { background: var(--grey-bg); padding: 9px 12px; text-align: center; font-size: .75rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: .4px; }
+  td { padding: 8px 12px; text-align: center; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+  .td-bold { font-weight: 700; }
+  .td-proj { color: var(--blue-mid); font-style: italic; }
+  .td-left { text-align: left; }
+
+  footer {
+    text-align: center;
+    padding: 16px;
+    color: var(--text-light);
+    font-size: .75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 10px;
   }
 </style>
 </head>
@@ -84,384 +177,282 @@
 
 <header>
   <div>
-    <h1>📋 Famillys – Suivi des Contrats</h1>
-    <div class="subtitle">Tableau de bord commercial · Mise à jour S11 2026</div>
+    <h1>🏠 Famillys — Tableau de Bord Signatures</h1>
+    <div class="subtitle">Suivi des contrats signés & performance commerciale</div>
   </div>
-  <div class="badge">93 contrats 2026</div>
+  <div class="date-badge">📅 Mis à jour au 24 mars 2026</div>
 </header>
 
 <nav>
-  <button class="active" onclick="showTab('tab2026')">🔵 Semaines 2026</button>
-  <button onclick="showTab('tabMois')">📅 Par mois</button>
-  <button onclick="showTab('tabAnnees')">📊 Années</button>
-  <button onclick="showTab('tabCompa')">🔄 Comparatif</button>
+  <a href="index.html" class="active">📊 Signatures</a>
+  <a href="abonnements.html">🔄 Abonnements</a>
+  <a href="cap_retraite.html">👴 Cap Retraite</a>
 </nav>
 
-<!-- ===================== TAB 1 : SEMAINES 2026 ===================== -->
-<div id="tab2026" class="tab active">
+<!-- SYNTHÈSE INTRO -->
+<div style="max-width:1200px; margin: 0 auto;">
+<div class="synthese-block">
+  <h2>📋 Synthèse — Point au 24 mars 2026</h2>
+  <p>
+    Yann, Christophe, voici le point commercial arrêté au <strong>24 mars 2026 (S12)</strong>.
+    Sur ce premier trimestre, Famillys affiche <strong>100 contrats signés</strong> en 12 semaines, soit un rythme de <strong>8,3 contrats/semaine</strong>, ce qui projette sur l'année à <strong>433 contrats</strong> — dépassant le record 2024 (530) si ce rythme se confirme.
+    Le mois de mars est toutefois en retrait par rapport à janvier et février (29 contrats vs 34–37), un point à surveiller.
+    Côté Cap Retraite, le volume de leads 2026 est en baisse par rapport à 2025 (190/mois vs 323/mois sur S1), probablement lié à une révision du contrat de partenariat ; les revenus réels sont à confirmer via les factures mensuelles.
+    Les abonnements familles d'accueil maintiennent <strong>21 dossiers actifs</strong>, avec une stabilité de la base.
+  </p>
+</div>
+</div>
 
-  <div class="kpi-row">
-    <div class="kpi">
-      <label>Contrats YTD 2026</label>
-      <div class="val">93</div>
-      <div class="sub">S1 → S11 · 2026</div>
+<div class="main">
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Contrats 2026 (S1–S12)</div>
+      <div class="kpi-value">100</div>
+      <div class="kpi-sub">vs 134 à S12 en 2025 <span class="badge-down">▼ −25%</span></div>
     </div>
-    <div class="kpi green">
-      <label>CA HT total 2026</label>
-      <div class="val">27 027 €</div>
-      <div class="sub">93 × 290,83 € HT</div>
+    <div class="kpi-card proj">
+      <div class="kpi-label">Projection 2026 ◌</div>
+      <div class="kpi-value" style="color:#2563a8;">433 <span class="badge-proj">PROJ.</span></div>
+      <div class="kpi-sub">sur base 8,3 contrats/semaine</div>
     </div>
-    <div class="kpi orange">
-      <label>Commissions 2026</label>
-      <div class="val">2 029 €</div>
-      <div class="sub">7,5 % du CA HT</div>
+    <div class="kpi-card green">
+      <div class="kpi-label">CA HT réalisé 2026</div>
+      <div class="kpi-value" style="color:var(--green);">29 083 €</div>
+      <div class="kpi-sub">100 × 290,83 € HT</div>
     </div>
-    <div class="kpi purple">
-      <label>Moy. hebdo 2026</label>
-      <div class="val">8,5</div>
-      <div class="sub">contrats / semaine</div>
+    <div class="kpi-card proj">
+      <div class="kpi-label">CA HT projeté 2026 ◌</div>
+      <div class="kpi-value" style="color:#2563a8;font-size:1.5rem;">125 929 € <span class="badge-proj">PROJ.</span></div>
+      <div class="kpi-sub">433 contrats × 290,83 € HT</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total historique</div>
+      <div class="kpi-value">1 968</div>
+      <div class="kpi-sub">contrats depuis 2021</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Record annuel</div>
+      <div class="kpi-value">530</div>
+      <div class="kpi-sub">en 2024 — objectif à dépasser</div>
     </div>
   </div>
 
-  <div class="chart-card">
-    <h2>Ventes hebdomadaires 2026 (contrats signés)</h2>
-    <div class="chart-wrap" style="height:280px">
-      <canvas id="chartWeek2026"></canvas>
+  <!-- CHARTS ROW 1 -->
+  <div class="chart-grid">
+
+    <!-- Contrats par année -->
+    <div class="chart-card">
+      <h3>📈 Contrats par année</h3>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot solid"></div> Réalisé</div>
+        <div class="legend-item"><div class="legend-dot proj"></div> ◌ Projeté 2026</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartAnnuel"></canvas></div>
     </div>
+
+    <!-- 2026 vs 2025 mensuel -->
+    <div class="chart-card">
+      <h3>📅 Mensuel 2026 vs 2025</h3>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot solid"></div> 2025</div>
+        <div class="legend-item" style="color:#2563a8;"><div class="legend-dot" style="background:#2563a8;"></div> 2026</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartMensuel"></canvas></div>
+    </div>
+
   </div>
 
-  <div class="chart-card">
-    <h2>Cumul contrats 2026</h2>
-    <div class="chart-wrap" style="height:220px">
-      <canvas id="chartCumul2026"></canvas>
-    </div>
-  </div>
-
-  <div class="chart-card">
-    <h2>Détail semaines 2026</h2>
+  <!-- TABLE MENSUELLE -->
+  <div class="table-card">
+    <h3>📋 Détail mensuel — 2025 et 2026</h3>
     <table>
       <thead>
         <tr>
-          <th>Semaine</th><th>Contrats</th><th>CA HT (€)</th><th>Commission (€)</th><th>Cumul YTD</th>
+          <th class="td-left">Mois</th>
+          <th>Jan</th><th>Fév</th><th>Mar</th><th>Avr</th><th>Mai</th><th>Jun</th>
+          <th>Jul</th><th>Aoû</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Déc</th>
+          <th>TOTAL</th>
         </tr>
       </thead>
-      <tbody id="tableWeeks2026"></tbody>
+      <tbody>
+        <tr>
+          <td class="td-left td-bold">2025</td>
+          <td>49</td><td>30</td><td>55</td><td>55</td><td>37</td><td>30</td>
+          <td>33</td><td>19</td><td>38</td><td>23</td><td>23</td><td>23</td>
+          <td class="td-bold">415</td>
+        </tr>
+        <tr>
+          <td class="td-left td-bold" style="color:var(--blue-mid)">2026</td>
+          <td>34</td><td>37</td><td>29</td>
+          <td class="td-proj">◌ 37</td><td class="td-proj">◌ 37</td><td class="td-proj">◌ 37</td>
+          <td class="td-proj">◌ 37</td><td class="td-proj">◌ 37</td><td class="td-proj">◌ 37</td>
+          <td class="td-proj">◌ 37</td><td class="td-proj">◌ 37</td><td class="td-proj">◌ 37</td>
+          <td class="td-proj td-bold">◌ 433</td>
+        </tr>
+      </tbody>
     </table>
+    <div style="font-size:.75rem;color:var(--text-light);margin-top:10px;">◌ = valeurs projetées sur base du rythme S1–S12 2026 (8,33 contrats/semaine)</div>
   </div>
-</div>
 
-<!-- ===================== TAB 2 : MOIS ===================== -->
-<div id="tabMois" class="tab">
-  <div class="year-selector" id="yearSelectorMois"></div>
-  <div class="chart-card">
-    <h2 id="titleMois">Contrats par mois</h2>
-    <div class="chart-wrap" style="height:300px">
-      <canvas id="chartMois"></canvas>
+  <!-- CHART TENDANCE ANNUELLE -->
+  <div class="chart-card" style="margin-bottom:22px;">
+    <h3>📊 Évolution annuelle 2021–2026</h3>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot solid"></div> Réalisé</div>
+      <div class="legend-item"><div class="legend-dot proj"></div> ◌ Projeté 2026</div>
     </div>
+    <div class="chart-wrap" style="height:200px;"><canvas id="chartTendance"></canvas></div>
   </div>
-  <div class="chart-card">
-    <h2>Tableau mensuel</h2>
-    <table>
-      <thead>
-        <tr><th>Mois</th><th id="moisYearHead">2026</th></tr>
-      </thead>
-      <tbody id="tableMois"></tbody>
-    </table>
-  </div>
-</div>
 
-<!-- ===================== TAB 3 : ANNÉES ===================== -->
-<div id="tabAnnees" class="tab">
-  <div class="kpi-row">
-    <div class="kpi"><label>2021 (jul→déc)</label><div class="val">146</div></div>
-    <div class="kpi"><label>2022</label><div class="val">367</div></div>
-    <div class="kpi"><label>2023</label><div class="val">410</div></div>
-    <div class="kpi"><label>2024</label><div class="val">526</div></div>
-    <div class="kpi"><label>2025</label><div class="val">416</div></div>
-    <div class="kpi green"><label>2026 YTD</label><div class="val">93</div><div class="sub">S11</div></div>
-  </div>
-  <div class="chart-card">
-    <h2>Contrats annuels (2021–2026 YTD)</h2>
-    <div class="chart-wrap" style="height:300px">
-      <canvas id="chartAnnees"></canvas>
-    </div>
-  </div>
-  <div class="grid2">
-    <div class="chart-card">
-      <h2>Évolution annuelle</h2>
-      <div class="chart-wrap" style="height:220px">
-        <canvas id="chartEvol"></canvas>
-      </div>
-    </div>
-    <div class="chart-card">
-      <h2>Totaux & CA</h2>
-      <table>
-        <thead><tr><th>Année</th><th>Contrats</th><th>CA HT (€)</th></tr></thead>
-        <tbody id="tableAnnees"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
+</div><!-- /main -->
 
-<!-- ===================== TAB 4 : COMPARATIF ===================== -->
-<div id="tabCompa" class="tab">
-  <div class="chart-card">
-    <h2>Comparatif hebdomadaire – S1 à S11 (toutes années)</h2>
-    <div class="chart-wrap" style="height:340px">
-      <canvas id="chartCompa"></canvas>
-    </div>
-  </div>
-  <div class="chart-card">
-    <h2>Cumul progressif S1→S11 par année</h2>
-    <div class="chart-wrap" style="height:280px">
-      <canvas id="chartCumulCompa"></canvas>
-    </div>
-  </div>
-</div>
+<footer>
+  Famillys Dashboard — Données au 24/03/2026 — Mis à jour par Philippe
+</footer>
 
 <script>
-// ===================== DATA =====================
-const PRICE_HT = 349 / 1.2;
-const COMM_RATE = 0.075;
-
-const weekly = {
-  2021: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,5,3,6,7,4,6,4,5,7,4,7,5,10,8,8,6,8,5,6,7,7,4,2,5,2,2],
-  2022: [5,10,6,7,7,10,12,6,10,8,9,12,11,10,7,7,11,9,5,6,7,5,5,8,8,9,4,6,4,6,14,5,7,6,10,3,13,8,9,7,7,7,4,3,7,6,7,3,5,1,1,4],
-  2023: [4,5,8,0,8,11,9,7,8,8,6,7,6,6,4,2,5,7,11,8,12,4,12,8,7,12,5,10,7,8,8,4,2,11,8,13,8,11,6,9,8,11,11,10,15,6,11,13,5,8,9,8],
-  2024: [4,13,7,7,3,12,8,8,17,10,11,9,22,8,13,10,5,10,10,8,11,5,11,9,10,3,14,22,14,5,6,10,6,22,12,14,11,10,7,4,8,12,7,7,11,6,10,15,12,16,12,9],
-  2025: [6,10,13,13,12,8,3,7,11,5,18,21,9,7,16,11,12,12,7,11,12,6,9,6,4,8,7,9,7,6,10,7,1,3,5,9,10,10,2,10,5,7,4,4,2,6,11,4,3,4,7,6],
-  2026: [5,10,8,10,4,12,11,5,9,10,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-};
-
-const monthly = {
-  2021: [0,0,0,0,0,0,24,22,29,31,28,12],
-  2022: [31,37,44,36,30,31,21,42,33,26,23,13],
-  2023: [20,34,33,17,40,41,33,28,40,44,48,32],
-  2024: [33,43,55,38,42,33,60,51,45,35,42,49],
-  2025: [49,30,55,55,37,30,33,19,38,23,23,24],
-  2026: [34,37,19,0,0,0,0,0,0,0,0,0]
-};
-
-const annual = { 2021: 146, 2022: 367, 2023: 410, 2024: 526, 2025: 416, 2026: 93 };
+// ---- DATA ----
+const ANNEES = [2021, 2022, 2023, 2024, 2025, 2026];
+const CONTRATS_REALISES = [146, 367, 410, 530, 415, 100];
+const PROJ_2026 = 433;
 const MOIS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-const YEARS = [2021,2022,2023,2024,2025,2026];
-const COLORS = {
-  2021: '#94a3b8', 2022: '#60a5fa', 2023: '#34d399',
-  2024: '#f97316', 2025: '#a78bfa', 2026: '#ef4444'
-};
+const DATA_2025 = [49,30,55,55,37,30,33,19,38,23,23,23];
+const DATA_2026_REEL = [34,37,29,null,null,null,null,null,null,null,null,null];
+const DATA_2026_PROJ = [null,null,null,37,37,37,37,37,37,37,37,37];
 
-// ===================== TAB NAV =====================
-function showTab(id) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
-}
+// Couleurs
+const BLUE_DARK = '#1a3a5c';
+const BLUE_MID = '#2563a8';
+const BLUE_PROJ = 'rgba(191,219,254,0.85)';
+const PROJ_BORDER = '#93c5fd';
 
-// ===================== SEMAINES 2026 =====================
-const weeks2026 = weekly[2026].slice(0, 11);
-const labels2026 = weeks2026.map((_, i) => `S${i+1}`);
-
-new Chart(document.getElementById('chartWeek2026'), {
+// ---- CHART 1: Annuel ----
+new Chart(document.getElementById('chartAnnuel'), {
   type: 'bar',
   data: {
-    labels: labels2026,
-    datasets: [{
-      label: 'Contrats', data: weeks2026,
-      backgroundColor: '#2563a8', borderRadius: 5
-    }]
+    labels: ANNEES,
+    datasets: [
+      {
+        label: 'Contrats réalisés',
+        data: [146,367,410,530,415,100],
+        backgroundColor: BLUE_DARK,
+        borderRadius: 4,
+        order: 2,
+      },
+      {
+        label: '◌ Projection 2026',
+        data: [null,null,null,null,null,PROJ_2026],
+        backgroundColor: BLUE_PROJ,
+        borderColor: PROJ_BORDER,
+        borderWidth: 2,
+        borderDash: [5,4],
+        borderRadius: 4,
+        order: 1,
+      }
+    ]
   },
   options: {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true, ticks: { stepSize: 2 } } }
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + ' contrats'
+        }
+      }
+    },
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
   }
 });
 
-// Cumul 2026
-let cum = 0;
-const cumData = weeks2026.map(v => { cum += v; return cum; });
-new Chart(document.getElementById('chartCumul2026'), {
+// ---- CHART 2: Mensuel 2025 vs 2026 ----
+new Chart(document.getElementById('chartMensuel'), {
   type: 'bar',
   data: {
-    labels: labels2026,
-    datasets: [{
-      label: 'Cumul', data: cumData,
-      backgroundColor: '#16a34a', borderRadius: 5
-    }]
+    labels: MOIS,
+    datasets: [
+      {
+        label: '2025',
+        data: DATA_2025,
+        backgroundColor: BLUE_DARK,
+        borderRadius: 3,
+        barPercentage: 0.4,
+        categoryPercentage: 0.8,
+      },
+      {
+        label: '2026 Réalisé',
+        data: [34,37,29,null,null,null,null,null,null,null,null,null],
+        backgroundColor: BLUE_MID,
+        borderRadius: 3,
+        barPercentage: 0.4,
+        categoryPercentage: 0.8,
+      },
+      {
+        label: '◌ 2026 Proj.',
+        data: [null,null,null,37,37,37,37,37,37,37,37,37],
+        backgroundColor: BLUE_PROJ,
+        borderColor: PROJ_BORDER,
+        borderWidth: 1.5,
+        borderRadius: 3,
+        barPercentage: 0.4,
+        categoryPercentage: 0.8,
+      }
+    ]
   },
   options: {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true } }
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12 } },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
   }
 });
 
-// Table semaines 2026
-const tbody = document.getElementById('tableWeeks2026');
-let cumYTD = 0;
-weeks2026.forEach((n, i) => {
-  cumYTD += n;
-  const caHT = (n * PRICE_HT).toFixed(2);
-  const comm = (n * PRICE_HT * COMM_RATE).toFixed(2);
-  const tr = `<tr>
-    <td class="td-week">S${i+1}</td>
-    <td>${n}</td>
-    <td>${parseFloat(caHT).toLocaleString('fr-FR')} €</td>
-    <td class="comm">${parseFloat(comm).toLocaleString('fr-FR')} €</td>
-    <td>${cumYTD}</td>
-  </tr>`;
-  tbody.innerHTML += tr;
-});
-// Total row
-const totalCA = (93 * PRICE_HT).toFixed(2);
-const totalComm = (93 * PRICE_HT * COMM_RATE).toFixed(2);
-tbody.innerHTML += `<tr style="font-weight:700;background:#e8f0fe">
-  <td>TOTAL</td><td>93</td>
-  <td>${parseFloat(totalCA).toLocaleString('fr-FR')} €</td>
-  <td class="comm">${parseFloat(totalComm).toLocaleString('fr-FR')} €</td>
-  <td>93</td>
-</tr>`;
-
-// ===================== MOIS =====================
-let selectedYearMois = 2026;
-const chartMoisInstance = new Chart(document.getElementById('chartMois'), {
-  type: 'bar',
-  data: { labels: MOIS, datasets: [] },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true } }
-  }
-});
-
-function updateMois(yr) {
-  selectedYearMois = yr;
-  document.querySelectorAll('#yearSelectorMois .year-btn').forEach(b => {
-    b.classList.toggle('active', parseInt(b.dataset.yr) === yr);
-  });
-  document.getElementById('titleMois').textContent = `Contrats par mois – ${yr}`;
-  document.getElementById('moisYearHead').textContent = yr;
-
-  const data = monthly[yr];
-  chartMoisInstance.data.datasets = [{
-    label: yr, data: data,
-    backgroundColor: COLORS[yr] || '#2563a8', borderRadius: 5
-  }];
-  chartMoisInstance.update();
-
-  const tb = document.getElementById('tableMois');
-  tb.innerHTML = '';
-  let total = 0;
-  data.forEach((v, i) => {
-    total += v;
-    tb.innerHTML += `<tr><td>${MOIS[i]}</td><td>${v > 0 ? v : '–'}</td></tr>`;
-  });
-  tb.innerHTML += `<tr style="font-weight:700;background:#e8f0fe"><td>Total</td><td>${total}</td></tr>`;
-}
-
-// Build year selector mois
-const selMois = document.getElementById('yearSelectorMois');
-YEARS.forEach(yr => {
-  const btn = document.createElement('button');
-  btn.className = 'year-btn' + (yr === 2026 ? ' active' : '');
-  btn.dataset.yr = yr;
-  btn.textContent = yr;
-  btn.onclick = () => updateMois(yr);
-  selMois.appendChild(btn);
-});
-updateMois(2026);
-
-// ===================== ANNÉES =====================
-const annualLabels = ['2021','2022','2023','2024','2025','2026 YTD'];
-const annualData = [146, 367, 410, 526, 416, 93];
-
-new Chart(document.getElementById('chartAnnees'), {
+// ---- CHART 3: Tendance ----
+new Chart(document.getElementById('chartTendance'), {
   type: 'bar',
   data: {
-    labels: annualLabels,
-    datasets: [{
-      label: 'Contrats',
-      data: annualData,
-      backgroundColor: ['#94a3b8','#60a5fa','#34d399','#f97316','#a78bfa','#ef4444'],
-      borderRadius: 6
-    }]
+    labels: ANNEES,
+    datasets: [
+      {
+        label: 'Réalisé',
+        data: [146,367,410,530,415,100],
+        backgroundColor: BLUE_DARK,
+        borderRadius: 4,
+      },
+      {
+        label: '◌ Projection',
+        data: [null,null,null,null,null,PROJ_2026],
+        backgroundColor: BLUE_PROJ,
+        borderColor: PROJ_BORDER,
+        borderWidth: 2,
+        borderRadius: 4,
+      }
+    ]
   },
   options: {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true } }
-  }
-});
-
-new Chart(document.getElementById('chartEvol'), {
-  type: 'bar',
-  data: {
-    labels: annualLabels,
-    datasets: [{
-      label: 'Contrats',
-      data: annualData,
-      backgroundColor: '#2563a8', borderRadius: 5
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: false } }
-  }
-});
-
-// Table années
-const tbAnnees = document.getElementById('tableAnnees');
-YEARS.forEach(yr => {
-  const n = annual[yr];
-  const ca = (n * PRICE_HT).toFixed(0);
-  tbAnnees.innerHTML += `<tr>
-    <td>${yr}${yr===2026?' (YTD)':''}</td>
-    <td>${n}</td>
-    <td>${parseInt(ca).toLocaleString('fr-FR')} €</td>
-  </tr>`;
-});
-
-// ===================== COMPARATIF =====================
-const MAX_WEEK_COMPA = 11;
-const compaLabels = Array.from({length: MAX_WEEK_COMPA}, (_, i) => `S${i+1}`);
-
-const compaDatasets = YEARS.map(yr => ({
-  label: String(yr),
-  data: weekly[yr].slice(0, MAX_WEEK_COMPA),
-  backgroundColor: COLORS[yr],
-  borderRadius: 3
-}));
-
-new Chart(document.getElementById('chartCompa'), {
-  type: 'bar',
-  data: { labels: compaLabels, datasets: compaDatasets },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'top' } },
-    scales: { x: { stacked: false }, y: { beginAtZero: true } }
-  }
-});
-
-// Cumul comparatif
-const cumulCompaDatasets = YEARS.map(yr => {
-  let c = 0;
-  return {
-    label: String(yr),
-    data: weekly[yr].slice(0, MAX_WEEK_COMPA).map(v => { c += v; return c; }),
-    backgroundColor: COLORS[yr],
-    borderRadius: 3
-  };
-});
-
-new Chart(document.getElementById('chartCumulCompa'), {
-  type: 'bar',
-  data: { labels: compaLabels, datasets: cumulCompaDatasets },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'top' } },
-    scales: { x: { stacked: false }, y: { beginAtZero: true } }
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => (ctx.datasetIndex === 1 ? '◌ Projection: ' : 'Réalisé: ') + ctx.parsed.y
+        }
+      }
+    },
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
   }
 });
 </script>
