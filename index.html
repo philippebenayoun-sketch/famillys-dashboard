@@ -6,35 +6,55 @@
 <title>Famillys – Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root{--blue-dark:#1a3a5c;--blue-mid:#2563a8;--blue-light:#93c5fd;--blue-proj:#bfdbfe;--green:#16a34a;--green-light:#dcfce7;--orange:#ea580c;--red:#dc2626;--teal:#0d9488;--amber:#d97706;--amber-light:#fef3c7;--grey-bg:#f1f5f9;--grey-card:#ffffff;--text:#1e293b;--text-light:#64748b;--border:#e2e8f0;}
+  :root{
+    --blue-dark:#1a3a5c;--blue-mid:#2563a8;--blue-light:#93c5fd;--blue-proj:#bfdbfe;
+    --green:#16a34a;--orange:#ea580c;--red:#dc2626;--teal:#0d9488;
+    --amber:#d97706;--amber-light:#fef3c7;
+    --grey-bg:#f1f5f9;--grey-card:#ffffff;--text:#1e293b;--text-light:#64748b;--border:#e2e8f0;
+  }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'Segoe UI',Arial,sans-serif;background:var(--grey-bg);color:var(--text);}
+
   header{background:var(--blue-dark);color:white;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
   header h1{font-size:1.35rem;font-weight:700;}
   header .subtitle{font-size:.85rem;opacity:.75;}
   .date-badge{background:rgba(255,255,255,.15);border-radius:6px;padding:6px 14px;font-size:.82rem;font-weight:600;}
+
   nav{background:var(--blue-mid);display:flex;overflow-x:auto;}
   nav button{color:rgba(255,255,255,.8);background:none;border:none;cursor:pointer;padding:12px 26px;font-size:.88rem;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;}
   nav button:hover{background:rgba(255,255,255,.1);color:white;}
   nav button.active{background:rgba(255,255,255,.15);color:white;border-bottom-color:#93c5fd;}
+
   .section{display:none;}.section.active{display:block;}
+
   .synthese-wrap{max-width:1200px;margin:0 auto;padding:20px 20px 0;}
   .synthese-block{border-radius:12px;padding:22px 28px;color:white;}
   .synthese-block.blue{background:linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%);}
   .synthese-block.teal{background:linear-gradient(135deg,#1a3a5c 0%,#0d9488 100%);}
+  .synthese-block.green{background:linear-gradient(135deg,#14532d 0%,#16a34a 100%);}
   .synthese-block h2{font-size:1rem;font-weight:700;margin-bottom:10px;opacity:.85;text-transform:uppercase;letter-spacing:.5px;}
-  .synthese-block p{font-size:.92rem;line-height:1.65;opacity:.92;}
+  .synthese-block p{font-size:.92rem;line-height:1.7;opacity:.95;}
   .synthese-block.blue strong{color:#bfdbfe;}
   .synthese-block.teal strong{color:#99f6e4;}
+  .synthese-block.green strong{color:#bbf7d0;}
+
   .main{padding:20px;max-width:1200px;margin:0 auto;}
+
   .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-bottom:22px;}
   .kpi-card{background:var(--grey-card);border-radius:10px;padding:18px 20px;border-left:4px solid var(--blue-mid);box-shadow:0 1px 4px rgba(0,0,0,.07);}
-  .kpi-card.green{border-left-color:var(--green);}.kpi-card.orange{border-left-color:var(--orange);}.kpi-card.proj{border-left-color:var(--blue-light);}.kpi-card.teal{border-left-color:var(--teal);}
+  .kpi-card.green{border-left-color:var(--green);}
+  .kpi-card.orange{border-left-color:var(--orange);}
+  .kpi-card.proj{border-left-color:var(--blue-light);}
+  .kpi-card.teal{border-left-color:var(--teal);}
+  .kpi-card.amber{border-left-color:var(--amber);}
   .kpi-label{font-size:.75rem;color:var(--text-light);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
   .kpi-value{font-size:1.9rem;font-weight:800;color:var(--blue-dark);line-height:1;}
   .kpi-sub{font-size:.78rem;color:var(--text-light);margin-top:5px;}
   .badge-proj{font-size:.7rem;font-weight:700;background:#dbeafe;color:#1e40af;border-radius:4px;padding:2px 7px;margin-left:4px;}
   .badge-down{color:var(--red);font-weight:700;}
+  .badge-up{color:var(--green);font-weight:700;}
+  .badge-neutral{color:var(--text-light);font-weight:700;}
+
   .chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px;margin-bottom:22px;}
   .chart-card{background:var(--grey-card);border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
   .chart-card h3{font-size:.88rem;font-weight:700;color:var(--blue-dark);margin-bottom:14px;text-transform:uppercase;letter-spacing:.4px;}
@@ -42,6 +62,7 @@
   .legend-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:.78rem;color:var(--text-light);}
   .legend-item{display:flex;align-items:center;gap:5px;}
   .legend-dot{width:12px;height:12px;border-radius:2px;}
+
   .table-card{background:var(--grey-card);border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:22px;overflow-x:auto;}
   .table-card h3{font-size:.88rem;font-weight:700;color:var(--blue-dark);margin-bottom:14px;text-transform:uppercase;letter-spacing:.4px;}
   table{width:100%;border-collapse:collapse;font-size:.84rem;}
@@ -51,264 +72,869 @@
   tr:last-child td{border-bottom:none;}
   tr:hover td{background:#f8fafc;}
   tr.total-row td{background:#f0fdf4;font-weight:700;border-top:2px solid #86efac;}
-  .td-bold{font-weight:700;}.td-proj{color:var(--blue-mid);font-style:italic;}.doublon-neg{color:var(--orange);font-weight:700;}
+  tr.sub-row td{background:#f8fafc;font-size:.8rem;color:var(--text-light);}
+  .td-bold{font-weight:700;}
+  .td-proj{color:var(--blue-mid);font-style:italic;}
+  .td-partial{color:var(--amber);font-style:italic;}
+  .td-green{color:var(--green);font-weight:700;}
+  .td-red{color:var(--red);font-weight:700;}
+  .doublon-neg{color:var(--orange);font-weight:700;}
+
+  /* Comparison table */
+  .cmp-better{background:#f0fdf4;color:#15803d;font-weight:700;}
+  .cmp-worse{background:#fff1f2;color:var(--red);}
+  .cmp-same{color:var(--text-light);}
+
+  /* insight boxes */
+  .insight-box{border-radius:8px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;font-size:.84rem;margin-bottom:14px;}
+  .insight-box.green{background:#f0fdf4;border:1px solid #86efac;}
+  .insight-box.amber{background:var(--amber-light);border:1px solid #fde68a;}
+  .insight-box.blue{background:#eff6ff;border:1px solid #bfdbfe;}
+  .insight-box.red{background:#fff1f2;border:1px solid #fecaca;}
+  .insight-box .icon{font-size:1.2rem;flex-shrink:0;}
+  .insight-box.green strong{color:#14532d;}
+  .insight-box.amber strong{color:#92400e;}
+  .insight-box.blue strong{color:#1e40af;}
+  .insight-box.red strong{color:#991b1b;}
+
+  /* Cap Retraite */
   .recon-block{background:var(--grey-card);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:22px;overflow:hidden;}
   .recon-header{background:linear-gradient(90deg,#1a3a5c,#0d9488);color:white;padding:14px 20px;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
   .recon-body{padding:20px;}
-  .months-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
-  @media(max-width:700px){.months-grid{grid-template-columns:1fr;}}
+  .months-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:18px;}
   .month-card{border-radius:10px;padding:16px;border:1px solid var(--border);}
   .month-card h4{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--blue-dark);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
   .month-card h4 .ref{font-size:.68rem;font-weight:600;color:var(--text-light);text-transform:none;}
   .zone-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:.82rem;}
-  .zone-row:last-child{border-bottom:none;}
   .zA{color:#1e40af;font-weight:600;}.zB{color:#15803d;font-weight:600;}.zC{color:#a16207;font-weight:600;}
   .month-footer{margin-top:8px;padding-top:8px;border-top:2px solid var(--border);}
   .month-footer .row{display:flex;justify-content:space-between;font-size:.82rem;padding:2px 0;}
   .month-footer .row.total{font-weight:700;color:var(--green);font-size:.88rem;}
   .doublon-badge{font-size:.7rem;font-weight:700;border-radius:4px;padding:1px 6px;background:#fef3c7;color:#92400e;}
   .status-ok{display:inline-flex;align-items:center;gap:3px;background:#dcfce7;color:#15803d;border-radius:4px;padding:2px 7px;font-size:.71rem;font-weight:700;}
+  .status-partial{display:inline-flex;align-items:center;gap:3px;background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 7px;font-size:.71rem;font-weight:700;}
   .pilotes-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;padding:14px 18px;background:var(--grey-card);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
   .pl-item{display:flex;align-items:flex-start;gap:10px;font-size:.84rem;}
   .pl-dot{width:14px;height:14px;border-radius:3px;flex-shrink:0;margin-top:2px;}
   .pl-text strong{display:block;font-size:.82rem;font-weight:700;margin-bottom:2px;}
   .pl-text span{color:var(--text-light);font-size:.78rem;}
-  .insight-box{border-radius:8px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;font-size:.84rem;margin-bottom:14px;}
-  .insight-box.green{background:#f0fdf4;border:1px solid #86efac;}
-  .insight-box.amber{background:var(--amber-light);border:1px solid #fde68a;}
-  .insight-box.blue{background:#eff6ff;border:1px solid #bfdbfe;}
-  .insight-box .icon{font-size:1.2rem;flex-shrink:0;}
-  .insight-box.green strong{color:#14532d;}.insight-box.amber strong{color:#92400e;}.insight-box.blue strong{color:#1e40af;}
   .note-tarif{background:#f0fdf4;border-left:4px solid var(--green);border-radius:6px;padding:12px 16px;font-size:.82rem;color:#166534;margin-bottom:22px;}
+
   .badge-perm{display:inline-block;font-size:.7rem;font-weight:700;border-radius:4px;padding:2px 7px;background:#dbeafe;color:#1e40af;}
+  .badge-temp{display:inline-block;font-size:.7rem;font-weight:700;border-radius:4px;padding:2px 7px;background:#fef3c7;color:#92400e;}
+
+  /* Section divider */
+  .section-title{font-size:.75rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;margin-top:4px;padding-bottom:6px;border-bottom:2px solid var(--border);}
+
   footer{text-align:center;padding:16px;color:var(--text-light);font-size:.75rem;border-top:1px solid var(--border);margin-top:10px;}
 </style>
 </head>
 <body>
+
 <header>
-  <div><h1>🏠 Famillys — Tableau de Bord</h1><div class="subtitle">Signatures · Abonnements · Cap Retraite</div></div>
-  <div class="date-badge">📅 Mis à jour au 31 mars 2026</div>
+  <div>
+    <h1>🏠 Famillys — Tableau de Bord</h1>
+    <div class="subtitle">Signatures · Abonnements · Cap Retraite</div>
+  </div>
+  <div class="date-badge">📅 Mis à jour au 11 avril 2026</div>
 </header>
+
 <nav>
   <button class="active" onclick="showSection('signatures',this)">📊 Signatures</button>
   <button onclick="showSection('abonnements',this)">🔄 Abonnements</button>
   <button onclick="showSection('cap',this)">👴 Cap Retraite</button>
 </nav>
 
-<!-- SECTION SIGNATURES -->
+<!-- ══════════════════════════════════════════════════
+     SECTION SIGNATURES
+══════════════════════════════════════════════════ -->
 <div id="signatures" class="section active">
-<div class="synthese-wrap"><div class="synthese-block blue">
-  <h2>📋 Synthèse — Clôture T1 au 31 mars 2026</h2>
-  <p>Yann, Christophe, voici le bilan du <strong>premier trimestre 2026</strong> arrêté au 31 mars. Famillys totalise <strong>105 contrats signés</strong> sur T1 (Jan : 34, Fév : 37, Mar : 34), soit un rythme de <strong>8,1 contrats/semaine</strong> projetant l'année à <strong>420 contrats</strong>. Le T1 2026 reste en retrait vs T1 2025 (<strong>−22%</strong>, 135 contrats), tendance à surveiller au T2. Les abonnements restent stables à <strong>21 dossiers actifs</strong> (1 629 €/mois). Cap Retraite T1 entièrement réconcilié : <strong>769 leads envoyés, 727 facturés, 7 278 € HT</strong>.</p>
-</div></div>
+<div class="synthese-wrap">
+<div class="synthese-block blue">
+  <h2>📋 Synthèse Signatures — Point au 11 avril 2026 (S15)</h2>
+  <p>
+    Yann, Christophe, voici le point arrêté au <strong>11 avril 2026</strong>.
+    Le T1 est clos à <strong>105 contrats</strong> (Jan 34 · Fév 37 · Mar 34), rythme de <strong>8,1/semaine</strong> projetant à <strong>420 contrats</strong> pour 2026.
+    Avril démarre avec <strong>5 contrats en S14–S15</strong> (données partielles au 7 avril).<br><br>
+    Point clé à retenir : le volume T1 2026 est en retrait de <strong>−22% vs T1 2025</strong> (105 vs 134), mais le <strong>CA HT est quasi identique en mars</strong> (9 888 € vs 9 921 €), car 2025 comportait de nombreux contrats à 79 € et 99 €.
+    Depuis janvier 2026, <strong>tous les contrats sont à 349 € TTC</strong> — la valeur unitaire a progressé de +53% en moyenne vs 2025.
+    Sur l'année 2025, le mix prix (349/99/79 €) avait généré seulement <strong>98 288 € HT</strong> pour 415 contrats, contre <strong>154 142 € HT</strong> pour 530 contrats en 2024.
+  </p>
+</div>
+</div>
 <div class="main">
+
+  <!-- KPI -->
   <div class="kpi-grid">
-    <div class="kpi-card"><div class="kpi-label">Contrats T1 2026</div><div class="kpi-value">105</div><div class="kpi-sub">vs 135 T1 2025 <span class="badge-down">▼ −22%</span></div></div>
-    <div class="kpi-card proj"><div class="kpi-label">Projection 2026 ◌</div><div class="kpi-value" style="color:#2563a8;">420 <span class="badge-proj">PROJ.</span></div><div class="kpi-sub">sur base 8,1 contrats/semaine</div></div>
-    <div class="kpi-card green"><div class="kpi-label">CA HT réalisé 2026</div><div class="kpi-value" style="color:var(--green);">30 537 €</div><div class="kpi-sub">105 × 290,83 € HT</div></div>
-    <div class="kpi-card proj"><div class="kpi-label">CA HT projeté 2026 ◌</div><div class="kpi-value" style="color:#2563a8;font-size:1.5rem;">122 149 € <span class="badge-proj">PROJ.</span></div><div class="kpi-sub">420 × 290,83 € HT</div></div>
-    <div class="kpi-card"><div class="kpi-label">Total historique</div><div class="kpi-value">1 973</div><div class="kpi-sub">contrats depuis 2021</div></div>
-    <div class="kpi-card"><div class="kpi-label">Record annuel</div><div class="kpi-value">530</div><div class="kpi-sub">en 2024 — objectif à dépasser</div></div>
+    <div class="kpi-card">
+      <div class="kpi-label">Contrats T1 2026</div>
+      <div class="kpi-value">105</div>
+      <div class="kpi-sub">vs 134 T1 2025 <span class="badge-down">▼ −22%</span></div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">Avril 2026 en cours ⚡</div>
+      <div class="kpi-value" style="color:var(--amber);">5</div>
+      <div class="kpi-sub">au 7 avril — mois incomplet</div>
+    </div>
+    <div class="kpi-card proj">
+      <div class="kpi-label">Projection 2026 ◌</div>
+      <div class="kpi-value" style="color:#2563a8;">420 <span class="badge-proj">PROJ.</span></div>
+      <div class="kpi-sub">8,1 contrats/semaine × 52</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">CA HT réalisé T1</div>
+      <div class="kpi-value" style="color:var(--green);">30 538 €</div>
+      <div class="kpi-sub">105 × 290,83 € HT</div>
+    </div>
+    <div class="kpi-card proj">
+      <div class="kpi-label">CA HT projeté 2026 ◌</div>
+      <div class="kpi-value" style="color:#2563a8;font-size:1.5rem;">122 149 € <span class="badge-proj">PROJ.</span></div>
+      <div class="kpi-sub">420 × 290,83 € HT</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total depuis 2021</div>
+      <div class="kpi-value">1 977</div>
+      <div class="kpi-sub">contrats signés</div>
+    </div>
   </div>
+
+  <!-- INSIGHT CLÉ -->
+  <div class="insight-box blue">
+    <span class="icon">💡</span>
+    <div><strong>Volume vs Valeur — le message clé 2026</strong> — Moins de contrats (-22% vs 2025) mais à 349 € TTC uniquement. En mars, 34 contrats 2026 = 9 888 € HT ≈ 55 contrats 2025 = 9 921 € HT. La montée en prix compense largement la baisse de volume. En 2025, le mix 79/99/349 € avait généré seulement 237 € HT/contrat en moyenne, contre 291 € HT aujourd'hui.</div>
+  </div>
+
+  <!-- CHARTS ROW 1 -->
   <div class="chart-grid">
     <div class="chart-card">
-      <h3>📈 Contrats par année</h3>
-      <div class="legend-row"><div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>Réalisé</div><div class="legend-item"><div class="legend-dot" style="background:#bfdbfe;border:1.5px dashed #93c5fd;"></div>◌ Projeté 2026</div></div>
-      <div class="chart-wrap"><canvas id="chartAnnuel"></canvas></div>
+      <h3>📈 Volume contrats par année</h3>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>Réalisé</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe;border:1.5px dashed #93c5fd;"></div>◌ Projection 2026</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartAnnuelNb"></canvas></div>
     </div>
     <div class="chart-card">
-      <h3>📅 Mensuel 2026 vs 2025</h3>
-      <div class="legend-row"><div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>2025</div><div class="legend-item"><div class="legend-dot" style="background:#2563a8;"></div>2026 réalisé</div><div class="legend-item"><div class="legend-dot" style="background:#bfdbfe;border:1.5px dashed #93c5fd;"></div>◌ proj.</div></div>
-      <div class="chart-wrap"><canvas id="chartMensuel"></canvas></div>
+      <h3>💶 CA HT par année</h3>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#16a34a;"></div>Réalisé</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#bbf7d0;border:1.5px dashed #86efac;"></div>◌ Projection 2026</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartAnnuelCA"></canvas></div>
     </div>
   </div>
-  <div class="table-card">
-    <h3>📋 Détail mensuel — 2025 et 2026</h3>
-    <table><thead><tr><th class="left">Mois</th><th>Jan</th><th>Fév</th><th>Mar</th><th>Avr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Aoû</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Déc</th><th>TOTAL</th></tr></thead>
-    <tbody>
-      <tr><td class="left td-bold">2025</td><td>49</td><td>30</td><td>55</td><td>55</td><td>37</td><td>30</td><td>33</td><td>19</td><td>38</td><td>23</td><td>23</td><td>23</td><td class="td-bold">415</td></tr>
-      <tr><td class="left td-bold" style="color:var(--blue-mid)">2026</td><td>34</td><td>37</td><td>34</td><td class="td-proj">◌ 35</td><td class="td-proj">◌ 35</td><td class="td-proj">◌ 35</td><td class="td-proj">◌ 35</td><td class="td-proj">◌ 35</td><td class="td-proj">◌ 35</td><td class="td-proj">◌ 35</td><td class="td-proj">◌ 35</td><td class="td-proj">◌ 35</td><td class="td-proj td-bold">◌ 420</td></tr>
-    </tbody></table>
-    <div style="font-size:.75rem;color:var(--text-light);margin-top:10px;">◌ = projection sur base du rythme T1 2026 (8,1 contrats/semaine × 52)</div>
+
+  <!-- CHART MENSUEL VOLUME + CA -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>📅 Volume mensuel 2026 vs 2025</h3>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>2025</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2563a8;"></div>2026 réalisé</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706;"></div>⚡ En cours</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe;border:1.5px dashed #93c5fd;"></div>◌ Proj.</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartMensuelNb"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>💶 CA HT mensuel 2026 vs 2025</h3>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>2025</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#16a34a;"></div>2026 réalisé</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe;border:1.5px dashed #93c5fd;"></div>◌ Proj.</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartMensuelCA"></canvas></div>
+    </div>
   </div>
+
+  <!-- TABLE COMPARAISON MENSUELLE -->
+  <div class="table-card">
+    <h3>📋 Comparaison mensuelle 2025 vs 2026 — Volume & CA HT</h3>
+    <table>
+      <thead>
+        <tr>
+          <th class="left">Mois</th>
+          <th colspan="2" style="background:#f1f5f9;border-bottom:2px solid #1a3a5c;">2025</th>
+          <th colspan="2" style="background:#eff6ff;border-bottom:2px solid #2563a8;">2026</th>
+          <th>Δ Volume</th>
+          <th>Δ CA HT</th>
+        </tr>
+        <tr>
+          <th class="left"></th>
+          <th>Contrats</th><th>CA HT</th>
+          <th>Contrats</th><th>CA HT</th>
+          <th></th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="left td-bold">Janvier</td>
+          <td>49</td><td>14 251 €</td>
+          <td class="td-bold" style="color:#2563a8;">34</td><td class="td-bold" style="color:#16a34a;">9 888 €</td>
+          <td class="td-red">−15</td>
+          <td class="td-red">−4 363 €</td>
+        </tr>
+        <tr>
+          <td class="left td-bold">Février</td>
+          <td>30</td><td>8 725 €</td>
+          <td class="td-bold" style="color:#2563a8;">37</td><td class="td-bold" style="color:#16a34a;">10 761 €</td>
+          <td class="td-green">+7</td>
+          <td class="td-green">+2 036 €</td>
+        </tr>
+        <tr>
+          <td class="left td-bold">Mars</td>
+          <td>55</td><td>9 921 €</td>
+          <td class="td-bold" style="color:#2563a8;">34</td><td class="td-bold" style="color:#16a34a;">9 888 €</td>
+          <td class="td-red">−21</td>
+          <td style="color:var(--text-light);font-weight:700;">−33 €</td>
+        </tr>
+        <tr class="total-row">
+          <td class="left">TOTAL T1</td>
+          <td>134</td><td>32 897 €</td>
+          <td style="color:#2563a8;">105</td><td style="color:#16a34a;">30 538 €</td>
+          <td class="td-red">−29 (−22%)</td>
+          <td class="td-red">−2 359 €</td>
+        </tr>
+        <tr>
+          <td class="left td-partial" colspan="7" style="font-size:.78rem;text-align:left;padding:8px 12px;">
+            ⚡ Avril 2026 en cours : 5 contrats au 7 avril · Avril 2025 : 55 contrats / 7 671 € HT
+          </td>
+        </tr>
+        <tr style="background:#f8fafc;">
+          <td class="left td-bold">Avr–Déc 2025</td>
+          <td>281</td><td>65 391 €</td>
+          <td class="td-proj">◌ 315</td><td class="td-proj">◌ 91 612 €</td>
+          <td class="td-proj">◌ +34</td>
+          <td class="td-proj">◌ +26 221 €</td>
+        </tr>
+        <tr style="background:#f0fdf4;">
+          <td class="left td-bold">TOTAL 2026 ◌</td>
+          <td style="color:var(--text-light);">(415 en 2025)</td>
+          <td style="color:var(--text-light);">(98 288 €)</td>
+          <td class="td-proj td-bold">◌ 420</td>
+          <td class="td-proj td-bold">◌ 122 149 €</td>
+          <td class="td-green">+1%</td>
+          <td class="td-green">+24%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:.75rem;color:var(--text-light);margin-top:10px;">
+      ⚠️ 2025 : mix prix 349/99/79 € → prix moyen 237 €HT/contrat · 2026 : 349 € TTC uniquement → 291 €HT/contrat (+23%)
+    </div>
+  </div>
+
+  <!-- TABLE HEBDO COMMISSIONS -->
+  <div class="table-card">
+    <h3>📋 Détail hebdomadaire 2026 — Contrats & Commissions (7,5% HT)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Semaine</th><th>Contrats</th><th>CA HT</th><th>Commission (7,5%)</th><th>Statut</th>
+        </tr>
+      </thead>
+      <tbody id="weeklyTableBody">
+      </tbody>
+    </table>
+    <div style="font-size:.75rem;color:var(--text-light);margin-top:10px;">Commission = 7,5% du CA HT · Tous contrats 2026 à 349 € TTC (290,83 € HT)</div>
+  </div>
+
+  <!-- Évolution annuelle -->
   <div class="chart-card" style="margin-bottom:22px;">
-    <h3>📊 Évolution annuelle 2021–2026</h3>
-    <div class="legend-row"><div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>Réalisé</div><div class="legend-item"><div class="legend-dot" style="background:#bfdbfe;border:1.5px dashed #93c5fd;"></div>◌ Projeté 2026</div></div>
-    <div class="chart-wrap" style="height:200px;"><canvas id="chartTendance"></canvas></div>
+    <h3>📊 Évolution annuelle 2021–2026 — Volume et CA HT</h3>
+    <div class="chart-wrap" style="height:210px;"><canvas id="chartTendance"></canvas></div>
   </div>
-</div>
+
+</div><!-- /main signatures -->
 </div>
 
-<!-- SECTION ABONNEMENTS -->
+<!-- ══════════════════════════════════════════════════
+     SECTION ABONNEMENTS
+══════════════════════════════════════════════════ -->
 <div id="abonnements" class="section">
-<div class="synthese-wrap"><div class="synthese-block blue">
-  <h2>📋 Synthèse — Abonnements au 31 mars 2026</h2>
-  <p>La base de familles d'accueil en service compte <strong>21 dossiers actifs</strong>, stable par rapport au mois dernier. Les frais de service s'établissent à <strong>1 629 € par mois</strong>, projection annualisée de <strong>19 548 €</strong>. Les salaires gérés représentent <strong>24 352 € net/mois</strong> (11 dossiers renseignés sur 21). Cette base récurrente constitue un socle de revenus stables, indépendant de l'activité de signature.</p>
-</div></div>
+<div class="synthese-wrap">
+<div class="synthese-block green">
+  <h2>📋 Synthèse Abonnements — Point au 11 avril 2026</h2>
+  <p>
+    La base compte <strong>21 familles d'accueil en service actif</strong>, dont <strong>12 abonnées à 99 €/mois</strong> et <strong>9 à 49 €/mois</strong>.
+    Les frais de service récurrents s'établissent à <strong>1 629 €/mois</strong>, soit une projection annuelle de <strong>19 548 €</strong>.
+    Les salaires gérés atteignent <strong>24 352 € net/mois</strong> sur 11 dossiers renseignés (10 restent à compléter).
+    Cette base récurrente constitue un socle stable indépendant des signatures — à développer via les nouveaux contrats signés qui deviennent abonnés après installation.
+  </p>
+</div>
+</div>
 <div class="main">
+
   <div class="kpi-grid">
-    <div class="kpi-card"><div class="kpi-label">Dossiers actifs</div><div class="kpi-value">21</div><div class="kpi-sub">familles d'accueil en service</div></div>
-    <div class="kpi-card green"><div class="kpi-label">Frais de service / mois</div><div class="kpi-value" style="color:var(--green);">1 629 €</div><div class="kpi-sub">9 × 49€ + 12 × 99€</div></div>
-    <div class="kpi-card green"><div class="kpi-label">Projection annuelle</div><div class="kpi-value" style="color:var(--green);font-size:1.5rem;">19 548 €</div><div class="kpi-sub">1 629 € × 12 mois</div></div>
-    <div class="kpi-card orange"><div class="kpi-label">Salaires gérés / mois</div><div class="kpi-value" style="color:var(--orange);font-size:1.5rem;">24 352 €</div><div class="kpi-sub">11 dossiers renseignés sur 21</div></div>
-    <div class="kpi-card"><div class="kpi-label">Salaires gérés / an</div><div class="kpi-value" style="font-size:1.5rem;">292 224 €</div><div class="kpi-sub">volume net annualisé</div></div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Dossiers actifs</div>
+      <div class="kpi-value" style="color:var(--green);">21</div>
+      <div class="kpi-sub">familles d'accueil en service</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Frais de service / mois</div>
+      <div class="kpi-value" style="color:var(--green);">1 629 €</div>
+      <div class="kpi-sub">9 × 49 € + 12 × 99 €</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Projection annuelle</div>
+      <div class="kpi-value" style="color:var(--green);font-size:1.5rem;">19 548 €</div>
+      <div class="kpi-sub">1 629 € × 12 mois</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">Salaires gérés / mois</div>
+      <div class="kpi-value" style="color:var(--orange);font-size:1.5rem;">24 352 €</div>
+      <div class="kpi-sub">11 dossiers renseignés / 21</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Salaires gérés / an</div>
+      <div class="kpi-value" style="font-size:1.5rem;">292 224 €</div>
+      <div class="kpi-sub">volume net annualisé (partiel)</div>
+    </div>
+    <div class="kpi-card teal">
+      <div class="kpi-label">Abonnements 99 €</div>
+      <div class="kpi-value" style="color:var(--teal);">12</div>
+      <div class="kpi-sub">57% de la base · 1 188 €/mois</div>
+    </div>
   </div>
+
   <div class="chart-grid">
-    <div class="chart-card"><h3>🏠 Répartition par type d'accueil</h3><div class="chart-wrap"><canvas id="chartType"></canvas></div></div>
-    <div class="chart-card"><h3>📅 Ancienneté — date d'emménagement</h3><div class="chart-wrap"><canvas id="chartAnciennete"></canvas></div></div>
+    <div class="chart-card">
+      <h3>🏠 Répartition par tarif</h3>
+      <div class="chart-wrap"><canvas id="chartTarif"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>📅 Ancienneté — année d'emménagement</h3>
+      <div class="chart-wrap"><canvas id="chartAnciennete"></canvas></div>
+    </div>
   </div>
+
+  <div class="insight-box amber">
+    <span class="icon">⚠️</span>
+    <div><strong>10 dossiers sans salaire renseigné</strong> — Les dossiers 2023–2026 n'ont pas encore de salaire net saisi dans le fichier source. Compléter ces champs permettrait d'afficher le volume total réel géré (~240 000 €/an estimé) et de mieux piloter la charge administrative.</div>
+  </div>
+  <div class="insight-box blue">
+    <span class="icon">📈</span>
+    <div><strong>Potentiel de croissance</strong> — Chaque nouveau contrat signé est un abonné potentiel. Avec 105 signatures en T1 et un taux de conversion signatures → abonnements, le portefeuille pourrait croître significativement. Tracker ce taux de conversion serait un KPI utile à ajouter.</div>
+  </div>
+
   <div class="table-card">
-    <h3>📋 Synthèse des dossiers actifs</h3>
-    <table><thead><tr><th>№</th><th class="left">Accueilli(e)</th><th class="left">Famille d'accueil</th><th>Emménagement</th><th>Type</th><th>Salaire net Mars 26</th><th>Frais service</th></tr></thead>
-    <tbody>
-      <tr><td>1</td><td class="left">Acker</td><td class="left">Agasse</td><td>Mai 2021</td><td><span class="badge-perm">Permanent</span></td><td>—</td><td>509 €</td></tr>
-      <tr><td>2</td><td class="left">Gayraud</td><td class="left">Dziurda</td><td>Oct 2021</td><td><span class="badge-perm">Permanent</span></td><td>2 114 €</td><td>664 €</td></tr>
-      <tr><td>3</td><td class="left">Montagnier / Schwartz</td><td class="left">Pinheiro</td><td>Nov 2021</td><td><span class="badge-perm">Permanent</span></td><td>2 143 €</td><td>615 €</td></tr>
-      <tr><td>4–5</td><td class="left">—</td><td class="left">—</td><td>2022</td><td><span class="badge-perm">Permanent</span></td><td>—</td><td>923 €</td></tr>
-      <tr><td>6–11</td><td class="left" colspan="2" style="color:var(--text-light);font-style:italic;">6 dossiers avec salaires renseignés</td><td>2022–2023</td><td><span class="badge-perm">Permanent</span></td><td style="font-weight:700;">∑ 24 352 €</td><td>—</td></tr>
-      <tr><td>12–21</td><td class="left" colspan="2" style="color:var(--text-light);font-style:italic;">10 dossiers sans salaire renseigné</td><td>2023–2024</td><td><span class="badge-perm">Permanent</span></td><td style="color:var(--text-light);">à compléter</td><td>—</td></tr>
-    </tbody></table>
-    <div style="font-size:.75rem;color:var(--text-light);margin-top:10px;">⚠️ Les champs salaire et frais des dossiers récents ne sont pas encore renseignés dans le fichier source.</div>
+    <h3>📋 Détail des 21 dossiers actifs</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>№</th>
+          <th class="left">Accueilli(e)</th>
+          <th class="left">Famille d'accueil</th>
+          <th>Emménagement</th>
+          <th>Abonnement</th>
+          <th>Salaire net Mars 26</th>
+          <th>Frais Famillys</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td class="left">Acker</td><td class="left">Agasse</td>
+          <td>Mai 2021</td><td><span class="badge-perm">49 €/mois</span></td><td style="color:var(--text-light);">—</td><td class="td-green">509 €</td>
+        </tr>
+        <tr>
+          <td>2</td><td class="left">Gayraud</td><td class="left">Dziurda</td>
+          <td>Oct 2021</td><td><span class="badge-perm">49 €/mois</span></td><td>2 114 €</td><td class="td-green">664 €</td>
+        </tr>
+        <tr>
+          <td>3</td><td class="left">Montagnier / Schwartz</td><td class="left">Pinheiro</td>
+          <td>Nov 2021</td><td><span class="badge-perm">49 €/mois</span></td><td>2 143 €</td><td class="td-green">615 €</td>
+        </tr>
+        <tr>
+          <td>4</td><td class="left">Derre</td><td class="left">Froeliger</td>
+          <td>Fév 2022</td><td><span class="badge-perm">49 €/mois</span></td><td style="color:var(--text-light);">—</td><td class="td-green">512 €</td>
+        </tr>
+        <tr>
+          <td>5</td><td class="left">Madeleine Merlin</td><td class="left">Saint Aubin</td>
+          <td>Mai 2022</td><td><span class="badge-perm">49 €/mois</span></td><td style="color:var(--text-light);">—</td><td class="td-green">411 €</td>
+        </tr>
+        <tr>
+          <td>7</td><td class="left">—</td><td class="left">—</td>
+          <td>2022</td><td><span class="badge-perm">49 €/mois</span></td><td style="color:var(--text-light);">—</td><td style="color:var(--text-light);">—</td>
+        </tr>
+        <tr>
+          <td>8–17</td>
+          <td class="left" colspan="2" style="color:var(--teal);font-style:italic;font-size:.82rem;">10 dossiers abonnés 99 €/mois (2022–2024)</td>
+          <td>2022–2024</td><td><span class="badge-temp">99 €/mois</span></td>
+          <td style="font-weight:700;">∑ partiel</td><td style="color:var(--text-light);">—</td>
+        </tr>
+        <tr>
+          <td>18–21</td>
+          <td class="left" colspan="2" style="color:var(--text-light);font-style:italic;font-size:.82rem;">4 dossiers récents (2023–2026)</td>
+          <td>2023–2026</td><td><span class="badge-temp">99 €/mois</span></td>
+          <td style="color:var(--text-light);">à compléter</td><td style="color:var(--text-light);">à compléter</td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="2" class="left">TOTAL</td>
+          <td></td>
+          <td></td>
+          <td style="font-weight:700;">1 629 €/mois</td>
+          <td style="color:var(--orange);font-weight:700;">24 352 €/mois*</td>
+          <td style="color:var(--green);font-weight:700;">2 712 €</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:.75rem;color:var(--text-light);margin-top:10px;">
+      * 11 dossiers renseignés sur 21 · Frais Famillys = total des honoraires facturés aux familles d'accueil (colonne Taxes du fichier)
+    </div>
   </div>
+
 </div>
 </div>
 
-<!-- SECTION CAP RETRAITE -->
+<!-- ══════════════════════════════════════════════════
+     SECTION CAP RETRAITE
+══════════════════════════════════════════════════ -->
 <div id="cap" class="section">
-<div class="synthese-wrap"><div class="synthese-block teal">
-  <h2>📋 Synthèse — Cap Retraite T1 2026 complet</h2>
-  <p>Les leads envoyés se composent du <strong>Pilote 2</strong> (onglets mensuels, 190/mois) et du <strong>Pilote 1</strong> (onglet CLIENTS, volume variable). Sur T1 2026, <strong>769 leads au total</strong> (570 P2 + 199 P1), <strong>727 facturés</strong> (−42 doublons, 94,5%), générant <strong>7 278 € HT</strong>. Le taux de conversion se dégrade de janvier (99%) à mars (91%), corrélé à la montée du Pilote 1. Projection annuelle : <strong>~29 112 € HT</strong>.</p>
-</div></div>
+<div class="synthese-wrap">
+<div class="synthese-block teal">
+  <h2>📋 Synthèse Cap Retraite — T1 clôturé + Avril en cours</h2>
+  <p>
+    Sur T1 2026 (<strong>entièrement réconcilié</strong>), Famillys a transmis <strong>769 leads</strong> (P2 : 570 + P1 : 199),
+    dont <strong>727 facturés</strong> (−42 doublons, 94,5%), générant <strong>7 278 € HT</strong>.
+    Le revenu moyen s'établit à <strong>2 426 €/mois</strong>, avec une projection annuelle à <strong>~29 112 € HT</strong>.
+    En avril, le Pilote 2 est complet à 190 leads ; le Pilote 1 compte <strong>13 leads au 7 avril</strong> (mois en cours).
+    Le taux de doublons croît avec la montée du Pilote 1 (−2 en jan → −25 en mars) — un dédoublonnage en amont est recommandé.
+  </p>
+</div>
+</div>
 <div class="main">
+
   <div class="pilotes-legend">
     <div class="pl-item"><div class="pl-dot" style="background:#1a3a5c;"></div><div class="pl-text"><strong>Pilote 2 — Leads EHPAD standards</strong><span>Onglets mensuels — flux régulier, stable à 190/mois en 2026</span></div></div>
     <div class="pl-item"><div class="pl-dot" style="background:#0d9488;"></div><div class="pl-text"><strong>Pilote 1 — Leads qualifiés (CLIENTS)</strong><span>Onglet CLIENTS — leads plus ciblés, volume variable</span></div></div>
     <div class="pl-item"><div class="pl-dot" style="background:#16a34a;"></div><div class="pl-text"><strong>Facturés (source de vérité)</strong><span>Leads retenus par Cap Retraite après déduction des doublons</span></div></div>
   </div>
+
   <div class="kpi-grid">
-    <div class="kpi-card"><div class="kpi-label">Leads envoyés T1</div><div class="kpi-value">769</div><div class="kpi-sub">P2 : 570 + P1 : 199</div></div>
-    <div class="kpi-card green"><div class="kpi-label">Leads facturés T1 ✅</div><div class="kpi-value" style="color:var(--green);">727</div><div class="kpi-sub">−42 doublons/non retenus (94,5%)</div></div>
-    <div class="kpi-card green"><div class="kpi-label">Revenu T1 confirmé ✅</div><div class="kpi-value" style="color:var(--green);font-size:1.5rem;">7 278 €</div><div class="kpi-sub">HT — TTC : 8 733,60 €</div></div>
-    <div class="kpi-card green"><div class="kpi-label">Moyenne mensuelle</div><div class="kpi-value" style="color:var(--green);font-size:1.5rem;">2 426 €</div><div class="kpi-sub">HT/mois sur 3 factures</div></div>
-    <div class="kpi-card proj"><div class="kpi-label">Projection 2026 ◌</div><div class="kpi-value" style="color:#2563a8;font-size:1.5rem;">29 112 € <span class="badge-proj">PROJ.</span></div><div class="kpi-sub">2 426 €/mois × 12</div></div>
-    <div class="kpi-card teal"><div class="kpi-label">€ / lead facturé</div><div class="kpi-value">10,01 €</div><div class="kpi-sub">Zone C dominante (57% du volume)</div></div>
+    <div class="kpi-card">
+      <div class="kpi-label">Leads envoyés T1</div>
+      <div class="kpi-value">769</div>
+      <div class="kpi-sub">P2 : 570 + P1 : 199</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Leads facturés T1 ✅</div>
+      <div class="kpi-value" style="color:var(--green);">727</div>
+      <div class="kpi-sub">−42 doublons (94,5%)</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Revenu T1 confirmé ✅</div>
+      <div class="kpi-value" style="color:var(--green);font-size:1.5rem;">7 278 €</div>
+      <div class="kpi-sub">HT — TTC : 8 734 €</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Moyenne mensuelle T1</div>
+      <div class="kpi-value" style="color:var(--green);font-size:1.5rem;">2 426 €</div>
+      <div class="kpi-sub">HT/mois sur 3 factures</div>
+    </div>
+    <div class="kpi-card proj">
+      <div class="kpi-label">Projection 2026 ◌</div>
+      <div class="kpi-value" style="color:#2563a8;font-size:1.5rem;">29 112 € <span class="badge-proj">PROJ.</span></div>
+      <div class="kpi-sub">2 426 €/mois × 12</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">Avril en cours ⚡</div>
+      <div class="kpi-value" style="color:var(--amber);font-size:1.5rem;">203</div>
+      <div class="kpi-sub">P2: 190 + P1: 13 (au 7 avr.)</div>
+    </div>
   </div>
+
+  <!-- RÉCONCILIATION T1 -->
   <div class="recon-block">
-    <div class="recon-header">🔍 Réconciliation Pilote 1 + Pilote 2 → Factures — T1 2026</div>
+    <div class="recon-header">🔍 Réconciliation T1 2026 — Pilote 1 + Pilote 2 → Factures</div>
     <div class="recon-body">
-      <div style="font-size:.8rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;margin-bottom:12px;">📄 Détail mensuel — leads envoyés & facturés par zone</div>
+      <div class="section-title">📄 Détail mensuel — leads envoyés & facturés par zone</div>
       <div class="months-grid">
         <div class="month-card" style="background:#eff6ff;border-color:#bfdbfe;">
           <h4>Janvier 2026 <span class="ref">CAP01-2026</span></h4>
-          <div class="zone-row"><span style="color:var(--text-light);">Pilote 2</span><span>190 leads</span></div>
-          <div class="zone-row"><span style="color:var(--teal);font-weight:600;">Pilote 1</span><span>67 leads</span></div>
+          <div class="zone-row"><span style="color:var(--text-light);">Pilote 2</span><span>190</span></div>
+          <div class="zone-row"><span style="color:var(--teal);font-weight:600;">Pilote 1</span><span>67</span></div>
           <div class="zone-row" style="font-weight:700;"><span>Total envoyé</span><span>257</span></div>
           <div class="month-footer">
-            <div class="row"><span class="zA">Zone A (20€)</span><span>44 × 880 €</span></div>
-            <div class="row"><span class="zB">Zone B (12€)</span><span>61 × 732 €</span></div>
-            <div class="row"><span class="zC">Zone C (6€)</span><span>150 × 900 €</span></div>
-            <div class="row" style="margin-top:4px;padding-top:4px;border-top:1px dashed var(--border);font-size:.78rem;color:var(--text-light);"><span>Doublons/non retenus</span><span class="doublon-badge">−2</span></div>
+            <div class="row"><span class="zA">Zone A (20 €)</span><span>44 → 880 €</span></div>
+            <div class="row"><span class="zB">Zone B (12 €)</span><span>61 → 732 €</span></div>
+            <div class="row"><span class="zC">Zone C (6 €)</span><span>150 → 900 €</span></div>
+            <div class="row" style="font-size:.78rem;color:var(--text-light);border-top:1px dashed var(--border);margin-top:4px;padding-top:4px;"><span>Doublons</span><span class="doublon-badge">−2</span></div>
             <div class="row total"><span>255 facturés</span><span>2 512 € HT</span></div>
           </div>
         </div>
         <div class="month-card" style="background:#f0fdf4;border-color:#86efac;">
           <h4>Février 2026 <span class="ref">CAP02-2026</span></h4>
-          <div class="zone-row"><span style="color:var(--text-light);">Pilote 2</span><span>190 leads</span></div>
-          <div class="zone-row"><span style="color:var(--teal);font-weight:600;">Pilote 1</span><span>41 leads</span></div>
+          <div class="zone-row"><span style="color:var(--text-light);">Pilote 2</span><span>190</span></div>
+          <div class="zone-row"><span style="color:var(--teal);font-weight:600;">Pilote 1</span><span>41</span></div>
           <div class="zone-row" style="font-weight:700;"><span>Total envoyé</span><span>231</span></div>
           <div class="month-footer">
-            <div class="row"><span class="zA">Zone A (20€)</span><span>35 × 700 €</span></div>
-            <div class="row"><span class="zB">Zone B (12€)</span><span>47 × 564 €</span></div>
-            <div class="row"><span class="zC">Zone C (6€)</span><span>134 × 804 €</span></div>
-            <div class="row" style="margin-top:4px;padding-top:4px;border-top:1px dashed var(--border);font-size:.78rem;color:var(--text-light);"><span>Doublons/non retenus</span><span class="doublon-badge">−15</span></div>
+            <div class="row"><span class="zA">Zone A (20 €)</span><span>35 → 700 €</span></div>
+            <div class="row"><span class="zB">Zone B (12 €)</span><span>47 → 564 €</span></div>
+            <div class="row"><span class="zC">Zone C (6 €)</span><span>134 → 804 €</span></div>
+            <div class="row" style="font-size:.78rem;color:var(--text-light);border-top:1px dashed var(--border);margin-top:4px;padding-top:4px;"><span>Doublons</span><span class="doublon-badge">−15</span></div>
             <div class="row total"><span>216 facturés</span><span>2 068 € HT</span></div>
           </div>
         </div>
         <div class="month-card" style="background:#fefce8;border-color:#fde68a;">
           <h4>Mars 2026 <span class="ref">CAP03-2026</span></h4>
-          <div class="zone-row"><span style="color:var(--text-light);">Pilote 2</span><span>190 leads</span></div>
-          <div class="zone-row"><span style="color:var(--teal);font-weight:600;">Pilote 1</span><span>91 leads</span></div>
+          <div class="zone-row"><span style="color:var(--text-light);">Pilote 2</span><span>190</span></div>
+          <div class="zone-row"><span style="color:var(--teal);font-weight:600;">Pilote 1</span><span>91</span></div>
           <div class="zone-row" style="font-weight:700;"><span>Total envoyé</span><span>281</span></div>
           <div class="month-footer">
-            <div class="row"><span class="zA">Zone A (20€)</span><span>50 × 1 000 €</span></div>
-            <div class="row"><span class="zB">Zone B (12€)</span><span>77 × 924 €</span></div>
-            <div class="row"><span class="zC">Zone C (6€)</span><span>129 × 774 €</span></div>
-            <div class="row" style="margin-top:4px;padding-top:4px;border-top:1px dashed var(--border);font-size:.78rem;color:var(--text-light);"><span>Doublons/non retenus</span><span class="doublon-badge">−25</span></div>
+            <div class="row"><span class="zA">Zone A (20 €)</span><span>50 → 1 000 €</span></div>
+            <div class="row"><span class="zB">Zone B (12 €)</span><span>77 → 924 €</span></div>
+            <div class="row"><span class="zC">Zone C (6 €)</span><span>129 → 774 €</span></div>
+            <div class="row" style="font-size:.78rem;color:var(--text-light);border-top:1px dashed var(--border);margin-top:4px;padding-top:4px;"><span>Doublons</span><span class="doublon-badge">−25</span></div>
             <div class="row total"><span>256 facturés</span><span>2 698 € HT</span></div>
           </div>
         </div>
+        <div class="month-card" style="background:#fff7ed;border-color:#fed7aa;opacity:.85;">
+          <h4>Avril 2026 ⚡ <span class="ref">En cours</span></h4>
+          <div class="zone-row"><span style="color:var(--text-light);">Pilote 2</span><span>190 ✅</span></div>
+          <div class="zone-row"><span style="color:var(--teal);font-weight:600;">Pilote 1</span><span style="color:var(--amber);">13 (partiel)</span></div>
+          <div class="zone-row" style="font-weight:700;"><span>Total envoyé</span><span style="color:var(--amber);">203+</span></div>
+          <div class="month-footer">
+            <div class="row" style="color:var(--text-light);font-style:italic;font-size:.8rem;"><span colspan="2">Facture non encore reçue</span></div>
+            <div class="row total" style="color:var(--amber);"><span>En attente</span><span>—</span></div>
+          </div>
+        </div>
       </div>
+
+      <!-- Tableau récap T1 -->
       <div style="overflow-x:auto;margin-bottom:16px;">
-        <table><thead><tr><th class="left">Mois</th><th>Pilote 2</th><th>Pilote 1</th><th>Total envoyé</th><th>Doublons</th><th>Leads facturés</th><th>Taux conv.</th><th>Revenu HT</th><th>Statut</th></tr></thead>
-        <tbody>
-          <tr><td class="left td-bold">Janvier</td><td>190</td><td style="color:var(--teal);font-weight:600;">67</td><td class="td-bold">257</td><td class="doublon-neg">−2</td><td style="color:var(--green);font-weight:700;">255</td><td>99,2%</td><td style="color:var(--green);font-weight:700;">2 512 €</td><td><span class="status-ok">✅</span></td></tr>
-          <tr><td class="left td-bold">Février</td><td>190</td><td style="color:var(--teal);font-weight:600;">41</td><td class="td-bold">231</td><td class="doublon-neg">−15</td><td style="color:var(--green);font-weight:700;">216</td><td>93,5%</td><td style="color:var(--green);font-weight:700;">2 068 €</td><td><span class="status-ok">✅</span></td></tr>
-          <tr><td class="left td-bold">Mars</td><td>190</td><td style="color:var(--teal);font-weight:600;">91</td><td class="td-bold">281</td><td class="doublon-neg">−25</td><td style="color:var(--green);font-weight:700;">256</td><td>91,1%</td><td style="color:var(--green);font-weight:700;">2 698 €</td><td><span class="status-ok">✅</span></td></tr>
-          <tr class="total-row"><td class="left">TOTAL T1</td><td>570</td><td style="color:var(--teal);">199</td><td>769</td><td class="doublon-neg">−42</td><td style="color:var(--green);">727</td><td>94,5%</td><td style="color:var(--green);">7 278 €</td><td><span class="status-ok">✅ Complet</span></td></tr>
-        </tbody></table>
+        <table>
+          <thead>
+            <tr>
+              <th class="left">Mois</th><th>P2</th><th>P1</th><th>Envoyés</th>
+              <th>Doublons</th><th>Facturés</th><th>Taux</th><th>Revenu HT</th><th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="left td-bold">Janvier</td>
+              <td>190</td><td style="color:var(--teal);font-weight:600;">67</td><td class="td-bold">257</td>
+              <td class="doublon-neg">−2</td><td class="td-green">255</td><td>99,2%</td>
+              <td class="td-green">2 512 €</td><td><span class="status-ok">✅</span></td>
+            </tr>
+            <tr>
+              <td class="left td-bold">Février</td>
+              <td>190</td><td style="color:var(--teal);font-weight:600;">41</td><td class="td-bold">231</td>
+              <td class="doublon-neg">−15</td><td class="td-green">216</td><td>93,5%</td>
+              <td class="td-green">2 068 €</td><td><span class="status-ok">✅</span></td>
+            </tr>
+            <tr>
+              <td class="left td-bold">Mars</td>
+              <td>190</td><td style="color:var(--teal);font-weight:600;">91</td><td class="td-bold">281</td>
+              <td class="doublon-neg">−25</td><td class="td-green">256</td><td>91,1%</td>
+              <td class="td-green">2 698 €</td><td><span class="status-ok">✅</span></td>
+            </tr>
+            <tr class="total-row">
+              <td class="left">TOTAL T1</td>
+              <td>570</td><td style="color:var(--teal);">199</td><td>769</td>
+              <td class="doublon-neg">−42</td><td class="td-green">727</td><td>94,5%</td>
+              <td class="td-green">7 278 €</td><td><span class="status-ok">✅ Complet</span></td>
+            </tr>
+            <tr style="background:#fff7ed;">
+              <td class="left td-partial">Avril ⚡</td>
+              <td>190</td><td style="color:var(--amber);">13+</td><td style="color:var(--amber);">203+</td>
+              <td style="color:var(--text-light);">—</td><td style="color:var(--text-light);">—</td><td style="color:var(--text-light);">—</td>
+              <td style="color:var(--text-light);">—</td><td><span class="status-partial">⚡ En cours</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="insight-box blue"><span class="icon">💡</span><div><strong>Logique Pilote 2 / Pilote 1</strong> — Le Pilote 2 est un flux régulier de 190 leads/mois. Le Pilote 1 (CLIENTS) apporte des leads plus qualifiés à volume variable. Les doublons croissants proviennent de contacts déjà présents dans le flux P2.</div></div>
-      <div class="insight-box amber"><span class="icon">⚠️</span><div><strong>Taux de doublons en hausse</strong> — De −2 (jan) à −25 (mars), corrélé à la montée du Pilote 1 (67→91). Un dédoublonnage en amont maximiserait les leads facturables.</div></div>
-      <div class="insight-box green"><span class="icon">✅</span><div><strong>T1 2026 entièrement réconcilié.</strong> La Zone A génère 35% des revenus avec 18% des leads seulement (20€/lead) — levier clé pour améliorer le revenu moyen par lead (actuellement 10,01 €).</div></div>
+
+      <div class="insight-box blue">
+        <span class="icon">💡</span>
+        <div><strong>Logique Pilote 2 / Pilote 1</strong> — P2 = flux fixe 190 leads/mois (EHPAD standards). P1 = leads qualifiés variables depuis l'onglet CLIENTS. Les doublons croissants (−2 → −25) viennent de contacts P1 déjà présents en P2. Un filtre de dédoublonnage avant envoi maximiserait les leads facturables.</div>
+      </div>
+      <div class="insight-box green">
+        <span class="icon">✅</span>
+        <div><strong>Levier Zone A</strong> — La Zone A (IDF + PACA, 20 €/lead) représente 18% des leads mais génère 35% des revenus. Augmenter la part Zone A dans le Pilote 1 améliorerait le revenu moyen par lead (actuellement 10,01 € sur T1).</div>
+      </div>
     </div>
   </div>
-  <div class="note-tarif"><strong>📌 Grille tarifaire Cap Retraite :</strong> Zone A (IDF + PACA) = <strong>20 €/lead</strong> &nbsp;|&nbsp; Zone B (Nouv.-Aq., HdF, Gd Est) = <strong>12 €/lead</strong> &nbsp;|&nbsp; Zone C (reste France) = <strong>6 €/lead</strong></div>
+
+  <div class="note-tarif">
+    <strong>📌 Grille tarifaire Cap Retraite :</strong>
+    Zone A (IDF + PACA) = <strong>20 €/lead</strong> &nbsp;|&nbsp;
+    Zone B (Nouv.-Aq., HdF, Grand Est) = <strong>12 €/lead</strong> &nbsp;|&nbsp;
+    Zone C (reste France) = <strong>6 €/lead</strong>
+  </div>
+
   <div class="chart-grid">
     <div class="chart-card">
-      <h3>📊 Leads T1 — Pilote 2, Pilote 1 & Facturés</h3>
-      <div class="legend-row"><div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>Pilote 2</div><div class="legend-item"><div class="legend-dot" style="background:#0d9488;"></div>Pilote 1</div><div class="legend-item"><div class="legend-dot" style="background:#16a34a;border:2px solid #15803d;"></div>Facturés</div></div>
+      <h3>📊 Leads T1 — P2, P1 & Facturés</h3>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>Pilote 2</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#0d9488;"></div>Pilote 1</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#16a34a;border:2px solid #15803d;"></div>Facturés</div>
+      </div>
       <div class="chart-wrap tall"><canvas id="chartPilotes"></canvas></div>
     </div>
     <div class="chart-card">
-      <h3>💶 Revenus T1 — par zone (factures)</h3>
-      <div class="legend-row"><div class="legend-item"><div class="legend-dot" style="background:#1e40af;"></div>Zone A</div><div class="legend-item"><div class="legend-dot" style="background:#15803d;"></div>Zone B</div><div class="legend-item"><div class="legend-dot" style="background:#a16207;"></div>Zone C</div></div>
+      <h3>💶 Revenus T1 par zone</h3>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e40af;"></div>Zone A (20€)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#15803d;"></div>Zone B (12€)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#a16207;"></div>Zone C (6€)</div>
+      </div>
       <div class="chart-wrap tall"><canvas id="chartRevenus"></canvas></div>
     </div>
   </div>
+
   <div class="chart-grid">
     <div class="chart-card">
-      <h3>📊 Leads envoyés 2025 vs 2026 (P1+P2)</h3>
-      <div class="legend-row"><div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>2025</div><div class="legend-item"><div class="legend-dot" style="background:#16a34a;"></div>2026 réel</div><div class="legend-item"><div class="legend-dot" style="background:#bfdbfe;border:1.5px dashed #93c5fd;"></div>◌ proj.</div></div>
+      <h3>📊 Leads envoyés 2025 vs 2026</h3>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#1a3a5c;"></div>2025</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#16a34a;"></div>2026 réel</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706;"></div>⚡ Avr. partiel</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe;border:1.5px dashed #93c5fd;"></div>◌ Proj.</div>
+      </div>
       <div class="chart-wrap tall"><canvas id="chartCapMensuel"></canvas></div>
     </div>
     <div class="chart-card">
-      <h3>💶 Mix zones T1 — revenus 7 278 €</h3>
+      <h3>💶 Mix zones T1 — 7 278 €</h3>
       <div class="chart-wrap tall"><canvas id="chartMix"></canvas></div>
     </div>
   </div>
-  <div class="table-card">
-    <h3>📋 Détail mensuel 2025 & 2026 — leads envoyés (P1+P2)</h3>
-    <table><thead><tr><th class="left">Année</th><th>Jan</th><th>Fév</th><th>Mar</th><th>Avr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Aoû</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Déc</th><th>TOTAL</th></tr></thead>
-    <tbody>
-      <tr><td class="left" style="font-size:.78rem;color:var(--text-light);">2025 — P2</td><td>323</td><td>323</td><td>323</td><td>323</td><td>323</td><td>323</td><td>323</td><td>156</td><td>150</td><td>150</td><td>150</td><td>150</td><td>3 017</td></tr>
-      <tr><td class="left" style="font-size:.78rem;color:var(--teal);">2025 — P1</td><td>45</td><td>83</td><td>158</td><td>128</td><td>142</td><td>181</td><td>133</td><td>36</td><td>37</td><td>40</td><td>51</td><td>43</td><td>1 077</td></tr>
-      <tr style="background:#f8fafc;"><td class="left td-bold">2025 TOTAL</td><td class="td-bold">368</td><td class="td-bold">406</td><td class="td-bold">481</td><td class="td-bold">451</td><td class="td-bold">465</td><td class="td-bold">504</td><td class="td-bold">456</td><td class="td-bold">192</td><td class="td-bold">187</td><td class="td-bold">190</td><td class="td-bold">201</td><td class="td-bold">193</td><td class="td-bold">4 094</td></tr>
-      <tr style="border-top:2px solid var(--border);"><td class="left" style="font-size:.78rem;color:var(--text-light);">2026 — P2</td><td>190</td><td>190</td><td>190</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td style="color:var(--text-light);">—</td></tr>
-      <tr><td class="left" style="font-size:.78rem;color:var(--teal);">2026 — P1</td><td>67</td><td>41</td><td>91</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td class="td-proj">◌</td><td style="color:var(--text-light);">—</td></tr>
-      <tr style="background:#f0fdf4;"><td class="left td-bold" style="color:var(--teal);">2026 TOTAL</td><td class="td-bold">257</td><td class="td-bold">231</td><td class="td-bold">281</td><td class="td-proj">◌ 256</td><td class="td-proj">◌ 256</td><td class="td-proj">◌ 256</td><td class="td-proj">◌ 256</td><td class="td-proj">◌ 256</td><td class="td-proj">◌ 256</td><td class="td-proj">◌ 256</td><td class="td-proj">◌ 256</td><td class="td-proj">◌ 256</td><td class="td-proj td-bold">◌ 2 817</td></tr>
-      <tr style="background:#dcfce7;"><td class="left td-bold" style="color:var(--green);">2026 Facturés ✅</td><td style="color:var(--green);font-weight:700;">255</td><td style="color:var(--green);font-weight:700;">216</td><td style="color:var(--green);font-weight:700;">256</td><td class="td-proj">◌ 242</td><td class="td-proj">◌ 242</td><td class="td-proj">◌ 242</td><td class="td-proj">◌ 242</td><td class="td-proj">◌ 242</td><td class="td-proj">◌ 242</td><td class="td-proj">◌ 242</td><td class="td-proj">◌ 242</td><td class="td-proj">◌ 242</td><td class="td-proj td-bold">◌ 2 908</td></tr>
-    </tbody></table>
-    <div style="font-size:.75rem;color:var(--text-light);margin-top:10px;">◌ Projection 2026 : P2 stable à 190/mois · P1 moy. T1 66/mois · Facturés moy. T1 242/mois</div>
-  </div>
+
 </div>
 </div>
 
-<footer>Famillys Dashboard — Données au 31/03/2026 — T1 complet — Mis à jour par Philippe</footer>
+<footer>Famillys Dashboard — Données au 11/04/2026 — T1 clôturé · Avril en cours — Mis à jour par Philippe</footer>
 
 <script>
-function showSection(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');}
-const BD='#1a3a5c',BM='#2563a8',BP='rgba(191,219,254,0.85)',PB='#93c5fd';
-const MOIS=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-new Chart(document.getElementById('chartAnnuel'),{type:'bar',data:{labels:[2021,2022,2023,2024,2025,2026],datasets:[{label:'Réalisé',data:[146,367,410,530,415,105],backgroundColor:BD,borderRadius:4},{label:'◌ Projection',data:[null,null,null,null,null,420],backgroundColor:BP,borderColor:PB,borderWidth:2,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.datasetIndex===1?'◌ Proj.: ':'Réalisé: ')+c.parsed.y+' contrats'}}},scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:11}}}}}});
-new Chart(document.getElementById('chartMensuel'),{type:'bar',data:{labels:MOIS,datasets:[{label:'2025',data:[49,30,55,55,37,30,33,19,38,23,23,23],backgroundColor:BD,borderRadius:3,barPercentage:0.38,categoryPercentage:0.85},{label:'2026 Réalisé',data:[34,37,34,null,null,null,null,null,null,null,null,null],backgroundColor:BM,borderRadius:3,barPercentage:0.38,categoryPercentage:0.85},{label:'◌ 2026 Proj.',data:[null,null,null,35,35,35,35,35,35,35,35,35],backgroundColor:BP,borderColor:PB,borderWidth:1.5,borderRadius:3,barPercentage:0.38,categoryPercentage:0.85}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:12}},tooltip:{mode:'index',intersect:false}},scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
-new Chart(document.getElementById('chartTendance'),{type:'bar',data:{labels:[2021,2022,2023,2024,2025,2026],datasets:[{label:'Réalisé',data:[146,367,410,530,415,105],backgroundColor:BD,borderRadius:4},{label:'◌ Projection',data:[null,null,null,null,null,420],backgroundColor:BP,borderColor:PB,borderWidth:2,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:11}}}}}});
-new Chart(document.getElementById('chartType'),{type:'doughnut',data:{labels:['Permanent','Temporaire'],datasets:[{data:[19,2],backgroundColor:[BD,'#93c5fd'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:12},padding:14}},tooltip:{callbacks:{label:c=>' '+c.label+': '+c.parsed+' dossiers'}}}}});
-new Chart(document.getElementById('chartAnciennete'),{type:'bar',data:{labels:['2021','2022','2023','2024'],datasets:[{label:'Dossiers entrés',data:[3,5,8,5],backgroundColor:BD,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,font:{size:11}},grid:{color:'#f1f5f9'}},x:{grid:{display:false},ticks:{font:{size:11}}}}}});
-const T1=['Janvier','Février','Mars'];
-new Chart(document.getElementById('chartPilotes'),{type:'bar',data:{labels:T1,datasets:[{label:'Pilote 2',data:[190,190,190],backgroundColor:'#1a3a5c',borderRadius:0,stack:'env'},{label:'Pilote 1',data:[67,41,91],backgroundColor:'#0d9488',borderRadius:4,stack:'env'},{label:'Facturés',data:[255,216,256],backgroundColor:'rgba(22,163,74,0.25)',borderColor:'#16a34a',borderWidth:2,borderRadius:4,stack:'fact'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:12}},tooltip:{mode:'index',intersect:false,callbacks:{footer:items=>{const s=items.find(i=>i.dataset.label==='Pilote 2');const p=items.find(i=>i.dataset.label==='Pilote 1');if(s&&p)return'Total envoyé : '+(s.parsed.y+p.parsed.y);return'';} }}},scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:11}}}}}});
-new Chart(document.getElementById('chartRevenus'),{type:'bar',data:{labels:T1,datasets:[{label:'Zone A (20€)',data:[880,700,1000],backgroundColor:'#1e40af',stack:'r'},{label:'Zone B (12€)',data:[732,564,924],backgroundColor:'#15803d',stack:'r'},{label:'Zone C (6€)',data:[900,804,774],backgroundColor:'#a16207',borderRadius:4,stack:'r'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:12}},tooltip:{callbacks:{footer:items=>'Total : '+items.reduce((s,i)=>s+i.parsed.y,0)+' €'}}},scales:{y:{beginAtZero:true,stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11},callback:v=>v+'€'}},x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}}}}});
-new Chart(document.getElementById('chartCapMensuel'),{type:'bar',data:{labels:MOIS,datasets:[{label:'2025',data:[368,406,481,451,465,504,456,192,187,190,201,193],backgroundColor:BD,borderRadius:3,barPercentage:0.38,categoryPercentage:0.85},{label:'2026 réel',data:[257,231,281,null,null,null,null,null,null,null,null,null],backgroundColor:'#16a34a',borderRadius:3,barPercentage:0.38,categoryPercentage:0.85},{label:'◌ 2026 proj.',data:[null,null,null,256,256,256,256,256,256,256,256,256],backgroundColor:BP,borderColor:PB,borderWidth:1.5,borderRadius:3,barPercentage:0.38,categoryPercentage:0.85}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:12}},tooltip:{mode:'index',intersect:false}},scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
-new Chart(document.getElementById('chartMix'),{type:'doughnut',data:{labels:['Zone A — 129 leads → 2 580€','Zone B — 185 leads → 2 220€','Zone C — 413 leads → 2 478€'],datasets:[{data:[2580,2220,2478],backgroundColor:['#1e40af','#15803d','#a16207'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:10}},tooltip:{callbacks:{label:c=>' '+c.label.split('—')[0]+': '+c.parsed+' €'}}}}});
+// ──────────────────────────────────────────────
+// NAVIGATION
+// ──────────────────────────────────────────────
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ──────────────────────────────────────────────
+// DATA
+// ──────────────────────────────────────────────
+const MOIS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const ANNEES = [2021,2022,2023,2024,2025,2026];
+
+// Signatures
+const ANN_NB   = [145,367,410,530,415,110];
+const ANN_CA   = [42171,106736,119242,154142,98288,31992];
+const PROJ_NB  = 420;
+const PROJ_CA  = Math.round(420 * (349/1.20));
+
+const M2025_NB = [49,30,55,55,37,30,33,19,38,23,23,23];
+const M2025_CA = [14251,8725,9921,7671,5461,7267,9389,4484,11052,6689,6689,6689];
+// 2026: Jan/Fév/Mar finalisés, Avr partiel (5 contrats), reste = projection
+const M2026_NB_REEL    = [34,37,34,null,null,null,null,null,null,null,null,null];
+const M2026_NB_PARTIAL = [null,null,null,5,null,null,null,null,null,null,null,null];
+const M2026_NB_PROJ    = [null,null,null,null,35,35,35,35,35,35,35,35];
+const M2026_CA_REEL    = [9888,10761,9888,null,null,null,null,null,null,null,null,null];
+const M2026_CA_PROJ    = [null,null,null,null,10179,10179,10179,10179,10179,10179,10179,10179];
+
+// Weekly commissions 2026
+const WEEKLY_DATA = [
+  {w:1,nb:2},{w:2,nb:10},{w:3,nb:8},{w:4,nb:10},{w:5,nb:4},{w:6,nb:12},
+  {w:7,nb:11},{w:8,nb:5},{w:9,nb:9},{w:10,nb:10},{w:11,nb:9},{w:12,nb:9},
+  {w:13,nb:5},{w:14,nb:3},{w:15,nb:3}
+];
+const HT_UNIT = 349/1.20;
+const COMM_RATE = 0.075;
+
+// Build weekly table
+const tbody = document.getElementById('weeklyTableBody');
+let totalNb=0, totalCA=0, totalComm=0;
+WEEKLY_DATA.forEach(row=>{
+  const ca = Math.round(row.nb * HT_UNIT);
+  const comm = (ca * COMM_RATE).toFixed(2);
+  totalNb += row.nb; totalCA += ca; totalComm += Math.round(ca*COMM_RATE*100)/100;
+  const isPartial = row.w >= 14;
+  const tr = document.createElement('tr');
+  if(isPartial) tr.style.background='#fff7ed';
+  tr.innerHTML = `
+    <td style="font-weight:600;">S${String(row.w).padStart(2,'0')} 2026${isPartial?' ⚡':''}</td>
+    <td>${row.nb}</td>
+    <td>${ca.toLocaleString('fr-FR')} €</td>
+    <td style="color:var(--green);font-weight:700;">${parseFloat(comm).toLocaleString('fr-FR')} €</td>
+    <td>${isPartial?'<span class="status-partial">⚡ Partiel</span>':'<span class="status-ok">✅</span>'}</td>
+  `;
+  tbody.appendChild(tr);
+});
+const trTotal = document.createElement('tr');
+trTotal.className = 'total-row';
+trTotal.innerHTML = `
+  <td style="text-align:left;font-weight:700;">TOTAL S1–S15</td>
+  <td>${totalNb}</td>
+  <td>${totalCA.toLocaleString('fr-FR')} €</td>
+  <td style="color:var(--green);font-weight:700;">${totalComm.toFixed(2).replace('.',',')} €</td>
+  <td></td>
+`;
+tbody.appendChild(trTotal);
+
+// ──────────────────────────────────────────────
+// COLORS
+// ──────────────────────────────────────────────
+const BD='#1a3a5c', BM='#2563a8', GR='#16a34a';
+const BP='rgba(191,219,254,0.85)', PB='#93c5fd';
+const GP='rgba(187,247,208,0.85)', PG='#86efac';
+const AM='rgba(217,119,6,0.85)';
+
+// ──────────────────────────────────────────────
+// CHART: Annual Volume
+// ──────────────────────────────────────────────
+new Chart(document.getElementById('chartAnnuelNb'),{
+  type:'bar',
+  data:{labels:ANNEES,datasets:[
+    {label:'Contrats réalisés',data:[145,367,410,530,415,110],backgroundColor:BD,borderRadius:4},
+    {label:'◌ Projection 2026',data:[null,null,null,null,null,PROJ_NB],backgroundColor:BP,borderColor:PB,borderWidth:2,borderRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.datasetIndex===1?'◌ Proj.: ':'Réalisé: ')+c.parsed.y+' contrats'}}},
+    scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:11}}}}}
+});
+
+// ──────────────────────────────────────────────
+// CHART: Annual CA HT
+// ──────────────────────────────────────────────
+new Chart(document.getElementById('chartAnnuelCA'),{
+  type:'bar',
+  data:{labels:ANNEES,datasets:[
+    {label:'CA HT réalisé',data:[42171,106736,119242,154142,98288,31992],backgroundColor:GR,borderRadius:4},
+    {label:'◌ CA HT proj. 2026',data:[null,null,null,null,null,PROJ_CA],backgroundColor:GP,borderColor:PG,borderWidth:2,borderRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.datasetIndex===1?'◌ Proj.: ':'Réalisé: ')+c.parsed.y.toLocaleString('fr-FR')+' € HT'}}},
+    scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11},callback:v=>v>=1000?(v/1000)+'k €':v+'€'}},x:{grid:{display:false},ticks:{font:{size:11}}}}}
+});
+
+// ──────────────────────────────────────────────
+// CHART: Monthly volume 2025 vs 2026
+// ──────────────────────────────────────────────
+new Chart(document.getElementById('chartMensuelNb'),{
+  type:'bar',
+  data:{labels:MOIS,datasets:[
+    {label:'2025',data:M2025_NB,backgroundColor:BD,borderRadius:3,barPercentage:0.35,categoryPercentage:0.85},
+    {label:'2026 réalisé',data:M2026_NB_REEL,backgroundColor:BM,borderRadius:3,barPercentage:0.35,categoryPercentage:0.85},
+    {label:'⚡ En cours',data:M2026_NB_PARTIAL,backgroundColor:AM,borderRadius:3,barPercentage:0.35,categoryPercentage:0.85},
+    {label:'◌ 2026 Proj.',data:M2026_NB_PROJ,backgroundColor:BP,borderColor:PB,borderWidth:1.5,borderRadius:3,barPercentage:0.35,categoryPercentage:0.85}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:11}},tooltip:{mode:'index',intersect:false}},
+    scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+
+// ──────────────────────────────────────────────
+// CHART: Monthly CA 2025 vs 2026
+// ──────────────────────────────────────────────
+new Chart(document.getElementById('chartMensuelCA'),{
+  type:'bar',
+  data:{labels:MOIS,datasets:[
+    {label:'2025 CA HT',data:M2025_CA,backgroundColor:BD,borderRadius:3,barPercentage:0.38,categoryPercentage:0.85},
+    {label:'2026 CA HT réalisé',data:M2026_CA_REEL,backgroundColor:GR,borderRadius:3,barPercentage:0.38,categoryPercentage:0.85},
+    {label:'◌ 2026 Proj.',data:M2026_CA_PROJ,backgroundColor:GP,borderColor:PG,borderWidth:1.5,borderRadius:3,barPercentage:0.38,categoryPercentage:0.85}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:11}},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>c.dataset.label+': '+c.parsed.y?.toLocaleString('fr-FR')+' €'}}},
+    scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11},callback:v=>v>=1000?(v/1000)+'k €':v+'€'}},x:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+
+// ──────────────────────────────────────────────
+// CHART: Tendance annuelle
+// ──────────────────────────────────────────────
+new Chart(document.getElementById('chartTendance'),{
+  type:'bar',
+  data:{labels:ANNEES,datasets:[
+    {label:'Volume',data:[145,367,410,530,415,110],backgroundColor:BD,borderRadius:4,yAxisID:'y'},
+    {label:'◌ Volume proj.',data:[null,null,null,null,null,PROJ_NB],backgroundColor:BP,borderColor:PB,borderWidth:2,borderRadius:4,yAxisID:'y'},
+    {label:'CA HT',data:[42171,106736,119242,154142,98288,31992],backgroundColor:'rgba(22,163,74,0.15)',borderColor:GR,borderWidth:2,type:'line',yAxisID:'y2',tension:0.3,pointBackgroundColor:GR}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:11}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.yAxisID==='y2'?c.parsed.y.toLocaleString('fr-FR')+' € HT':c.parsed.y+' contrats')}}},
+    scales:{
+      y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:10}}},
+      y2:{position:'right',beginAtZero:true,grid:{display:false},ticks:{font:{size:10},callback:v=>v>=1000?(v/1000)+'k€':v}}
+    }}
+});
+
+// ──────────────────────────────────────────────
+// CHARTS: Abonnements
+// ──────────────────────────────────────────────
+new Chart(document.getElementById('chartTarif'),{
+  type:'doughnut',
+  data:{labels:['99 €/mois (12 dossiers)','49 €/mois (9 dossiers)'],
+    datasets:[{data:[1188,441],backgroundColor:['#0d9488','#1a3a5c'],borderWidth:2,borderColor:'#fff'}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}},
+      tooltip:{callbacks:{label:c=>' '+c.label.split('(')[0].trim()+' → '+c.parsed+' €/mois'}}}}
+});
+
+new Chart(document.getElementById('chartAnciennete'),{
+  type:'bar',
+  data:{labels:['2021','2022','2023','2024','2026'],
+    datasets:[{label:'Dossiers entrés',data:[3,3,4,4,1],backgroundColor:['#1a3a5c','#1a3a5c','#2563a8','#2563a8','#d97706'],borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{y:{beginAtZero:true,ticks:{stepSize:1,font:{size:11}},grid:{color:'#f1f5f9'}},x:{grid:{display:false},ticks:{font:{size:11}}}}}
+});
+
+// ──────────────────────────────────────────────
+// CHARTS: Cap Retraite
+// ──────────────────────────────────────────────
+const T1M = ['Janvier','Février','Mars'];
+new Chart(document.getElementById('chartPilotes'),{
+  type:'bar',
+  data:{labels:T1M,datasets:[
+    {label:'Pilote 2',data:[190,190,190],backgroundColor:'#1a3a5c',borderRadius:0,stack:'env'},
+    {label:'Pilote 1',data:[67,41,91],backgroundColor:'#0d9488',borderRadius:4,stack:'env'},
+    {label:'Facturés',data:[255,216,256],backgroundColor:'rgba(22,163,74,0.25)',borderColor:'#16a34a',borderWidth:2,borderRadius:4,stack:'fact'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:12}},
+      tooltip:{mode:'index',intersect:false,callbacks:{footer:items=>{const s=items.find(i=>i.dataset.label==='Pilote 2');const p=items.find(i=>i.dataset.label==='Pilote 1');if(s&&p)return'Total envoyé : '+(s.parsed.y+p.parsed.y);return'';} }}},
+    scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:11}}}}}
+});
+
+new Chart(document.getElementById('chartRevenus'),{
+  type:'bar',
+  data:{labels:T1M,datasets:[
+    {label:'Zone A (20€)',data:[880,700,1000],backgroundColor:'#1e40af',stack:'r'},
+    {label:'Zone B (12€)',data:[732,564,924],backgroundColor:'#15803d',stack:'r'},
+    {label:'Zone C (6€)',data:[900,804,774],backgroundColor:'#a16207',borderRadius:4,stack:'r'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:12}},
+      tooltip:{callbacks:{footer:items=>'Total : '+items.reduce((s,i)=>s+i.parsed.y,0)+' €'}}},
+    scales:{y:{beginAtZero:true,stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11},callback:v=>v+'€'}},
+      x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}}}}
+});
+
+new Chart(document.getElementById('chartCapMensuel'),{
+  type:'bar',
+  data:{labels:MOIS,datasets:[
+    {label:'2025',data:[368,406,481,451,465,504,456,192,187,190,201,193],backgroundColor:BD,borderRadius:3,barPercentage:0.35,categoryPercentage:0.85},
+    {label:'2026 réel',data:[257,231,281,null,null,null,null,null,null,null,null,null],backgroundColor:GR,borderRadius:3,barPercentage:0.35,categoryPercentage:0.85},
+    {label:'⚡ Avr. partiel',data:[null,null,null,203,null,null,null,null,null,null,null,null],backgroundColor:AM,borderRadius:3,barPercentage:0.35,categoryPercentage:0.85},
+    {label:'◌ 2026 proj.',data:[null,null,null,null,256,256,256,256,256,256,256,256],backgroundColor:BP,borderColor:PB,borderWidth:1.5,borderRadius:3,barPercentage:0.35,categoryPercentage:0.85}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:11}},tooltip:{mode:'index',intersect:false}},
+    scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('chartMix'),{
+  type:'doughnut',
+  data:{labels:['Zone A — 129 leads → 2 580 €','Zone B — 185 leads → 2 220 €','Zone C — 413 leads → 2 478 €'],
+    datasets:[{data:[2580,2220,2478],backgroundColor:['#1e40af','#15803d','#a16207'],borderWidth:2,borderColor:'#fff'}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:10}},
+      tooltip:{callbacks:{label:c=>' '+c.label.split('—')[0]+': '+c.parsed+' €'}}}}
+});
 </script>
 </body>
 </html>
